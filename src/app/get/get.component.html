@@ -1,0 +1,47 @@
+
+<ng-container *ngIf="bookslist.length > 0; else noBooks">
+  <p [ngStyle]="{color: getColor()}"></p>
+
+  <table class="table">
+    <thead>
+    <tr input class="form-check-input me-1" type="checkbox" value="" aria-label="..."  class="table-primary">
+      <th scope="col">Lp</th>
+      <th scope="col">Title</th>
+      <th scope="col">Authors</th>
+      <th scope="col">Literary genre</th>
+      <th scope="col">Year of publication</th>
+      <th scope="col">Signature</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let book of bookslist; let i = index">
+      <th scope="row">{{i+1}}</th>
+      <td>{{book.title}}</td>
+      <td>
+        <ul>
+          <li *ngFor="let author of book.author;">{{author.forename}} {{author.surname}}</li>
+        </ul>
+      </td>
+      <td>
+      <ul>
+        <li *ngFor="let bookTag of book.bookTag">{{bookTag.literaryGenre}}</li>
+      </ul>
+      </td>
+      <td>{{book.yearOfPublication}}</td>
+      <td>{{book.signature}}</td>
+    </tr>
+
+    </tbody>
+  </table>
+
+
+
+</ng-container>
+
+
+<ng-template #noBooks>
+ <p>No books</p>
+</ng-template>
+
+
+

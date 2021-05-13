@@ -1,0 +1,21 @@
+<button type="button" class="btn btn-primary" (click)="showAddAuthorsForm()" >Add an Author</button>
+<form class="addAuthor" method="post" [hidden]="isHidden">
+  <fieldset class="input">
+
+    <label class="input label">Authors</label>
+    <table class = "table">
+      <thead>
+      <tr>
+        <th scope="col">Lp</th>
+        <th scope = "col">Author's forename</th>
+        <th scope = "col">Author's surname</th>
+      </tr>
+      </thead>
+      <tbody>
+        <ng-template #bookAuthorListContentsContainer></ng-template>
+      </tbody>
+    </table>
+
+    <button type="button" class="btn btn-outline-primary" (click)="addNextAuthor()">Add a next Author</button>
+  </fieldset>
+</form>

@@ -1,0 +1,31 @@
+<section class="datatable">
+  <button type="button" class="btn btn-primary" (click)="showAddBookForm()" >Add a book</button>
+  <form class = "add" method="post" [hidden]="isHidden">
+    <fieldset class="input">
+      <label class="input label">Book title</label>
+      <input  type="text" name="title" placeholder="Insert a Book title" required [(ngModel)]="titleInput">
+    </fieldset>
+
+   <app-book-author-list></app-book-author-list>
+
+    <fieldset class="input">
+      <label class="input label">Literary Genre</label>
+      <input type="text" name="literaryGenre" placeholder="Insert a Literary genre" required [(ngModel)]="booksTagInput">
+    </fieldset>
+
+    <fieldset class="input">
+      <label class="input label">Year publication</label>
+      <input type="number" name="yearOfPublication;" placeholder="Insert a Year publication" required [(ngModel)]="yearOfPublicationInput">
+    </fieldset>
+
+    <fieldset class="input">
+      <label class="input label">Book signature</label>
+      <input type="text" name="bookSignature" placeholder="Insert a Book signature" required [(ngModel)]="signatureInput">
+    </fieldset>
+
+    <div [hidden]="isHidden">
+      <button class="btn btn-primary" type="submit" (click)="saveBook()">Submit</button>
+    </div>
+
+  </form>
+</section>

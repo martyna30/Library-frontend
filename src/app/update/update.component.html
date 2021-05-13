@@ -1,0 +1,30 @@
+<section class="datatable">
+  <button type="submit" change_button class= "change_button"(click)="ChangeABook()">Modify a book</button>
+
+  <form class = "put" method="put" [hidden]="isHidden">
+    <fieldset class="input">
+      <label class="input label">Book title</label>
+      <input type="text" name="title" placeholder="Insert a Book title" required>
+    </fieldset>
+
+    <fieldset class="input">
+      <label class="input label">Year publication</label>
+      <input type="text" name="yearOfPublication;" placeholder="Insert a Year publication" required>
+    </fieldset>
+
+    <fieldset class="input">
+      <label class="input label">Book signature</label>
+      <input type="text" name="signature" placeholder="Insert a Book signature" required>
+    </fieldset>
+
+    <fieldset class="input">
+      <label class="input label">Literary Genre</label>
+      <input type="text" name="literaryGenre" placeholder="Insert a Literary genre" required>
+    </fieldset>
+
+    <fieldset class="input">
+      <label class="input label">Book signature</label>
+      <input type="text" name="author" placeholder="Insert a Author" required>
+    </fieldset>
+  </form>
+</section>

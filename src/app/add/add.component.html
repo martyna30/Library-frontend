@@ -1,26 +1,73 @@
 <section class="datatable">
   <button type="button" class="btn btn-primary" (click)="showAddBookForm()" >Add a book</button>
-  <form class = "add" method="post" [hidden]="isHidden">
+  <form [formGroup]="myFormModel" class = "add" method="post" [hidden]="isHidden">
     <fieldset class="input">
       <label class="input label">Book title</label>
-      <input  type="text" name="title" placeholder="Insert a Book title" required [(ngModel)]="titleInput">
+      <input  type="text" name="title" placeholder="Insert a Book title" required formControlName="titleInput">
     </fieldset>
 
-   <app-book-author-list></app-book-author-list>
+    <fieldset class="input">
+
+      <label class="input label">Authors</label>
+      <table class = "table">
+        <thead>
+        <tr>
+          <th scope="col">Lp</th>
+          <th scope = "col">Author's forename</th>
+          <th scope = "col">Author's surname</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        <ng-container formArrayName="authors">
+          <tr *ngFor="let author of myFormModel.get('authors')['controls']; let i = index;" formGroupName="{{ i }}">
+            <th>{{ i + 1 }}</th>
+            <td>
+              <input type="text" placeholder="Insert an Author Forename" required formControlName="authorForenameInput">
+            </td>
+
+            <td>
+              <input type="text" placeholder="Insert an Author Surname" required formControlName="authorSurnameInput">
+            </td>
+          </tr>
+        </ng-container>
+        </tbody>
+      </table>
+
+      <button type="button" class="btn btn-outline-primary" (click)="addNextAuthor()">Add a next Author</button>
+    </fieldset>
 
     <fieldset class="input">
       <label class="input label">Literary Genre</label>
-      <input type="text" name="literaryGenre" placeholder="Insert a Literary genre" required [(ngModel)]="booksTagInput">
+      <table class="table">
+        <thead>
+        <tr>
+          <th scope="col">Lp</th>
+          <th scope="col">Literary Genre</th>
+        </tr>
+        </thead>
+        <tbody>
+        <ng-container formArrayName="booksTags">
+          <tr *ngFor="let bookTag of myFormModel.get('booksTags')['controls']; let i = index;" formGroupName="{{ i }}">
+            <th>{{i + 1}}</th>
+            <td>
+             <input type="text" placeholder="Insert a Literary Genre" required formControlName="booksTagInput">
+            </td>
+          </tr>
+        </ng-container>
+        </tbody>
+        </table>
+      <button type="button" class="btn btn-outline-primary" (click)="addNextBooksTag()">Add a next Book Tag</button>
     </fieldset>
 
     <fieldset class="input">
       <label class="input label">Year publication</label>
-      <input type="number" name="yearOfPublication;" placeholder="Insert a Year publication" required [(ngModel)]="yearOfPublicationInput">
+      <input type="number" name="yearOfPublication;" placeholder="Insert a Year publication" required formControlName="yearOfPublicationInput">
     </fieldset>
 
     <fieldset class="input">
       <label class="input label">Book signature</label>
-      <input type="text" name="bookSignature" placeholder="Insert a Book signature" required [(ngModel)]="signatureInput">
+      <input type="text" name="bookSignature" placeholder="Insert a Book signature" required formControlName="signatureInput">
     </fieldset>
 
     <div [hidden]="isHidden">

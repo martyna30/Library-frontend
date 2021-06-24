@@ -1,82 +1,73 @@
-import {Component, Inject, Input, OnInit, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {Book} from '../models-interface/book';
 import {BookService} from '../../services/book.service';
-
-import {BookTag} from '../models-interface/bookTag';
 import {AuthorService} from '../../services/author.service';
-
-import {BookAuthorListComponent} from '../book-author-list/book-author-list.component';
-import {BookAuthorListContentComponent} from '../book-author-list-content/book-author-list-content.component';
-import {Observable} from 'rxjs';
 import {Author} from '../models-interface/author';
-
-
-
-
+import {FormArray, FormBuilder, FormGroup} from '@angular/forms';
+import {BehaviorSubject} from 'rxjs';
+import {BookTag} from '../models-interface/bookTag';
+import {any} from 'codelyzer/util/function';
+import {toNumbers} from '@angular/compiler-cli/src/diagnostics/typescript_version';
+import {empty} from 'rxjs/internal/Observer';
+import {filter, map} from 'rxjs/operators';
+// @ts-ignore
 @Component({
   selector: 'app-add',
   templateUrl: './add.component.html',
   styleUrls: ['./add.component.css']
 })
 export class AddComponent implements OnInit {
-
-  bookAuthorsComponent: BookAuthorListContentComponent[];
-
-  authorFound: Author;
   isHidden = true;
-  bookslist: Array<Book> = [];
-  authorForenameInput: string;
-  authorSurnameInput: string;
-  booksTagInput: [] ; // Array<BookTag>;
-  yearOfPublicationInput: number;
-  signatureInput: string;
-  titleInput = '';
+
+  myFormModel: FormGroup;
+  authors: FormArray;
+  booksTags: FormArray;
+
+  private idFound: number;
+
+
+  constructor(private fb: FormBuilder, private authorService: AuthorService, private bookService: BookService) {
+  }
 
   ngOnInit(): void {
-  }
-
-  constructor(private bookService: BookService, private authorService: AuthorService) {
-    this.bookService.getBookListObservable().subscribe((books: Array<Book>) => {
-      this.bookslist = books;
+    this.myFormModel = this.fb.group({
+      titleInput: '',
+      authors: this.fb.array([]),
+      booksTags: this.fb.array([]),
+      yearOfPublicationInput: '',
+      signatureInput: ''
     });
-    // @ts-ignore
-    return this.authorService.findAuthorWithName().subscribe((authorInput) => {
-      this.authorFound = authorInput;
+
+    this.addNextAuthor();
+    this.addNextBooksTag();
+  }
+
+  createAuthor(): FormGroup {
+    return this.fb.group({
+      authorForenameInput: '',
+      authorSurnameInput: ''
     });
   }
-  // tslint:disable-next-line:typedef
-  saveBook() {
-    const book: Book = {
-      title: this.titleInput,
-      yearOfPublication: this.yearOfPublicationInput,
-      signature: this.signatureInput,
-      author: [],
-      bookTag: [{literaryGenre: 'c'}]
-    };
 
-    this.bookAuthorsComponent.forEach(bookAuthor => {
-      const authorFound = this.authorFound;
-      // @ts-ignore
-      const author = new Author (
-        authorFound !== undefined ? authorFound.id : null,
-        this.authorSurnameInput,
-        this.authorForenameInput
-      );
-      book.author.push(author);
-      });
-
-    this.bookService.addBook(book);
-    this.bookService.saveBookToDB(book);
-    this.titleInput = '';
-    this.authorSurnameInput = '';
-    this.authorForenameInput = '';
-    this.booksTagInput = null;
-    this.yearOfPublicationInput = null;
-    this.signatureInput = '';
+  addNextAuthor(): void {
+    console.log('addNextAuthor');
+    this.authors = this.myFormModel.get('authors') as FormArray;
+    console.log(this.authors);
+    this.authors.push(this.createAuthor());
   }
-  // tslint:disable-next-line:typedef
 
-  // tslint:disable-next-line:typedef
+  createBooksTag(): FormGroup {
+    return this.fb.group({
+      booksTagInput: ''
+    });
+  }
+
+  addNextBooksTag(): void {
+    this.booksTags = this.myFormModel.get('booksTags') as FormArray;
+    this.booksTags.push(this.createBooksTag());
+  }
+
+
   showAddBookForm() {
     if (this.isHidden) {
       this.isHidden = !this.isHidden;
@@ -85,6 +76,58 @@ export class AddComponent implements OnInit {
     }
   }
 
+  saveBook() {
+    const book: Book = {
+      id: null,
+      title: this.myFormModel.get('titleInput').value,
+      authors: [],
+      bookTags: [],
+      yearOfPublication: this.myFormModel.get('yearOfPublicationInput').value,
+      signature: this.myFormModel.get('signatureInput').value
+    };
+    this.authors.controls.forEach(authorControl => {
+      const author: Author = {
+        id: null,
+        forename: authorControl.get('authorForenameInput').value,
+        surname: authorControl.get('authorSurnameInput').value,
+      };
+      book.authors.push(author);
+    });
+    this.booksTags.controls.forEach(booksTagControl => {
+      const bookTag: BookTag = {
+        id: null,
+        literaryGenre: booksTagControl.get('booksTagInput').value
+      };
+      book.bookTags.push(bookTag);
+    });
 
-
+    this.bookService.addBook(book);
+    this.bookService.saveBookToDB(book);
+  }
 }
+
+
+// this.authorService.getIdByName(authorControl.get('authorForenameInput').value, authorControl.get('authorSurnameInput').value)
+// .subscribe((idAuthor: number) => {
+// this.idFound = idAuthor;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {BookService} from '../../services/book.service';
 import {Book} from '../models-interface/book';
+import {Author} from '../models-interface/author';
+import {BookTag} from '../models-interface/bookTag';
 
 @Component({
   selector: 'app-get',
@@ -10,7 +12,6 @@ import {Book} from '../models-interface/book';
 export class GetComponent implements OnInit {
 
   bookslist: Array<Book> = []; // przyjmuje książki i wyswietla je
-
 
   constructor(private bookService: BookService) {
     this.bookService.getBookListObservable().subscribe( (books: Array<Book>)  => {

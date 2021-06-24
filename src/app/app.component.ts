@@ -8,7 +8,8 @@ import {BookService} from '../services/book.service';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'listOfbooks';
+  // title = 'listOfbooks';
+  errorMessage: string;
 
   constructor(private bookService: BookService) {}
   // tslint:disable-next-line:typedef
@@ -21,6 +22,11 @@ export class AppComponent {
   }
 
 
-
-
 }
+
+
+
+
+
+
+

@@ -1,3 +1,5 @@
+// @ts-ignore
+
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
@@ -9,11 +11,11 @@ import {BookService} from '../services/book.service';
 import {HttpService} from '../services/http.service';
 import { GetComponent } from './get/get.component';
 import {HttpClient, HttpClientModule} from '@angular/common/http';
-import {FormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
-import { BookAuthorListComponent } from './book-author-list/book-author-list.component';
+
 import {AuthorService} from '../services/author.service';
-import { BookAuthorListContentComponent } from './book-author-list-content/book-author-list-content.component';
+
 import {AdDirective} from './directive/ad.directive';
 
 
@@ -24,12 +26,10 @@ import {AdDirective} from './directive/ad.directive';
     UpdateComponent,
     DeleteComponent,
     GetComponent,
-    BookAuthorListComponent,
-    BookAuthorListContentComponent,
-    AdDirective
+    AdDirective,
   ],
   imports: [
-    BrowserModule, HttpClientModule, FormsModule
+    BrowserModule, HttpClientModule, FormsModule, ReactiveFormsModule
   ],
   providers: [BookService, HttpService, AuthorService],
   bootstrap: [AppComponent]

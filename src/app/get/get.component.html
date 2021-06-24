@@ -19,12 +19,12 @@
       <td>{{book.title}}</td>
       <td>
         <ul>
-          <li *ngFor="let author of book.author;">{{author.forename}} {{author.surname}}</li>
+          <li *ngFor="let author of book.authors">{{author.forename}} {{author.surname}}</li>
         </ul>
       </td>
       <td>
       <ul>
-        <li *ngFor="let bookTag of book.bookTag">{{bookTag.literaryGenre}}</li>
+        <li *ngFor="let bookTag of book.bookTags">{{bookTag.literaryGenre}}</li>
       </ul>
       </td>
       <td>{{book.yearOfPublication}}</td>

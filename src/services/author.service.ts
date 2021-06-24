@@ -1,42 +1,41 @@
 import {Injectable, Input, Optional, Output} from '@angular/core';
-import {BehaviorSubject, Observable} from 'rxjs';
+import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import {Author} from '../app/models-interface/author';
 import {HttpService} from './http.service';
+import {HttpParams} from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthorService {
 
-  private foundAuthorWithName = new BehaviorSubject<Author>(null);
+  constructor(private httpService: HttpService) {}
 
-  /*constructor(private httpService: HttpService, surname: string, forename: string) {
-    this.httpService.findAuthorsWithName(surname, forename).subscribe( authorInput => {
-      this.foundAuthorWithName.next(authorInput);
-    });
-  }*/
-  constructor(private httpService: HttpService) {
+  getIdByName(forename, surname): Observable<number> {
+    return this.httpService.getIdByName(forename, surname);
   }
+    /*
+      addAuthorToObservable(author: Author): void {
+      const authorToDB = this.authorToDB.getValue();
+      authorToDB.push(author);
+      this.authorToDB.next(authorToDB);
+      }
 
-  findAuthorWithName(): Observable<Author> {
-    return this.foundAuthorWithName.asObservable();
-  }
+      getAuthorWithName() {
+        // tslint:disable-next-line:no-shadowed-variable
+        const authorForename = this.authorToDB.getValue().map(author => author.forename);
+        // tslint:disable-next-line:no-shadowed-variable
+        const authorSurname = this.authorToDB.getValue().map(author => author.surname);
 
-  // @ts-ignore
-  /*/addAuthor(author: Author): void {
-    const list = this.authorListObs.getValue();
+        this.httpService.findAuthorsWithName(authorForename, authorSurname);
+      }*/
 
-    if (!list.includes(author)) {
-      list.push(author);
-      this.saveAuthorToDB();
-    }
-    this.authorListObs.next(list);
-  }
-    // tslint:disable-next-line:typedef
-  saveAuthorToDB() {
+  /*saveAuthorToDB() {
     this.httpService.saveAuthor(this.authorListObs.getValue());
   }*/
-}
+
+  }
+
 
 
 

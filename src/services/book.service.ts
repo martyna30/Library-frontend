@@ -31,8 +31,8 @@ export class BookService {
   // tslint:disable-next-line:typedef
 
   // tslint:disable-next-line:typedef
-  saveBookToDB(book: Book) {
-    this.httpService.saveBook(book);
+  saveBookToDB(book: Book): Observable<Book> {
+    return this.httpService.saveBook(book);
   }
   // tslint:disable-next-line:typedef
   getBookListObservable(): Observable<Array<Book>> {

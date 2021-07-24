@@ -10,6 +10,7 @@ import {any} from 'codelyzer/util/function';
 import {toNumbers} from '@angular/compiler-cli/src/diagnostics/typescript_version';
 import {empty} from 'rxjs/internal/Observer';
 import {filter, map} from 'rxjs/operators';
+import {HttpErrorResponse} from '@angular/common/http';
 // @ts-ignore
 @Component({
   selector: 'app-add',
@@ -23,7 +24,9 @@ export class AddComponent implements OnInit {
   authors: FormArray;
   booksTags: FormArray;
 
-  private idFound: number;
+  error: Book;
+  private isCreated = false;
+  private bookExist = false;
 
 
   constructor(private fb: FormBuilder, private authorService: AuthorService, private bookService: BookService) {
@@ -102,7 +105,22 @@ export class AddComponent implements OnInit {
     });
 
     this.bookService.addBook(book);
-    this.bookService.saveBookToDB(book);
+    this.bookService.saveBookToDB(book).subscribe(
+      data => {
+        console.log(data);
+        this.isCreated = true;
+        this.bookExist = false;
+        },
+      error => {
+        this.error = error.error;
+        this.isCreated = false;
+        if (error.status === 409) {
+          this.isCreated = false;
+          this.bookExist = true;
+        }
+        console.log(error);
+      }
+    );
   }
 }
 
@@ -110,6 +128,14 @@ export class AddComponent implements OnInit {
 // this.authorService.getIdByName(authorControl.get('authorForenameInput').value, authorControl.get('authorSurnameInput').value)
 // .subscribe((idAuthor: number) => {
 // this.idFound = idAuthor;
+
+
+  /*data => this.errorResponse = data['message'],
+  (error: HttpErrorResponse) =>
+    this.errorResponse = ''*/
+
+
+
 
 
 

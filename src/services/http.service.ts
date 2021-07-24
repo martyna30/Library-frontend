@@ -9,7 +9,8 @@ import {Author} from '../app/models-interface/author';
   providedIn: 'root'
 })
 export class HttpService {
-  readonly URL_DB = 'http://localhost:8080/v1/library/';
+  private URL_DB = 'http://localhost:8080/v1/library/';
+  private httpHeader = {headers: new HttpHeaders({'Content-Type': 'application/json'})};
 
   constructor(private http: HttpClient) {
     this.getBooks();
@@ -25,13 +26,13 @@ export class HttpService {
 
 
   // tslint:disable-next-line:typedef
-  saveBook(book: Book) {
-    this.http.post(this.URL_DB + 'createBook', book)
-      .subscribe(requestBody => {
-        console.log(requestBody);
-      }, err => (
-        console.log(err)
-        ));
+  saveBook(book: Book): Observable<Book> {
+    return this.http.post<Book>(this.URL_DB + 'createBook', book);
+      // .subscribe(requestBody => {
+       //  console.log(requestBody);
+      // }, err => (
+       // console.log(err)
+       // ));
   }
 
 
@@ -47,15 +48,15 @@ export class HttpService {
     const param = new HttpParams()
       .set('forename', forename + '')
       .set('surname', surname + '');
-    const httpHeaders = new HttpHeaders()
-      .set('Content-Type', 'application/json')
-      .set('charset', 'utf-8');
+    const httpHeaders = this.httpHeader;
+      // .set('Content-Type', 'application/json')
+      // .set('charset', 'utf-8');
 
     // .set('Authorization', 'Basic QWxhZGRpb');
     // @ts-ignore
     return this.http.get<number>(this.URL_DB + 'findIdByName', {
       observe: 'response',
-      headers: httpHeaders,
+      header: httpHeaders,
       params: param
     }); // catchError(this.handleError);
   }

@@ -11,6 +11,7 @@ import {toNumbers} from '@angular/compiler-cli/src/diagnostics/typescript_versio
 import {empty} from 'rxjs/internal/Observer';
 import {filter, map} from 'rxjs/operators';
 import {HttpErrorResponse} from '@angular/common/http';
+import {BookValidationError} from '../models-interface/bookValidationError';
 // @ts-ignore
 @Component({
   selector: 'app-add',
@@ -24,7 +25,7 @@ export class AddComponent implements OnInit {
   authors: FormArray;
   booksTags: FormArray;
 
-  error: Book;
+  validationErrors: BookValidationError;
   private isCreated = false;
   private bookExist = false;
 
@@ -40,7 +41,7 @@ export class AddComponent implements OnInit {
       yearOfPublicationInput: '',
       signatureInput: ''
     });
-
+    console.log('aaa');
     this.addNextAuthor();
     this.addNextBooksTag();
   }
@@ -111,14 +112,17 @@ export class AddComponent implements OnInit {
         this.isCreated = true;
         this.bookExist = false;
         },
-      error => {
-        this.error = error.error;
+      response => {
+        console.log(response.error);
+        this.validationErrors = {
+          title: response.error[0]
+        };
+
         this.isCreated = false;
-        if (error.status === 409) {
+        if (response.status === 409) {
           this.isCreated = false;
           this.bookExist = true;
         }
-        console.log(error);
       }
     );
   }

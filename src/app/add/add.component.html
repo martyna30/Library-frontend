@@ -4,7 +4,7 @@
     <div class="col-md-6">
       <label for="validationServer03" class="form-label">Book title</label>
       <input type="text" class="form-control " id="validationServer03" placeholder="Insert a Book title" aria-describedby="validationServer03Feedback" required formControlName="titleInput">
-      <div id="validationServer03Feedback" class="invalid-feedback d-block" *ngIf="validationErrors?.title"> {{validationErrors?.title}}
+      <div id="validationServer03Feedback" class="invalid-feedback d-block" *ngIf="validationErrors?.title"> {{validationErrors.title[0]}}
     </div>
     </div>
 
@@ -27,10 +27,18 @@
             <th>{{ i + 1 }}</th>
             <td>
               <input type="text" placeholder="Insert an Author Forename" required formControlName="authorForenameInput">
+
+              <div class="invalid-feedback d-block" *ngIf="validationErrors !== undefined && validationErrors['authors[' + i + '].forename'] !== undefined">
+                {{validationErrors['authors[' + i + '].forename'][0]}}
+              </div>
             </td>
 
             <td>
-              <input type="text" placeholder="Insert an Author Surname" required formControlName="authorSurnameInput">
+             <input type="text" placeholder="Insert an Author Surname" required formControlName="authorSurnameInput">
+
+              <div class="invalid-feedback d-block" *ngIf="validationErrors !== undefined && validationErrors['authors[' + i + '].surname'] !== undefined">
+                {{validationErrors['authors[' + i + '].surname'][0]}}
+              </div>
             </td>
           </tr>
         </ng-container>
@@ -65,16 +73,19 @@
 
     <fieldset class="col-10">
       <label class="input label">Year publication</label>
-      <input type="number" name="yearOfPublication;" placeholder="Insert a Year publication" required formControlName="yearOfPublicationInput">
+      <input type="number" name="yearOfPublication" placeholder="Insert a Year publication" required formControlName="yearOfPublicationInput">
     </fieldset>
-    <div class = "col-10" *ngIf="validationErrors !== null && validationErrors?.yearOfPublication">
-        <span class="text text-danger">{{validationErrors.yearOfPublication}}</span>
+    <div class="col-10" *ngIf="validationErrors !== null && validationErrors?.yearOfPublication">
+        <span class="text text-danger">{{validationErrors.yearOfPublication[0]}}</span>
       </div>
 
     <fieldset class="input">
       <label class="input label">Book signature</label>
       <input type="text" name="bookSignature" placeholder="Insert a Book signature" required formControlName="signatureInput">
     </fieldset>
+    <div class = "col-10" *ngIf="validationErrors !== null && validationErrors?.signature">
+      <span class="text text-danger">{{validationErrors.signature[0]}}</span>
+    </div>
 
     <div class = "col-12" [hidden]="isHidden">
       <button class="btn btn-primary" type="submit" (click)="saveBook()">Submit</button>

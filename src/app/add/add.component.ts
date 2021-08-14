@@ -12,6 +12,7 @@ import {empty} from 'rxjs/internal/Observer';
 import {filter, map} from 'rxjs/operators';
 import {HttpErrorResponse} from '@angular/common/http';
 import {BookValidationError} from '../models-interface/bookValidationError';
+import {AuthorValidationError} from '../models-interface/authorValidationError';
 // @ts-ignore
 @Component({
   selector: 'app-add',
@@ -25,7 +26,11 @@ export class AddComponent implements OnInit {
   authors: FormArray;
   booksTags: FormArray;
 
+
+
   validationErrors: BookValidationError;
+  authorsValidationErrors: AuthorValidationError;
+  // validationErrors: Book;
   private isCreated = false;
   private bookExist = false;
 
@@ -114,15 +119,16 @@ export class AddComponent implements OnInit {
         },
       response => {
         console.log(response.error);
-        this.validationErrors = {
+        this.validationErrors = response.error;
+        /*{
           title: response.error[0]
-        };
-
+        };*/
         this.isCreated = false;
         if (response.status === 409) {
           this.isCreated = false;
           this.bookExist = true;
         }
+        console.log(response);
       }
     );
   }

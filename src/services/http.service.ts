@@ -3,6 +3,7 @@ import {HttpClient, HttpErrorResponse, HttpHeaders, HttpParams} from '@angular/c
 import {Book} from '../app/models-interface/book';
 import {Observable, throwError} from 'rxjs';
 import {Author} from '../app/models-interface/author';
+import {observeOn} from 'rxjs/operators';
 
 
 @Injectable({
@@ -49,11 +50,8 @@ export class HttpService {
       .set('forename', forename + '')
       .set('surname', surname + '');
     const httpHeaders = this.httpHeader;
-      // .set('Content-Type', 'application/json')
-      // .set('charset', 'utf-8');
-
-    // .set('Authorization', 'Basic QWxhZGRpb');
     // @ts-ignore
+
     return this.http.get<number>(this.URL_DB + 'findIdByName', {
       observe: 'response',
       header: httpHeaders,
@@ -70,7 +68,20 @@ export class HttpService {
       );
       return throwError('');
     }*/
+  getBook(id: number): Observable<Book> {
+    const param = new HttpParams()
+      .set('bookId', id + '');
+    const httpHeaders = this.httpHeader;
+    // @ts-ignore
+
+    return this.http.get<Book>(this.URL_DB + 'getBook', {
+      observe: 'body',
+      header: httpHeaders,
+      params: param
+    });
+    }
   }
+
 
 
 

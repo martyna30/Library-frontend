@@ -1,6 +1,10 @@
 <section class="datatable">
-  <button type="button" class="btn btn-primary" (click)="showAddBookForm()" >Add a book</button>
+  <button type="button" class="btn btn-primary" (click)="showAddBookForm()">Add a book</button>
+  <button type="button" class="btn btn-secondary" (click)="showEditBookForm()">Modify a book</button>
+
   <form [formGroup]="myFormModel" class="row g-3" method="post" [hidden]="isHidden">
+    <input type="hidden" name="id" value="">
+
     <div class="col-md-6">
       <label for="validationServer03" class="form-label">Book title</label>
       <input type="text" class="form-control " id="validationServer03" placeholder="Insert a Book title" aria-describedby="validationServer03Feedback" required formControlName="titleInput">
@@ -8,9 +12,7 @@
     </div>
     </div>
 
-
     <fieldset class="input">
-
       <label class="input label">Authors</label>
       <table class = "table">
         <thead>
@@ -37,9 +39,13 @@
              <input type="text" placeholder="Insert an Author Surname" required formControlName="authorSurnameInput">
 
               <div class="invalid-feedback d-block" *ngIf="validationErrors !== undefined && validationErrors['authors[' + i + '].surname'] !== undefined">
-                {{validationErrors['authors[' + i + '].surname'][0]}}
+                {{validationErrors['authors[0].surname'][0]}}
               </div>
             </td>
+            <td>
+              <i class="bi bi-x-circle"></i>
+            </td>
+
           </tr>
         </ng-container>
         </tbody>
@@ -63,6 +69,9 @@
             <th>{{i + 1}}</th>
             <td>
              <input type="text" placeholder="Insert a Literary Genre" required formControlName="booksTagInput">
+              <div class = "invalid-feedback d-block" *ngIf="validationErrors !== undefined && validationErrors.bookTags !== undefined">
+                {{validationErrors.bookTags}}
+              </div>
             </td>
           </tr>
         </ng-container>

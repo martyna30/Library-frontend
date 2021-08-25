@@ -5,6 +5,7 @@
   <table class="table">
     <thead>
     <tr input class="form-check-input me-1" type="checkbox" value="" aria-label="..."  class="table-primary">
+      <th scope="col"></th>
       <th scope="col">Lp</th>
       <th scope="col">Title</th>
       <th scope="col">Authors</th>
@@ -14,8 +15,13 @@
     </tr>
     </thead>
     <tbody>
+
     <tr *ngFor="let book of bookslist; let i = index">
-      <th scope="row">{{i+1}}</th>
+      <td>
+        <input #self class="form-check-input" type="checkbox"  [value]="book.id" id="BookId" (change)="changeCheckboxList(self)">
+
+      </td>
+      <td>{{i+1}}</td>
       <td>{{book.title}}</td>
       <td>
         <ul>
@@ -23,9 +29,9 @@
         </ul>
       </td>
       <td>
-      <ul>
-        <li *ngFor="let bookTag of book.bookTags">{{bookTag.literaryGenre}}</li>
-      </ul>
+        <ul>
+          <li *ngFor="let bookTag of book.bookTags">{{bookTag.literaryGenre}}</li>
+        </ul>
       </td>
       <td>{{book.yearOfPublication}}</td>
       <td>{{book.signature}}</td>

@@ -17,6 +17,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {AuthorService} from '../services/author.service';
 
 import {AdDirective} from './directive/ad.directive';
+import {CheckboxService} from '../services/checkbox.service';
 
 
 @NgModule({
@@ -31,7 +32,7 @@ import {AdDirective} from './directive/ad.directive';
   imports: [
     BrowserModule, HttpClientModule, FormsModule, ReactiveFormsModule
   ],
-  providers: [BookService, HttpService, AuthorService],
+  providers: [BookService, HttpService, AuthorService, CheckboxService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

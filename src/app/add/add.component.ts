@@ -4,15 +4,10 @@ import {BookService} from '../../services/book.service';
 import {AuthorService} from '../../services/author.service';
 import {Author} from '../models-interface/author';
 import {FormArray, FormBuilder, FormGroup} from '@angular/forms';
-import {BehaviorSubject} from 'rxjs';
 import {BookTag} from '../models-interface/bookTag';
-import {any} from 'codelyzer/util/function';
-import {toNumbers} from '@angular/compiler-cli/src/diagnostics/typescript_version';
-import {empty} from 'rxjs/internal/Observer';
-import {filter, map} from 'rxjs/operators';
-import {HttpErrorResponse} from '@angular/common/http';
 import {BookValidationError} from '../models-interface/bookValidationError';
 import {AuthorValidationError} from '../models-interface/authorValidationError';
+import {CheckboxService} from '../../services/checkbox.service';
 // @ts-ignore
 @Component({
   selector: 'app-add',
@@ -26,16 +21,17 @@ export class AddComponent implements OnInit {
   authors: FormArray;
   booksTags: FormArray;
 
-
-
   validationErrors: BookValidationError;
   authorsValidationErrors: AuthorValidationError;
   // validationErrors: Book;
   private isCreated = false;
   private bookExist = false;
 
+  private checkedList: Map<number, number>;
+  private idBook: number;
 
-  constructor(private fb: FormBuilder, private authorService: AuthorService, private bookService: BookService) {
+
+  constructor(private fb: FormBuilder, private authorService: AuthorService, private bookService: BookService, private checkboxservice: CheckboxService) {
   }
 
   ngOnInit(): void {
@@ -76,14 +72,66 @@ export class AddComponent implements OnInit {
     this.booksTags.push(this.createBooksTag());
   }
 
-
-  showAddBookForm() {
+  // tslint:disable-next-line:typedef
+  private showBookForm() {
     if (this.isHidden) {
       this.isHidden = !this.isHidden;
     } else {
       this.isHidden = true;
     }
   }
+
+
+  showAddBookForm(): void {
+  this.showBookForm();
+  }
+
+  showEditBookForm(): void {
+    this.showBookForm();
+    this.checkedList = this.checkboxservice.getMap();
+
+    if (this.checkboxservice.length() === 1) {
+      this.idBook = Number(this.checkedList.keys().next().value);
+
+      this.bookService.getBookById(this.idBook).subscribe((bookFromDb) => {
+        this.myFormModel.get('titleInput').setValue(bookFromDb.title);
+        this.myFormModel.get('yearOfPublicationInput').setValue(bookFromDb.yearOfPublication);
+        this.myFormModel.get('signatureInput').setValue(bookFromDb.signature);
+
+        bookFromDb.authors.forEach((author, index) => {
+          if (index >= this.authors.length) {
+            this.addNextAuthor();
+          }
+
+          this.authors.at(index).get('authorForenameInput').setValue(author.forename);
+          this.authors.at(index).get('authorSurnameInput').setValue(author.surname);
+        });
+        bookFromDb.bookTags.forEach((bookTag, index) => {
+          if (index) {
+            this.addNextBooksTag();
+          }
+          this.booksTags.at(index).get('booksTagInput').setValue(bookTag.literaryGenre);
+        });
+      });
+    }
+    if (this.checkboxservice.length() === 0) {
+        alert('Brak zaznaczonego');
+    }
+    if (this.checkboxservice.length() > 1) {
+        alert('jest zaznaczony więcj niż jeden, może byc jeden');
+    }
+  }
+
+
+
+    // jesli checkbos nie jest zaznaczony alert ze nie jest
+    // jesli sa dwa i wiecej, ale, że moze byc tylko jeden modyfikowany
+
+    // znajdz id zaznaczonego checkbosa
+    // wyslij zapytanie do api o ksiazke o tym id (i autorow i tagi)
+    // uzupelnij formularz znalezionymi danymi
+
+
 
   saveBook() {
     const book: Book = {
@@ -116,7 +164,7 @@ export class AddComponent implements OnInit {
         console.log(data);
         this.isCreated = true;
         this.bookExist = false;
-        },
+      },
       response => {
         console.log(response.error);
         this.validationErrors = response.error;
@@ -133,6 +181,11 @@ export class AddComponent implements OnInit {
     );
   }
 }
+
+
+
+
+
 
 
 // this.authorService.getIdByName(authorControl.get('authorForenameInput').value, authorControl.get('authorSurnameInput').value)

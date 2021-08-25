@@ -39,6 +39,10 @@ export class BookService {
     return this.httpService.getBooks();
   }
 
+  getBookById(id: number): Observable<Book> {
+    return this.httpService.getBook(id);
+  }
+
 
 
 

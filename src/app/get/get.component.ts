@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {BookService} from '../../services/book.service';
 import {Book} from '../models-interface/book';
 import {Author} from '../models-interface/author';
 import {BookTag} from '../models-interface/bookTag';
+import {CheckboxService} from '../../services/checkbox.service';
+import {BehaviorSubject} from 'rxjs';
 
 @Component({
   selector: 'app-get',
@@ -13,17 +15,37 @@ export class GetComponent implements OnInit {
 
   bookslist: Array<Book> = []; // przyjmuje książki i wyswietla je
 
-  constructor(private bookService: BookService) {
-    this.bookService.getBookListObservable().subscribe( (books: Array<Book>)  => {
+
+  // tslint:disable-next-line:ban-types
+
+
+   bookId: string;
+
+
+
+  constructor(private bookService: BookService, private checkboxService: CheckboxService) {
+    this.bookService.getBookListObservable().subscribe((books: Array<Book>) => {
       this.bookslist = books;
     });
+
+
   }
 
   ngOnInit(): void {
   }
-
   getColor(): string {
     // return this.bookslist.length >= 0 ? 'blue' : 'white';
     return 'blue';
   }
+
+  // tslint:disable-next-line:typedef
+  changeCheckboxList( checkboxOfBook: HTMLInputElement){    // checkboxOfBook: HTMLInputElement
+    // tslint:disable-next-line:align
+    if (checkboxOfBook.checked) {
+      this.checkboxService.add(Number(checkboxOfBook.value));
+    } else {
+     this.checkboxService.remove(Number(checkboxOfBook.value));
+    }
+  }
 }
+

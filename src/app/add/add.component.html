@@ -43,7 +43,7 @@
               </div>
             </td>
             <td>
-              <i class="bi bi-x-circle"></i>
+              <i #circle [id]="i" class="bi bi-x-circle" (click)="deleteAuthors(circle)"></i>
             </td>
 
           </tr>
@@ -72,6 +72,9 @@
               <div class = "invalid-feedback d-block" *ngIf="validationErrors !== undefined && validationErrors.bookTags !== undefined">
                 {{validationErrors.bookTags}}
               </div>
+            </td>
+            <td>
+              <i #circle [id]="i" class="bi bi-x-circle" (click)="deleteBooksTags(circle)"></i>
             </td>
           </tr>
         </ng-container>

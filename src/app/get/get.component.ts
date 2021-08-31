@@ -14,23 +14,20 @@ import {BehaviorSubject} from 'rxjs';
 export class GetComponent implements OnInit {
 
   bookslist: Array<Book> = []; // przyjmuje książki i wyswietla je
-
-
-  // tslint:disable-next-line:ban-types
-
-
-   bookId: string;
+  bookId: string;
 
 
 
   constructor(private bookService: BookService, private checkboxService: CheckboxService) {
-    this.bookService.getBookListObservable().subscribe((books: Array<Book>) => {
+    // tslint:disable-next-line:new-parens
+    this.bookService.getBooksFromService().subscribe(((book) => {
+     this.bookslist = book;
+    }));
+   /* this.bookService.getBookListObservable().subscribe((books) => {
       this.bookslist = books;
-    });
-
-
+    //});
+    */
   }
-
   ngOnInit(): void {
   }
   getColor(): string {

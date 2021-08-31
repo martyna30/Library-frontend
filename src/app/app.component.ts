@@ -8,7 +8,7 @@ import {BookService} from '../services/book.service';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  // title = 'listOfbooks';
+  title = 'library-frontend';
   errorMessage: string;
 
   constructor(private bookService: BookService) {}

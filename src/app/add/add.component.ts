@@ -15,6 +15,10 @@ import {CheckboxService} from '../../services/checkbox.service';
   styleUrls: ['./add.component.css']
 })
 export class AddComponent implements OnInit {
+
+
+  constructor(private fb: FormBuilder, private authorService: AuthorService, private bookService: BookService, private checkboxservice: CheckboxService) {
+  }
   isHidden = true;
 
   myFormModel: FormGroup;
@@ -31,8 +35,8 @@ export class AddComponent implements OnInit {
   private idBook: number;
 
 
-  constructor(private fb: FormBuilder, private authorService: AuthorService, private bookService: BookService, private checkboxservice: CheckboxService) {
-  }
+
+
 
   ngOnInit(): void {
     this.myFormModel = this.fb.group({
@@ -55,9 +59,7 @@ export class AddComponent implements OnInit {
   }
 
   addNextAuthor(): void {
-    console.log('addNextAuthor');
     this.authors = this.myFormModel.get('authors') as FormArray;
-    console.log(this.authors);
     this.authors.push(this.createAuthor());
   }
 
@@ -124,12 +126,6 @@ export class AddComponent implements OnInit {
 
 
 
-    // jesli checkbos nie jest zaznaczony alert ze nie jest
-    // jesli sa dwa i wiecej, ale, że moze byc tylko jeden modyfikowany
-
-    // znajdz id zaznaczonego checkbosa
-    // wyslij zapytanie do api o ksiazke o tym id (i autorow i tagi)
-    // uzupelnij formularz znalezionymi danymi
 
 
 
@@ -179,6 +175,15 @@ export class AddComponent implements OnInit {
         console.log(response);
       }
     );
+  }
+
+  // tslint:disable-next-line:typedef
+  deleteAuthors(circle: HTMLElement) {
+    this.authors.removeAt(Number(circle.id));
+  }
+  // tslint:disable-next-line:typedef
+  deleteBooksTags(circle: HTMLElement) {
+    this.booksTags.removeAt(Number(circle.id));
   }
 }
 

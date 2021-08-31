@@ -12,6 +12,7 @@ import {observeOn} from 'rxjs/operators';
 export class HttpService {
   private URL_DB = 'http://localhost:8080/v1/library/';
   private httpHeader = {headers: new HttpHeaders({'Content-Type': 'application/json'})};
+  private httpHeader2 = {headers2: new HttpHeaders({'Access-Control-Allow-Origin': '*'})};
 
   constructor(private http: HttpClient) {
     this.getBooks();
@@ -80,7 +81,17 @@ export class HttpService {
       params: param
     });
     }
+    // tslint:disable-next-line:typedef
+  deleteBook(id: number): Observable<object> {
+    const param = new HttpParams()
+      .set('bookId', id + '');
+    return this.http.delete(this.URL_DB + 'deleteBook', {
+      headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' } ,
+      observe: 'body',
+      params: param
+    });
   }
+}
 
 
 

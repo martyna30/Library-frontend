@@ -82,11 +82,20 @@ export class HttpService {
     });
     }
     // tslint:disable-next-line:typedef
-  deleteBook(id: number): Observable<object> {
+  deleteBook(id: number): Observable<Book> {
     const param = new HttpParams()
       .set('bookId', id + '');
-    return this.http.delete(this.URL_DB + 'deleteBook', {
+    return this.http.delete<Book>(this.URL_DB + 'deleteBook', {
       headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' } ,
+      observe: 'body',
+      params: param
+    });
+  }
+
+  updateBook(id: number): Observable<Book> {
+    const param = new HttpParams()
+      .set('bookId', id + '');
+    return this.http.put<Book>(this.URL_DB + 'updateBook', {
       observe: 'body',
       params: param
     });

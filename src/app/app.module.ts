@@ -32,7 +32,7 @@ import {CheckboxService} from '../services/checkbox.service';
   imports: [
     BrowserModule, HttpClientModule, FormsModule, ReactiveFormsModule
   ],
-  providers: [BookService, HttpService, AuthorService, CheckboxService],
+  providers: [BookService, HttpService, AuthorService], // jak jest injectable root to nie musi byc tu
   bootstrap: [AppComponent]
 })
 export class AppModule { }

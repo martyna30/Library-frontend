@@ -12,8 +12,10 @@ import {BehaviorSubject} from 'rxjs';
   styleUrls: ['./get.component.css']
 })
 export class GetComponent implements OnInit {
+  ngOnInit(): void {
+  }
 
-  bookslist: Array<Book> = []; // przyjmuje książki i wyswietla je
+  /*bookslist: Array<Book> = []; // przyjmuje książki i wyswietla je
   bookId: string;
 
 
@@ -27,9 +29,8 @@ export class GetComponent implements OnInit {
       this.bookslist = books;
     //});
     */
-  }
-  ngOnInit(): void {
-  }
+  /*}
+
   getColor(): string {
     // return this.bookslist.length >= 0 ? 'blue' : 'white';
     return 'blue';
@@ -43,6 +44,6 @@ export class GetComponent implements OnInit {
     } else {
      this.checkboxService.remove(Number(checkboxOfBook.value));
     }
-  }
+  }*/
 }
 

@@ -26,16 +26,12 @@ export class AddComponent implements OnInit {
   booksTags: FormArray;
 
   validationErrors: BookValidationError;
-  authorsValidationErrors: AuthorValidationError;
-  // validationErrors: Book;
   private isCreated = false;
   private bookExist = false;
+  private mode: string;
 
   private checkedList: Map<number, number>;
   private idBook: number;
-
-
-
 
 
   ngOnInit(): void {
@@ -85,10 +81,24 @@ export class AddComponent implements OnInit {
 
 
   showAddBookForm(): void {
-  this.showBookForm();
+    this.mode = 'add';
+    this.showBookForm();
+  }
+
+  // tslint:disable-next-line:typedef
+  updateBook() {
+    this.bookService.updateBook(this.idBook).subscribe((modifiedBook) => {
+      console.log(modifiedBook);
+      this.isCreated = true;
+    }, response => {
+      console.log(response.error);
+      this.validationErrors = response.error;
+      this.isCreated = false;
+    });
   }
 
   showEditBookForm(): void {
+    this.mode = 'edit';
     this.showBookForm();
     this.checkedList = this.checkboxservice.getMap();
 
@@ -104,7 +114,6 @@ export class AddComponent implements OnInit {
           if (index >= this.authors.length) {
             this.addNextAuthor();
           }
-
           this.authors.at(index).get('authorForenameInput').setValue(author.forename);
           this.authors.at(index).get('authorSurnameInput').setValue(author.surname);
         });
@@ -115,66 +124,64 @@ export class AddComponent implements OnInit {
           this.booksTags.at(index).get('booksTagInput').setValue(bookTag.literaryGenre);
         });
       });
-    }
-    if (this.checkboxservice.length() === 0) {
+
+      if (this.checkboxservice.length() === 0) {
         alert('Brak zaznaczonego');
-    }
-    if (this.checkboxservice.length() > 1) {
+      }
+      if (this.checkboxservice.length() > 1) {
         alert('jest zaznaczony więcj niż jeden, może byc jeden');
+      }
     }
   }
 
 
-
-
-
-
   saveBook() {
-    const book: Book = {
-      id: null,
-      title: this.myFormModel.get('titleInput').value,
-      authors: [],
-      bookTags: [],
-      yearOfPublication: this.myFormModel.get('yearOfPublicationInput').value,
-      signature: this.myFormModel.get('signatureInput').value
-    };
-    this.authors.controls.forEach(authorControl => {
-      const author: Author = {
+    if (this.mode === 'edit') {
+      this.updateBook();
+    } else {
+      const book: Book = {
         id: null,
-        forename: authorControl.get('authorForenameInput').value,
-        surname: authorControl.get('authorSurnameInput').value,
+        title: this.myFormModel.get('titleInput').value,
+        authors: [],
+        bookTags: [],
+        yearOfPublication: this.myFormModel.get('yearOfPublicationInput').value,
+        signature: this.myFormModel.get('signatureInput').value
       };
-      book.authors.push(author);
-    });
-    this.booksTags.controls.forEach(booksTagControl => {
-      const bookTag: BookTag = {
-        id: null,
-        literaryGenre: booksTagControl.get('booksTagInput').value
-      };
-      book.bookTags.push(bookTag);
-    });
+      this.authors.controls.forEach(authorControl => {
+        const author: Author = {
+          id: null,
+          forename: authorControl.get('authorForenameInput').value,
+          surname: authorControl.get('authorSurnameInput').value,
+        };
+        book.authors.push(author);
+      });
+      this.booksTags.controls.forEach(booksTagControl => {
+        const bookTag: BookTag = {
+          id: null,
+          literaryGenre: booksTagControl.get('booksTagInput').value
+        };
+        book.bookTags.push(bookTag);
+      });
 
-    this.bookService.addBook(book);
-    this.bookService.saveBookToDB(book).subscribe(
-      data => {
-        console.log(data);
-        this.isCreated = true;
-        this.bookExist = false;
-      },
-      response => {
-        console.log(response.error);
-        this.validationErrors = response.error;
-        /*{
-          title: response.error[0]
-        };*/
-        this.isCreated = false;
-        if (response.status === 409) {
+      this.bookService.addBook(book);
+      this.bookService.saveBookToDB(book).subscribe(
+        createdBook => {
+          console.log(createdBook);
+          this.isCreated = true;
+          this.bookExist = false;
+        },
+        response => {
+          console.log(response.error);
+          this.validationErrors = response.error;
           this.isCreated = false;
-          this.bookExist = true;
+          if (response.status === 409) {
+            this.isCreated = false;
+            this.bookExist = true;
+          }
+          console.log(response);
         }
-        console.log(response);
-      }
-    );
+      );
+    }
   }
 
   // tslint:disable-next-line:typedef
@@ -185,6 +192,8 @@ export class AddComponent implements OnInit {
   deleteBooksTags(circle: HTMLElement) {
     this.booksTags.removeAt(Number(circle.id));
   }
+
+
 }
 
 
@@ -193,14 +202,7 @@ export class AddComponent implements OnInit {
 
 
 
-// this.authorService.getIdByName(authorControl.get('authorForenameInput').value, authorControl.get('authorSurnameInput').value)
-// .subscribe((idAuthor: number) => {
-// this.idFound = idAuthor;
 
-
-  /*data => this.errorResponse = data['message'],
-  (error: HttpErrorResponse) =>
-    this.errorResponse = ''*/
 
 
 

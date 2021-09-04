@@ -47,24 +47,17 @@ export class BookService {
   }
 
   // @ts-ignore
-  deleteBook(id: number): void  {
+  deleteBook(id: number): Observable<Book> {
     this.httpService.deleteBook(id).subscribe(() => {
       this.getBookListObservable().subscribe((newList) => {
         this.bookListObs.next(newList);
       });
     });
-
-    // const list = this.bookListObs.getValue();
-    // tslint:disable-next-line:no-shadowed-variable
-    // const listAfterDelete = list.filter(listBook => listBook.id !== id);
-   // this.bookListObs.next(listAfterDelete);
   }
-  // tslint:disable-next-line:typedef
-  removeBookFromList(id: number) {
-    const list = this.bookListObs.getValue().filter(book => book.id !== id);
-    // const list = this.bookListObs.getValue().map(b => b.id).filter(bookId => bookId !== id);
-    // @ts-ignore
-    this.bookListObs.next(list);
+
+    updateBook(id: number): Observable<Book> {
+      return this.httpService.updateBook(id);
+    }
   }
 
 
@@ -73,4 +66,7 @@ export class BookService {
 
 
 
-}
+
+
+
+

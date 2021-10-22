@@ -1,0 +1,26 @@
+<section class="datatable">
+  <button type="button" class="btn btn-primary" (click)="showAddAuthorForm()">Add a author</button>
+  <button type="button" class="btn btn-secondary" (click)="showEditAuthorForm()">Modify a author</button>
+  <form [formGroup]="myFormModel" class="row g-3" method="post" [hidden]="isHidden">
+    <fieldset class="col-10">
+      <label for="validationAuthorForename" class="form-label">Author's Forename</label>
+      <input type="text" class="form-control " id="validationAuthorForename" placeholder="Insert an Author Forename" aria-describedby="validationServer03Feedback" required formControlName="authorForenameInput">
+      </fieldset>
+      <div id="validationServer04Feedback" class="invalid-feedback d-block" *ngIf="validationErrors?.forename">
+        <span class="text text-danger"> {{validationErrors.forename[0]}} </span>
+      </div>
+
+    <fieldset class="col-10">
+      <label for="validationAuthorSurname" class="form-label">Author's Surname</label>
+      <input type="text" class="form-control " id="validationAuthorSurname" placeholder="Insert an Author Surname" aria-describedby="validationServer03Feedback" required formControlName="authorSurnameInput">
+    </fieldset>
+    <div id="validationServer03Feedback" class="invalid-feedback d-block" *ngIf="validationErrors?.surname">
+      <span class="text text-danger"> {{validationErrors.surname[0]}} </span>
+    </div>
+
+    <div class = "col-12">
+      <button class="btn btn-primary" type="submit" (click)="saveAuthor()">Submit</button>
+    </div>
+
+  </form>
+</section>

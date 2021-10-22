@@ -4,75 +4,25 @@
 </head>
 <body>
 <div id = "container">
-  <div id = "logo"><h1>Library</h1></div>
+
+  <nav>
   <div id="menu>">
+    <a class ="logo" routerLink="/"><h4>Library</h4></a>
     <div id="lists"><b>Lists</b></div>
-    <div class="lists">List of Books</div>
-    <div class="lists">List of Authors</div>
-    <div class="lists">List of Book tags</div>
-
+    <li><a routerLink="/books" routerLinkActive="active">List of Books</a></li>
+    <li><a routerLink="/authors" routerLinkActive="active">List of Authors</a></li>
+    <li><a routerLink="/tags" routerLinkActive="active">List of Book tags</a></li>
   </div>
-  <div id="sidebar">
-    <div id="tags"><b>Category</b></div>
-    <div class = "tags">Fiction</div>
-    <div class="tags">Thriller</div>
-    <div class="tags">Science Fiction</div>
-    <div class="tags">Fantasy</div>
-    <div class="tags">Horror</div>
-  </div>
-  <div id="content">
-  <main class="crud container">
-    <ng-container *ngIf="bookslist.length > 0; else noBooks"> pocz
-      <p [ngStyle]="{color: getColor()}"></p>
+  </nav>
+  <router-outlet></router-outlet>
 
-      <table class="table">
-        <thead>
-        <tr input class="form-check-input me-1" type="checkbox" value="" aria-label="..."  class="table-primary">
-          <th scope="col"></th>
-          <th scope="col">Lp</th>
-          <th scope="col">Title</th>
-          <th scope="col">Authors</th>
-          <th scope="col">Literary genre</th>
-          <th scope="col">Year of publication</th>
-          <th scope="col">Signature</th>
-        </tr>
-        </thead>
-        <tbody>
 
-        <tr *ngFor="let book of bookslist; let i = index">
-          <td>
-            <input #self class="form-check-input" type="checkbox"  [value]="book.id" id="BookId" (change)="changeCheckboxList(self)">
 
-          </td>
-          <td>{{i+1}}</td>
 
-          <td>{{book.title}}</td>
-          <td>
-            <ul>
-              <li *ngFor="let author of book.authors">{{author.forename}} {{author.surname}}</li>
-            </ul>
-          </td>
-          <td>
-            <ul>
-              <li *ngFor="let bookTag of book.bookTags">{{bookTag.literaryGenre}}</li>
-            </ul>
-          </td>
-          <td>{{book.yearOfPublication}}</td>
-          <td>{{book.signature}}</td>
-        </tr>
-
-        </tbody>
-      </table>
-    </ng-container>
-
-    <ng-template #noBooks>
-      <p>No books</p>
-    </ng-template>
-
-    <app-add></app-add>
     <app-update></app-update>
-    <app-delete></app-delete>
-  </main>
+
+
+
   </div>
-</div>
+
 </body>

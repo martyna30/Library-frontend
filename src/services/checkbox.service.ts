@@ -7,23 +7,41 @@ import {Book} from '../app/models-interface/book';
 })
 export class CheckboxService {
 
-  private map = new Map<number, number>();
+  private booksMap = new Map<number, number>();
+  private authorsMap = new Map<number, number>();
 
-  getMap(): Map<number, number> {
-    return this.map;
+  getBooksMap(): Map<number, number> {
+    return this.booksMap;
   }
 
-  add(id: number): void {
-    this.map.set(id, 1);
+  addToBooksMap(id: number): void {
+    this.booksMap.set(id, 1);
   }
 
-  remove(id: number): void {
-    this.map.delete(id);
+  removeFromBooksMap(id: number): void {
+    this.booksMap.delete(id);
   }
 
-  length(): number {
-    return this.map.size;
+  lengthBooksMap(): number {
+    return this.booksMap.size;
   }
+
+  getAuthorsMap(): Map<number, number> {
+    return this.booksMap;
+  }
+
+  addToAuthorsMap(id: number): void {
+    this.booksMap.set(id, 1);
+  }
+
+  removeFromAuthorsMap(id: number): void {
+    this.booksMap.delete(id);
+  }
+
+  lengthAuthorsMap(): number {
+    return this.booksMap.size;
+  }
+
 
 }
 

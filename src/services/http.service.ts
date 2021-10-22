@@ -16,6 +16,7 @@ export class HttpService {
 
   constructor(private http: HttpClient) {
     this.getBooks();
+    this.getAuthors();
   }
 
   getBooks(): Observable<Array<Book>> {
@@ -30,20 +31,10 @@ export class HttpService {
   // tslint:disable-next-line:typedef
   saveBook(book: Book): Observable<Book> {
     return this.http.post<Book>(this.URL_DB + 'createBook', book);
-      // .subscribe(requestBody => {
-       //  console.log(requestBody);
-      // }, err => (
-       // console.log(err)
-       // ));
   }
 
-
-  // tslint:disable-next-line:typedef
-  saveAuthor(authors: Array<Author>) {
-    this.http.post(this.URL_DB + 'createAuthor', authors)
-      .subscribe(authors1 => {
-        console.log(authors1);
-    });
+  saveAuthor(author: Author): Observable<Author> {
+    return this.http.post<Author>(this.URL_DB + 'createAuthor', author);
   }
 
   getIdByName(forename: string, surname: string): Observable<number> {
@@ -60,15 +51,20 @@ export class HttpService {
     }); // catchError(this.handleError);
   }
 
-    // tslint:disable-next-line:typedef
-    /*private handleError(error: HttpErrorResponse) {
-      console.error(
-        'Name: $ {error.name} \n' +
-        'Message: ${ error.message} \n' +
-        'Returned code: ${error.status}\n'
-      );
-      return throwError('');
-    }*/
+  deleteBook(id: number): Observable<Book> {
+    const param = new HttpParams()
+      .set('bookId', id + '');
+    return this.http.delete<Book>(this.URL_DB + 'deleteBook', {
+      headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
+      observe: 'body',
+      params: param
+    });
+  }
+
+  updateBook(book: Book): Observable<Book> {
+    return this.http.put<Book>(this.URL_DB + 'updateBook', book);
+  }
+
   getBook(id: number): Observable<Book> {
     const param = new HttpParams()
       .set('bookId', id + '');
@@ -80,25 +76,22 @@ export class HttpService {
       header: httpHeaders,
       params: param
     });
-    }
-    // tslint:disable-next-line:typedef
-  deleteBook(id: number): Observable<Book> {
+  }
+
+  getAuthor(id: number): Observable<Author> {
     const param = new HttpParams()
-      .set('bookId', id + '');
-    return this.http.delete<Book>(this.URL_DB + 'deleteBook', {
-      headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' } ,
+      .set('authorId', id + '');
+    const httpHeaders = this.httpHeader;
+    // @ts-ignore
+    return this.http.get<Author>(this.URL_DB + 'getAuthor', {
       observe: 'body',
+      header: httpHeaders,
       params: param
     });
   }
 
-  updateBook(id: number): Observable<Book> {
-    const param = new HttpParams()
-      .set('bookId', id + '');
-    return this.http.put<Book>(this.URL_DB + 'updateBook', {
-      observe: 'body',
-      params: param
-    });
+  updateAuthor(author: Author): Observable<Author> {
+    return this.http.put<Author>(this.URL_DB + 'updateAuthor', author);
   }
 }
 

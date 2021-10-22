@@ -36,14 +36,14 @@ export class DeleteComponent implements OnInit {
   deleteBook() {
     // @ts-ignore
     if (this.checkboxService.length() === 1) {
-      this.checkedList = this.checkboxService.getMap();
+      this.checkedList = this.checkboxService.getBooksMap();
       const bookId = Number(this.checkedList.keys().next().value);
 
       if (confirm('Are you sure to delete book ')) {
         this.bookService.deleteBook(bookId);
       }
     }
-    if (this.checkboxService.length() > 1) {
+    if (this.checkboxService.lengthBooksMap() > 1) {
       alert('jest zaznaczony więcj niż jeden, może byc jeden');
     }
     // @ts-ignore

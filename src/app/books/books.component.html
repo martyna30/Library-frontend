@@ -1,0 +1,52 @@
+<div id="content">
+  <main class="crud container">
+    <ng-container *ngIf="bookslist !== null; else noBooks"> booksComponent
+      <p [ngStyle]="{color: getColor()}"></p>
+
+      <table class="table">
+        <thead>
+        <tr input class="form-check-input me-1" type="checkbox" value="" aria-label="..."  class="table-primary">
+          <th scope="col"></th>
+          <th scope="col">Lp</th>
+          <th scope="col">Title</th>
+          <th scope="col">Authors</th>
+          <th scope="col">Literary genre</th>
+          <th scope="col">Year of publication</th>
+          <th scope="col">Signature</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        <tr *ngFor="let book of bookslist | async; let i = index">
+          <td>
+            <input #self class="form-check-input" type="checkbox"  [value]="book.id" id="BookId" (change)="changeCheckboxList(self)">
+
+          </td>
+          <td>{{i+1}}</td>
+
+          <td>{{book.title}}</td>
+          <td>
+            <ul>
+              <li *ngFor="let author of book.authors">{{author.forename}} {{author.surname}}</li>
+
+            </ul>
+          </td>
+          <td>
+            <ul>
+              <li *ngFor="let bookTag of book.bookTags">{{bookTag.literaryGenre}}</li>
+            </ul>
+          </td>
+          <td>{{book.yearOfPublication}}</td>
+          <td>{{book.signature}}</td>
+        </tr>
+        </tbody>
+      </table>
+    </ng-container>
+    <ng-template #noBooks>
+      <p>No books</p>
+    </ng-template>
+
+    <app-add-book [bookslist]="bookslist"> </app-add-book>
+
+  </main>
+</div>

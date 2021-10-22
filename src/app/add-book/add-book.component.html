@@ -4,13 +4,19 @@
 
   <form [formGroup]="myFormModel" class="row g-3" method="post" [hidden]="isHidden">
     <input type="hidden" name="id" value="">
+    <mat-form-field>
+      <mat-label for="validationServer" class="form-label">Book title</mat-label>
+      <input matInput type="text" [matAutocomplete]="auto" class="form-control " id="validationServer" placeholder="Insert a Book title" aria-describedby="validationServer03Feedback" required formControlName="titleInput">
 
-    <div class="col-md-6">
-      <label for="validationServer03" class="form-label">Book title</label>
-      <input type="text" class="form-control " id="validationServer03" placeholder="Insert a Book title" aria-describedby="validationServer03Feedback" required formControlName="titleInput">
-      <div id="validationServer03Feedback" class="invalid-feedback d-block" *ngIf="validationErrors?.title"> {{validationErrors.title[0]}}
+        <mat-autocomplete #auto="matAutocomplete">
+        <mat-option *ngFor="let bookTitle of this.filteredTitles" [value]="bookTitle">{{bookTitle}}</mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+
+    <div id="validationServer03Feedback" class="invalid-feedback d-block" *ngIf="validationErrors?.title"> {{validationErrors.title[0]}}
     </div>
-    </div>
+
+
 
     <fieldset class="input">
       <label class="input label">Authors</label>
@@ -28,7 +34,20 @@
           <tr *ngFor="let author of myFormModel.get('authors')['controls']; let i = index;" formGroupName="{{ i }}">
             <th>{{ i + 1 }}</th>
             <td>
-              <input type="text" placeholder="Insert an Author Forename" required formControlName="authorForenameInput">
+
+              <mat-form-field>
+
+              <input matInput type="text" [matAutocomplete]="auto" placeholder="Insert an Author Forename" required formControlName="authorForenameInput">
+
+                <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+                <ng-template appAutocompleteContent>
+                  <mat-option *ngFor="let authorForename of filteredAuthorsForenameList | async"  [value]="authorForename">
+                  {{authorForename}}
+                </mat-option>
+                </ng-template>
+              </mat-autocomplete>
+              </mat-form-field>
+
 
               <div class="invalid-feedback d-block" *ngIf="validationErrors !== undefined && validationErrors['authors[' + i + '].forename'] !== undefined">
                 {{validationErrors['authors[' + i + '].forename'][0]}}
@@ -99,10 +118,10 @@
       <span class="text text-danger">{{validationErrors.signature[0]}}</span>
     </div>
 
-    <div class = "col-12" [hidden]="isHidden">
+    <div class = "col-12">
       <button class="btn btn-primary" type="submit" (click)="saveBook()">Submit</button>
-
     </div>
+
 
   </form>
 

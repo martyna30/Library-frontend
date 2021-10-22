@@ -20,12 +20,12 @@ export class BookService {
     });
 
   }
-  getBooksFromService(): Observable<Array<Book>>   {
+  getBooksFromBookService(): Observable<Array<Book>>   {
     return this.bookListObs.asObservable();
   }
 
   // tslint:disable-next-line:typedef
-  addBook(book: Book) {
+  addBookToList(book: Book) {
     const list = this.bookListObs.getValue();
     list.push(book);
     this.bookListObs.next(list); // emituje liste z nową książką
@@ -55,10 +55,21 @@ export class BookService {
     });
   }
 
-    updateBook(id: number): Observable<Book> {
-      return this.httpService.updateBook(id);
+  // @ts-ignore
+  updateBook(book: Book): Observable<Book> {
+      this.httpService.updateBook(book).subscribe(() => {
+        this.getBookListObservable().subscribe((newList) => {
+          this.bookListObs.next(newList);
+        });
+      });
     }
+    // tslint:disable-next-line:typedef
+  deleteBookFromList(bookToModified: Book) {
+    const list = this.bookListObs.getValue();
+    list.filter(b => b !== bookToModified);
+    this.bookListObs.next(list);
   }
+}
 
 
 

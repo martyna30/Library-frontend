@@ -1,1 +1,26 @@
 /* You can add global styles to this file, and also import other style files */
+.active {
+  color: red;
+}
+
+.cdk-overlay-container{
+  position:fixed;
+  z-index:1000;
+}
+.cdk-global-overlay-wrapper{
+  display:flex;
+  position:absolute;
+  z-index:1000;
+}
+.cdk-overlay-pane {
+  position:absolute;
+  pointer-events:auto;
+  box-sizing:border-box;
+  z-index:1000
+}
+
+.mat-autocomplete-panel {
+  width: 400px;
+  background-color: #fff;
+  border: 1px solid black;
+}

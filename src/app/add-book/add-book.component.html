@@ -13,6 +13,8 @@
       </mat-autocomplete>
     </mat-form-field>
 
+    <div *ngFor="let bookTitle of this.filteredTitles">{{bookTitle}}</div>
+
     <div id="validationServer03Feedback" class="invalid-feedback d-block" *ngIf="validationErrors?.title"> {{validationErrors.title[0]}}
     </div>
 

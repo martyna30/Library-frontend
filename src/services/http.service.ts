@@ -14,6 +14,7 @@ export class HttpService {
   private httpHeader = {headers: new HttpHeaders({'Content-Type': 'application/json'})};
   private httpHeader2 = {headers2: new HttpHeaders({'Access-Control-Allow-Origin': '*'})};
 
+
   constructor(private http: HttpClient) {
     this.getBooks();
     this.getAuthors();
@@ -48,7 +49,7 @@ export class HttpService {
       observe: 'response',
       header: httpHeaders,
       params: param
-    }); // catchError(this.handleError);
+    });
   }
 
   deleteBook(id: number): Observable<Book> {
@@ -93,7 +94,20 @@ export class HttpService {
   updateAuthor(author: Author): Observable<Author> {
     return this.http.put<Author>(this.URL_DB + 'updateAuthor', author);
   }
+
+  getBooksWithSpecifiedTitle(title: string): Observable<Array<Book>> {
+    // @ts-ignore
+    const param = new HttpParams()
+      .set('title', title + '');
+    return this.http.get<Array<Book>>(this.URL_DB + 'getBooksWithSpecifiedTitle', {
+      headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
+      observe: 'body',
+      params: param
+    });
+  }
 }
+
+
 
 
 

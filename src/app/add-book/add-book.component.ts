@@ -25,8 +25,8 @@ export class AddBookComponent implements OnInit {
 
   filteredTitles: string[] = [];
 
-  @Input()
-  bookslist: Array<Book>;
+
+  // private bookslist: Array<Book>;
 
 
   authorslist: Array<Author>;
@@ -56,12 +56,12 @@ export class AddBookComponent implements OnInit {
       yearOfPublicationInput: '',
       signatureInput: ''
     });
-    console.log('aaa');
+
     this.addNextAuthor();
     this.addNextBooksTag();
-    this.bookService.getBooksFromBookService().subscribe(books => {
+    /*this.bookService.getBooksFromBookService().subscribe(books => {
      this.bookslist = books;
-     });
+     });*/
     /*this.authorService.getAuthorsFromAuthorsService().subscribe(authors => {
       this.authorslist = authors;
     });
@@ -85,16 +85,22 @@ export class AddBookComponent implements OnInit {
   }
   // @ts-ignore
   // tslint:disable-next-line:typedef
-  private filterBookTitles(enteredTitle) {
-    // tslint:disable-next-line:only-arrow-functions
-    // @TODO coś nie tak jest z tym this.bookslist - to nigdzie nie jest tworzone, więc po czym ten map jest?
-
-    this.filteredTitles = this.bookslist.map(books => books.title)
+  // private filterBookTitles(enteredTitle) {
+    /*this.filteredTitles = this.bookslist.map(books => books.title)
       .filter(title => {
         return title.toLowerCase().indexOf(enteredTitle.toLowerCase()) > -1;
-      });
+      });*/
 
-    console.log(this.filteredTitles);
+  // tslint:disable-next-line:typedef
+  private filterBookTitles(title) {
+
+    setTimeout(() => {
+      this.bookService.getBooksWithSpecifiedTitle(title).subscribe(book => {
+        // tslint:disable-next-line:no-shadowed-variable
+        this.filteredTitles = book.map(book => book.title);
+        console.log(book);
+      });
+      }, 4000);
   }
   // tslint:disable-next-line:typedef
   displayFn(subject) {

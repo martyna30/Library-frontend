@@ -13,14 +13,14 @@ export class BookService {
   private bookListObs = new BehaviorSubject<Array<Book>>([]);
 
 
-
   constructor(private httpService: HttpService) {
     this.httpService.getBooks().subscribe(books => {
       this.bookListObs.next(books);
     });
 
   }
-  getBooksFromBookService(): Observable<Array<Book>>   {
+
+  getBooksFromBookService(): Observable<Array<Book>> {
     return this.bookListObs.asObservable();
   }
 
@@ -37,6 +37,7 @@ export class BookService {
   saveBookToDB(book: Book): Observable<Book> {
     return this.httpService.saveBook(book);
   }
+
   // tslint:disable-next-line:typedef
   getBookListObservable(): Observable<Array<Book>> {
     return this.httpService.getBooks();
@@ -57,17 +58,23 @@ export class BookService {
 
   // @ts-ignore
   updateBook(book: Book): Observable<Book> {
-      this.httpService.updateBook(book).subscribe(() => {
-        this.getBookListObservable().subscribe((newList) => {
-          this.bookListObs.next(newList);
-        });
+    this.httpService.updateBook(book).subscribe(() => {
+      this.getBookListObservable().subscribe((newList) => {
+        this.bookListObs.next(newList);
       });
-    }
-    // tslint:disable-next-line:typedef
+    });
+  }
+
+  // tslint:disable-next-line:typedef
   deleteBookFromList(bookToModified: Book) {
     const list = this.bookListObs.getValue();
     list.filter(b => b !== bookToModified);
     this.bookListObs.next(list);
+  }
+
+  // @ts-ignore
+  getBooksWithSpecifiedTitle(title: string): Observable<Array<Book>> {
+    return this.httpService.getBooksWithSpecifiedTitle(title);
   }
 }
 

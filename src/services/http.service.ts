@@ -4,6 +4,7 @@ import {Book} from '../app/models-interface/book';
 import {Observable, throwError} from 'rxjs';
 import {Author} from '../app/models-interface/author';
 import {observeOn} from 'rxjs/operators';
+import {AuthorService} from './author.service';
 
 
 @Injectable({
@@ -105,7 +106,33 @@ export class HttpService {
       params: param
     });
   }
+
+  getAuthorsForenameWithSpecifiedCharacters(forename: string): Observable<Array<Author>> {
+    const param = new HttpParams()
+      .set('forename', forename + '');
+    const header1 = this.httpHeader;
+    return this.http.get<Array<Author>>(this.URL_DB + 'getAuthorsForenameWithSpecifiedCharacters', {
+      headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
+      observe: 'body',
+      params: param
+    });
+  }
+
+  getAuthorsSurnameWithSpecifiedCharacters(surname: string): Observable<Array<Author>> {
+    const param = new HttpParams()
+      .set('surname', surname + '');
+    const header1 = this.httpHeader;
+    return this.http.get<Array<Author>>(this.URL_DB + 'getAuthorsSurnameWithSpecifiedCharacters', {
+      headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
+      observe: 'body',
+      params: param
+    });
+  }
+
 }
+
+
+
 
 
 

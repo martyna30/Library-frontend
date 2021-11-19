@@ -3,20 +3,18 @@
   <button type="button" class="btn btn-secondary" (click)="showEditBookForm()">Modify a book</button>
 
   <form [formGroup]="myFormModel" class="row g-3" method="post" [hidden]="isHidden">
-    <input type="hidden" name="id" value="">
-    <mat-form-field>
-      <mat-label for="validationServer" class="form-label">Book title</mat-label>
-      <input matInput type="text" [matAutocomplete]="auto" class="form-control " id="validationServer" placeholder="Insert a Book title" aria-describedby="validationServer03Feedback" required formControlName="titleInput">
-
-        <mat-autocomplete #auto="matAutocomplete">
+<fieldset>
+  <label id="title">Title</label>
+    <mat-form-field appearance="fill">
+      <input matInput type="text" [matAutocomplete]="auto" (ngModelChange)="toggleTitlePlaceholder()"  placeholder="Insert a Title" required formControlName="titleInput"/>
+      <mat-autocomplete #auto="matAutocomplete">
         <mat-option *ngFor="let bookTitle of this.filteredTitles" [value]="bookTitle">{{bookTitle}}</mat-option>
       </mat-autocomplete>
     </mat-form-field>
 
-    <div *ngFor="let bookTitle of this.filteredTitles">{{bookTitle}}</div>
-
     <div id="validationServer03Feedback" class="invalid-feedback d-block" *ngIf="validationErrors?.title"> {{validationErrors.title[0]}}
     </div>
+</fieldset>
 
 
 
@@ -37,18 +35,18 @@
             <th>{{ i + 1 }}</th>
             <td>
 
-              <mat-form-field>
+              <mat-form-field appearance="fill">
 
-              <input matInput type="text" [matAutocomplete]="auto" placeholder="Insert an Author Forename" required formControlName="authorForenameInput">
+                <input matInput type="text" [matAutocomplete]="auto"  (ngModelChange)="toggleAuthorForenamePlaceholder()" placeholder="Insert an Author Forename" required formControlName="authorForenameInput">
 
-                <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
-                <ng-template appAutocompleteContent>
-                  <mat-option *ngFor="let authorForename of filteredAuthorsForenameList | async"  [value]="authorForename">
+                <mat-autocomplete #auto="matAutocomplete">
+
+                  <mat-option *ngFor="let authorForename of filteredAuthorsForenameList[i]"  [value]="authorForename">
                   {{authorForename}}
-                </mat-option>
-                </ng-template>
-              </mat-autocomplete>
+                  </mat-option>
+                </mat-autocomplete>
               </mat-form-field>
+
 
 
               <div class="invalid-feedback d-block" *ngIf="validationErrors !== undefined && validationErrors['authors[' + i + '].forename'] !== undefined">
@@ -57,7 +55,12 @@
             </td>
 
             <td>
-             <input type="text" placeholder="Insert an Author Surname" required formControlName="authorSurnameInput">
+              <mat-form-field appearance="fill">
+                  <input matInput type="text" [matAutocomplete]="auto2" (ngModelChange)="toggleAuthorSurnamePlaceholder()" placeholder="Insert an Author Surname" required formControlName="authorSurnameInput">
+                    <mat-autocomplete #auto2="matAutocomplete" >
+                      <mat-option *ngFor="let authorSurname of filteredAuthorsSurnameList" [value]="authorSurname">{{authorSurname}}</mat-option>
+                    </mat-autocomplete>
+                </mat-form-field>
 
               <div class="invalid-feedback d-block" *ngIf="validationErrors !== undefined && validationErrors['authors[' + i + '].surname'] !== undefined">
                 {{validationErrors['authors[0].surname'][0]}}

@@ -10,7 +10,9 @@ import {AuthorValidationError} from '../models-interface/authorValidationError';
 import {CheckboxService} from '../../services/checkbox.service';
 import {FormControl} from '@angular/forms';
 import {debounceTime, map, startWith} from 'rxjs/operators';
-import {Observable} from 'rxjs';
+import {Observable, pipe} from 'rxjs';
+import {placeholdersToParams} from '@angular/compiler/src/render3/view/i18n/util';
+import {ifTrue} from 'codelyzer/util/function';
 
 
 // @ts-ignore
@@ -20,18 +22,16 @@ import {Observable} from 'rxjs';
   styleUrls: ['./add-book.component.css']
 })
 export class AddBookComponent implements OnInit {
+
   constructor(private fb: FormBuilder, private authorService: AuthorService, private bookService: BookService, private checkboxservice: CheckboxService) {}
   isHidden = true;
+  showTitlePlaceholder: boolean;
+  showAuthorForenamePlaceholder = [];
+  showAuthorSurnamePlaceholder = [];
 
   filteredTitles: string[] = [];
-
-
-  // private bookslist: Array<Book>;
-
-
-  authorslist: Array<Author>;
-
-  filteredAuthorsForenameList: Observable<string[]>;
+  filteredAuthorsForenameList = [];
+  filteredAuthorsSurnameList = [];
 
 
   myFormModel: FormGroup;
@@ -56,56 +56,67 @@ export class AddBookComponent implements OnInit {
       yearOfPublicationInput: '',
       signatureInput: ''
     });
-
     this.addNextAuthor();
     this.addNextBooksTag();
-    /*this.bookService.getBooksFromBookService().subscribe(books => {
-     this.bookslist = books;
-     });*/
-    /*this.authorService.getAuthorsFromAuthorsService().subscribe(authors => {
-      this.authorslist = authors;
-    });
-    // @ts-ignore
-    /*this.filteredAuthorsForenameList = this.authors.controls.map(authorControl => {
-      authorControl.get('authorForenameInput').valueChanges.pipe(
-        startWith(''),
-        map(value => this.filterAuthorForename(value))
-      );*/
-   // });
-    // @ts-ignore
-    this.myFormModel.get('titleInput').valueChanges.subscribe(response => {
+    /*this.authors.controls.forEach((authorControl, index) => {
+      this.authors.at(index).get('authorForenameInput').valueChanges.subscribe(forename => {
+        this.filterAuthorForename(forename, index);
+        console.log(forename, index);
+      });
+   }),*/
+    this.authors.controls.forEach((authorControl2, index) => {
+      authorControl2.get('authorSurnameInput').valueChanges.subscribe(surname => {
+          this.filterAuthorSurname(surname);
+          console.log(surname);
+        });
+      }),
+      this.myFormModel.get('titleInput').valueChanges.subscribe(response => {
       console.log('data is', response);
+      setTimeout(() => 3000);
       this.filterBookTitles(response);
     });
-    /*pipe(
-      debounceTime(1000),
-      startWith(''),
-      map(value => this.filterBookTitles(value))
-      );*/
   }
-  // @ts-ignore
-  // tslint:disable-next-line:typedef
-  // private filterBookTitles(enteredTitle) {
-    /*this.filteredTitles = this.bookslist.map(books => books.title)
-      .filter(title => {
-        return title.toLowerCase().indexOf(enteredTitle.toLowerCase()) > -1;
-      });*/
-
   // tslint:disable-next-line:typedef
   private filterBookTitles(title) {
-
-    setTimeout(() => {
+    // setTimeout(() => 3000); {
       this.bookService.getBooksWithSpecifiedTitle(title).subscribe(book => {
         // tslint:disable-next-line:no-shadowed-variable
         this.filteredTitles = book.map(book => book.title);
         console.log(book);
       });
-      }, 4000);
   }
   // tslint:disable-next-line:typedef
+  checkTheChangeForename() {
+    const index = this.authors.controls.length - 1;
+    const authorForenameInput = this.authors.controls[index].get('authorForenameInput');
+
+    authorForenameInput.valueChanges.subscribe(
+      forename => this.filterAuthorForename(forename, index)
+    );
+  }
+    // tslint:disable-next-line:typedef
   displayFn(subject) {
     return subject ? subject.name : undefined;
   }
+  // tslint:disable-next-line:typedef
+  toggleTitlePlaceholder() {
+     this.showTitlePlaceholder = (this.myFormModel.get('titleInput').value === '');
+  }
+  // tslint:disable-next-line:typedef
+  toggleAuthorForenamePlaceholder() {
+    this.authors.controls.forEach((authorControl, index) => {
+      this.showAuthorForenamePlaceholder[index] = (authorControl.get('authorForenameInput').value === '');
+    });
+  }
+
+
+  // tslint:disable-next-line:typedef
+  toggleAuthorSurnamePlaceholder() {
+    this.authors.controls.forEach((authorControl, index) => {
+      this.showAuthorSurnamePlaceholder[index] = authorControl.get('authorSurnameInput').value === '';
+    });
+  }
+
   createAuthor(): FormGroup {
     return this.fb.group({
       authorForenameInput: '',
@@ -113,15 +124,31 @@ export class AddBookComponent implements OnInit {
     });
   }
   // tslint:disable-next-line:typedef
-  private filterAuthorForename(value: string): string[] {
-    const filterValue = value.toLowerCase();
-    return this.authorslist.map(author => author.forename)
-     .filter(authorForename => authorForename.toLowerCase().includes(filterValue)
-     );
+  private filterAuthorForename(forename, index) {
+    this.authorService.getAuthorsForenameWithSpecifiedCharacters(forename).subscribe(authorsIncoming => {
+      this.filteredAuthorsForenameList[index] = authorsIncoming.map(authors => authors.forename);
+      console.log(index);
+    });
   }
+  // tslint:disable-next-line:typedef
+    private filterAuthorSurname(surname) {
+      this.authorService.getAuthorsSurnameWithSpecifiedCharacters(surname).subscribe(authorsComing => {
+        this.filteredAuthorsSurnameList = authorsComing.map(author => author.surname);
+        console.log(authorsComing);
+        console.log(this.filteredAuthorsSurnameList);
+      });
+    }
+    // return this.authorslist.map(author => author.forename)
+     // .filter(authorForename => authorForename.toLowerCase().includes(filterValue)
+     // );
   addNextAuthor(): void {
     this.authors = this.myFormModel.get('authors') as FormArray;
     this.authors.push(this.createAuthor());
+    this.toggleTitlePlaceholder();
+    this.toggleAuthorForenamePlaceholder();
+    this.toggleAuthorSurnamePlaceholder();
+    this.checkTheChangeForename();
+
   }
 
   createBooksTag(): FormGroup {
@@ -144,12 +171,7 @@ export class AddBookComponent implements OnInit {
     }
 
   }
-  // tslint:disable-next-line:typedef
-  getAuthorsListFromService() {
-    this.authorService.getAuthorsFromAuthorsService().subscribe(authors => {
-      this.authorslist = authors;
-    });
-  }
+
 
 
   showAddBookForm(): void {
@@ -315,6 +337,8 @@ export class AddBookComponent implements OnInit {
       });
   }
   // tslint:disable-next-line:typedef
+
+
   clearValidationErrors() {
     this.validationErrors.title = '';
     // @ts-ignore
@@ -324,7 +348,9 @@ export class AddBookComponent implements OnInit {
     this.validationErrors.yearOfPublication = '';
     this.validationErrors.signature = '';
   }
-  // tslint:disable-next-line:typedef
+
+
+
 }
 
 

@@ -80,6 +80,14 @@ export class AuthorService {
       });
     });
   }
+  // tslint:disable-next-line:typedef
+  getAuthorsForenameWithSpecifiedCharacters(forename: string) {
+    return this.httpService.getAuthorsForenameWithSpecifiedCharacters(forename);
+  }
+  // tslint:disable-next-line:typedef
+  getAuthorsSurnameWithSpecifiedCharacters(surname: string) {
+    return this.httpService.getAuthorsSurnameWithSpecifiedCharacters(surname);
+  }
 }
 
 

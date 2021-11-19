@@ -1,0 +1,4 @@
+.row g-3 {
+  display: flex;
+  flex-direction: column;
+}

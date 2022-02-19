@@ -5,6 +5,8 @@ import {CheckboxService} from '../../services/checkbox.service';
 import {Author} from '../models-interface/author';
 import {AuthorService} from '../../services/author.service';
 
+
+
 @Component({
   selector: 'app-add-author',
   templateUrl: './add-author.component.html',
@@ -29,6 +31,11 @@ export class AddAuthorComponent implements OnInit {
   private checkedList: Map<number, number>;
   private idAuthor: number;
 
+  showAuthorForenamePlaceholder: boolean;
+  showAuthorSurnamePlaceholder: boolean;
+  filteredAuthorsForenameList: string[];
+  filteredAuthorsSurnameList: string[];
+
   // tslint:disable-next-line:typedef
 
 
@@ -38,20 +45,9 @@ export class AddAuthorComponent implements OnInit {
       authorForenameInput: '',
       authorSurnameInput: ''
     });
+    this.checkTheChangeAuthorForename();
+    this.checkTheChangeAuthorSurname();
   }
-
-  /*createAuthor(): FormGroup {
-    return this.fb.group({
-      authorForenameInput: '',
-      authorSurnameInput: ''
-    });
-  }*/
-
-  /*addNextAuthor(): void {
-    this.authors = this.myFormModel.get('authors') as FormArray;
-    this.authors.push(this.createAuthor());
-  }*/
-
   // tslint:disable-next-line:typedef
   private showAuthorForm() {
     if (this.isHidden) {
@@ -66,9 +62,6 @@ export class AddAuthorComponent implements OnInit {
     this.showAuthorForm();
     this.isButtonHidden = false;
   }
-
-  // tslint:disable-next-line:typedef
-
   // tslint:disable-next-line:typedef
   showEditAuthorForm() {
     this.mode = 'edit';
@@ -82,13 +75,8 @@ export class AddAuthorComponent implements OnInit {
       this.authorService.getAuthorById(this.idAuthor).subscribe((authorFromDb) => {
         this.myFormModel.get('authorForenameInput').setValue(authorFromDb.forename);
         this.myFormModel.get('authorSurnameInput').setValue(authorFromDb.surname);
-        // this.authors.at(0).get('authorSurnameInput').setValue(authorFromDb.surname);
       });
     }
-    // while (this.authors.length > 1) {
-      // this.authors.removeAt(0);
-    // }
-
     if (this.checkboxservice.lengthBooksMap() === 0) {
       alert('Brak zaznaczonego');
     }
@@ -124,7 +112,7 @@ export class AddAuthorComponent implements OnInit {
         });
     }
   // tslint:disable-next-line:typedef
-    saveAuthor() {
+  saveAuthor() {
     // @ts-ignore
     if (this.mode === 'edit') {
       this.changeAuthor();
@@ -152,15 +140,42 @@ export class AddAuthorComponent implements OnInit {
           });
       }
     }
-  // tslint:disable-next-line:typedef
+
     clearAuthorForm() {
       this.myFormModel.get('authorForenameInput').setValue('');
       this.myFormModel.get('authorSurnameInput').setValue('');
   }
 
   // tslint:disable-next-line:typedef
-  /*clearAuthorModifyForm() {
-    this.authors.at(0).get('authorForenameInput').setValue('');
-    this.authors.at(0).get('authorSurnameInput').setValue('');
-  }*/
+  checkTheChangeAuthorForename() {
+    this.myFormModel.get('authorForenameInput').valueChanges.subscribe(
+      forename => this.filterForename(forename)
+    );
+  }
+  // tslint:disable-next-line:typedef
+  filterForename(forename: string) {
+    this.authorService.getAuthorsForenameWithSpecifiedCharacters(forename).subscribe( authorsIncoming =>
+      this.filteredAuthorsForenameList = authorsIncoming.map(authors => authors.forename)
+    );
+  }
+  // tslint:disable-next-line:typedef
+  checkTheChangeAuthorSurname() {
+    this.myFormModel.get('authorSurnameInput').valueChanges.subscribe(
+      surname => this.filterSurname(surname)
+    );
+  }
+  // tslint:disable-next-line:typedef
+  filterSurname(surname: string) {
+    this.authorService.getAuthorsSurnameWithSpecifiedCharacters(surname).subscribe(authorsComing => {
+      this.filteredAuthorsSurnameList = authorsComing.map(authors => authors.surname);
+    });
+  }
+  // tslint:disable-next-line:typedef
+  toggleAuthorForenamePlaceholder() {
+    this.showAuthorForenamePlaceholder = this.myFormModel.get('authorForenameInput').value === '';
+  }
+  // tslint:disable-next-line:typedef
+  toggleAuthorSurnamePlaceholder() {
+    this.showAuthorSurnamePlaceholder = this.myFormModel.get('authorSurnameInput').value === '';
+  }
 }

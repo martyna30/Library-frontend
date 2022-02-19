@@ -1,28 +1,34 @@
-<head>
-<title>Library</title>
-
-</head>
 <body>
-<div id = "container">
+<div id="container">
+<header id="header">
+  <img class="logoHeader" src="/assets/img/logo.png" alt="logo"/>
+  <h4 class="logo-text"> Library </h4>
+</header>
 
-  <nav>
-  <div id="menu>">
+  <nav id="navbar">
     <a class ="logo" routerLink="/"><h4>Library</h4></a>
-    <div id="lists"><b>Lists</b></div>
-    <li><a routerLink="/books" routerLinkActive="active">List of Books</a></li>
-    <li><a routerLink="/authors" routerLinkActive="active">List of Authors</a></li>
-    <li><a routerLink="/tags" routerLinkActive="active">List of Book tags</a></li>
-  </div>
+
+    <div class="row">
+      <div class="col">
+        <div ngbDropdown class="d-inline-block">
+          <button class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle>Lists</button>
+          <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+            <button ngbDropdownItem>  <li><a routerLink="/books" routerLinkActive="active">List of Books</a></li> </button>
+            <button ngbDropdownItem>    <li><a routerLink="/authors" routerLinkActive="active">List of Authors</a></li> </button>
+            <button ngbDropdownItem>   <li><a routerLink="/tags" routerLinkActive="active">List of Book tags</a></li> </button>
+          </div>
+        </div>
+      </div>
+    </div>
   </nav>
   <router-outlet></router-outlet>
 
-
-
-
+  <main id="main">
     <app-update></app-update>
 
+    <aside id="sidemenu">
 
-
-  </div>
-
+    </aside>
+  </main>
+</div>
 </body>

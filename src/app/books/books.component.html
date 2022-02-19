@@ -1,34 +1,37 @@
-<div id="content">
-  <main class="crud container">
-    <ng-container *ngIf="bookslist !== null; else noBooks"> booksComponent
+
+  <section id="booksList">
+    <div class="button">
+      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" mat-raised-button (click)="openDialog('add')">Add a book></button>
+
+      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"  mat-raised-button (click)="openDialog('edit')" >Modify a book</button>
+    </div>
+    <ng-container *ngIf="bookslist !== null; else noBooks">
       <p [ngStyle]="{color: getColor()}"></p>
 
-      <table class="table">
+      <table class="table table-striped">
         <thead>
         <tr input class="form-check-input me-1" type="checkbox" value="" aria-label="..."  class="table-primary">
-          <th scope="col"></th>
-          <th scope="col">Lp</th>
-          <th scope="col">Title</th>
-          <th scope="col">Authors</th>
-          <th scope="col">Literary genre</th>
-          <th scope="col">Year of publication</th>
-          <th scope="col">Signature</th>
+          <th scope="row"> # </th>
+          <th scope="row">Lp</th>
+          <th scope="row">Title</th>
+          <th scope="row">Authors</th>
+          <th scope="row">Literary genre</th>
+          <th scope="row">Year of publication</th>
+          <th scope="row">Signature</th>
+          <th scope="row">amountOfbook</th>
         </tr>
         </thead>
-        <tbody>
+        <tbody *ngIf="bookslist as list">
 
-        <tr *ngFor="let book of bookslist | async; let i = index">
+        <tr *ngFor="let book of list | async let i = index">
           <td>
-            <input #self class="form-check-input" type="checkbox"  [value]="book.id" id="BookId" (change)="changeCheckboxList(self)">
-
+            <input #self class="form-check-input" type="checkbox"  [value]="book.id" id="BookIdInput" (change)="changeCheckboxList(self)">
           </td>
-          <td>{{i+1}}</td>
-
+          <th scope="row">{{(page-1) * size + i+1}}</th>
           <td>{{book.title}}</td>
           <td>
             <ul>
               <li *ngFor="let author of book.authors">{{author.forename}} {{author.surname}}</li>
-
             </ul>
           </td>
           <td>
@@ -38,15 +41,56 @@
           </td>
           <td>{{book.yearOfPublication}}</td>
           <td>{{book.signature}}</td>
+          <td>{{book.amountOfbook}}</td>
         </tr>
+
         </tbody>
+
       </table>
     </ng-container>
+
+
     <ng-template #noBooks>
       <p>No books</p>
     </ng-template>
 
-    <app-add-book> </app-add-book>
+<div class=pagination>
+      <ngb-pagination [collectionSize]="total | async" [pageSize]="size" [(page)]="page" [boundaryLinks]="true"  [disabled]='isDisabled'  (pageChange)="loadPage($event)" >
 
-  </main>
+        <ng-template ngbPaginationPages let-page let-pages="pages">
+          <li class="ngb-custom-pages-item" *ngIf="pages.length > 0">
+            <div class="mb-3 d-flex flex-nowrap px-2">
+              <label
+                id="paginationInputLabel"
+                for="paginationInput"
+                class="col-form-label me-2 ms-1"
+              >Page</label>
+              <input #i
+                     type="text"
+                     inputmode="numeric"
+                     pattern="[0-9]*"
+                     class="form-control custom-pages-input"
+                     id="paginationInput"
+                     [value]="page"
+                     (keyup.enter)="selectPage(i.value)"
+                     (blur)="selectPage(i.value)"
+                     (input)="formatInput($any($event).target)"
+                     aria-labelledby="paginationInputLabel paginationDescription"
+                     style="width: 2.5rem"
+              />
+              <span id="paginationDescription" class="col-form-label text-nowrap px-2">
+                  of {{pages.length}}</span>
+            </div>
+          </li>
+        </ng-template>
+      </ngb-pagination>
+      <hr>
+
+      <pre>Current page: {{page}}</pre>
+
 </div>
+
+  <app-add-book #childAddRef [page]="page" [size]="size"  ></app-add-book>
+<app-delete #childDeleteRef [page]="page" [size]="size" ></app-delete>
+  </section>
+

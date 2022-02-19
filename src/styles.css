@@ -1,6 +1,32 @@
 /* You can add global styles to this file, and also import other style files */
+
+*{
+  font-family: sans-serif;
+
+
+}
+
 .active {
-  color: red;
+  color: mediumblue;
+}
+
+.custom-modalbox {
+  color: blue;
+  border: 1px solid #000;
+  height: auto;
+  width: 550px;
+  min-height: 550px;
+  max-height: 600px;
+  background-color: #fff;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  bottom: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+
+  padding:  10px;
+  overflow:scroll;
 }
 
 .cdk-overlay-container{

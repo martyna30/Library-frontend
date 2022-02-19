@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {CheckboxService} from '../../services/checkbox.service';
 import {BookService} from '../../services/book.service';
 
@@ -8,6 +8,10 @@ import {BookService} from '../../services/book.service';
   styleUrls: ['./delete.component.css']
 })
 export class DeleteComponent implements OnInit {
+  @Input()
+  page;
+  @Input()
+  size;
   isHidden = true;
   private checkedList: Map<number, number>;
   private idBook: number;
@@ -41,6 +45,7 @@ export class DeleteComponent implements OnInit {
 
       if (confirm('Are you sure to delete book ')) {
         this.bookService.deleteBook(bookId);
+        this.bookService.getBookListObservable(this.page, this.size);
       }
     }
     if (this.checkboxService.lengthBooksMap() > 1) {

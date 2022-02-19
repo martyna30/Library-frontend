@@ -1,135 +1,152 @@
-<section class="datatable">
-  <button type="button" class="btn btn-primary" (click)="showAddBookForm()">Add a book</button>
-  <button type="button" class="btn btn-secondary" (click)="showEditBookForm()">Modify a book</button>
+<div id="modal-container>">
+<section class="custom-modalbox" [hidden]="isHidden">
+  <h2 mat-dialog-title>{{mode}}</h2>
+  <mat-dialog-content  [formGroup]="myFormModel" class="row g-3" method="post">
+    <fieldset class="mb-3">
+    <label id="title">Title</label>
+      <mat-form-field appearance="fill">
+        <input matInput type="text" [matAutocomplete]="auto" (ngModelChange)="toggleTitlePlaceholder()"  placeholder="Insert a Title" required formControlName="titleInput"/>
+        <mat-autocomplete #auto="matAutocomplete">
+          <mat-option *ngFor="let bookTitle of this.filteredTitles" [value]="bookTitle">{{bookTitle}}</mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
 
-  <form [formGroup]="myFormModel" class="row g-3" method="post" [hidden]="isHidden">
-<fieldset>
-  <label id="title">Title</label>
-    <mat-form-field appearance="fill">
-      <input matInput type="text" [matAutocomplete]="auto" (ngModelChange)="toggleTitlePlaceholder()"  placeholder="Insert a Title" required formControlName="titleInput"/>
-      <mat-autocomplete #auto="matAutocomplete">
-        <mat-option *ngFor="let bookTitle of this.filteredTitles" [value]="bookTitle">{{bookTitle}}</mat-option>
-      </mat-autocomplete>
-    </mat-form-field>
-
-    <div id="validationServer03Feedback" class="invalid-feedback d-block" *ngIf="validationErrors?.title"> {{validationErrors.title[0]}}
-    </div>
-</fieldset>
-
-
-
-    <fieldset class="input">
-      <label class="input label">Authors</label>
-      <table class = "table">
-        <thead>
-        <tr>
-          <th scope="col">Lp</th>
-          <th scope = "col">Author's forename</th>
-          <th scope = "col">Author's surname</th>
-        </tr>
-        </thead>
-        <tbody>
-
-        <ng-container formArrayName="authors">
-          <tr *ngFor="let author of myFormModel.get('authors')['controls']; let i = index;" formGroupName="{{ i }}">
-            <th>{{ i + 1 }}</th>
-            <td>
-
-              <mat-form-field appearance="fill">
-
-                <input matInput type="text" [matAutocomplete]="auto"  (ngModelChange)="toggleAuthorForenamePlaceholder()" placeholder="Insert an Author Forename" required formControlName="authorForenameInput">
-
-                <mat-autocomplete #auto="matAutocomplete">
-
-                  <mat-option *ngFor="let authorForename of filteredAuthorsForenameList[i]"  [value]="authorForename">
-                  {{authorForename}}
-                  </mat-option>
-                </mat-autocomplete>
-              </mat-form-field>
+      <div id="validationServer03Feedback" class="invalid-feedback d-block" *ngIf="validationErrors?.title"> {{validationErrors.title[0]}}
+      </div>
+  </fieldset>
 
 
 
-              <div class="invalid-feedback d-block" *ngIf="validationErrors !== undefined && validationErrors['authors[' + i + '].forename'] !== undefined">
-                {{validationErrors['authors[' + i + '].forename'][0]}}
-              </div>
-            </td>
+      <fieldset class="input">
+        <label class="input label">Authors</label>
+        <table class = "table">
+          <thead>
+          <tr>
+            <th scope="col">Lp</th>
+            <th scope = "col">Author's forename</th>
+            <th scope = "col">Author's surname</th>
+          </tr>
+          </thead>
+          <tbody>
 
-            <td>
-              <mat-form-field appearance="fill">
-                  <input matInput type="text" [matAutocomplete]="auto2" (ngModelChange)="toggleAuthorSurnamePlaceholder()" placeholder="Insert an Author Surname" required formControlName="authorSurnameInput">
-                    <mat-autocomplete #auto2="matAutocomplete" >
-                      <mat-option *ngFor="let authorSurname of filteredAuthorsSurnameList" [value]="authorSurname">{{authorSurname}}</mat-option>
-                    </mat-autocomplete>
+          <ng-container formArrayName="authors">
+            <tr *ngFor="let author of myFormModel.get('authors')['controls']; let i = index;" formGroupName="{{ i }}">
+              <th>{{ i + 1 }}</th>
+              <td>
+
+                <mat-form-field appearance="fill">
+
+                  <input matInput type="text" [matAutocomplete]="auto"  (ngModelChange)="toggleAuthorForenamePlaceholder()" placeholder="Insert an Author Forename" required formControlName="authorForenameInput">
+
+                  <mat-autocomplete #auto="matAutocomplete">
+
+                    <mat-option *ngFor="let authorForename of filteredAuthorsForenameList[i]"  [value]="authorForename">
+                    {{authorForename}}
+                    </mat-option>
+                  </mat-autocomplete>
                 </mat-form-field>
 
-              <div class="invalid-feedback d-block" *ngIf="validationErrors !== undefined && validationErrors['authors[' + i + '].surname'] !== undefined">
-                {{validationErrors['authors[0].surname'][0]}}
-              </div>
-            </td>
-            <td>
-              <i #circle [id]="i" class="bi bi-x-circle" (click)="deleteAuthors(circle)"></i>
-            </td>
 
-          </tr>
-        </ng-container>
-        </tbody>
-      </table>
 
-      <button type="button" class="btn btn-outline-primary" (click)="addNextAuthor()">Add a next Author</button>
-    </fieldset>
+                <div class="invalid-feedback d-block" *ngIf="validationErrors !== undefined && validationErrors['authors[' + i + '].forename'] !== undefined">
+                  {{validationErrors['authors[' + i + '].forename'][0]}}
+                </div>
+              </td>
 
-    <fieldset class="input">
-      <label class="input label">Literary Genre</label>
-      <table class="table">
-        <thead>
-        <tr>
-          <th scope="col">Lp</th>
-          <th scope="col">Literary Genre</th>
-        </tr>
-        </thead>
-        <tbody>
-        <ng-container formArrayName="booksTags">
-          <tr *ngFor="let bookTag of myFormModel.get('booksTags')['controls']; let i = index;" formGroupName="{{ i }}">
-            <th>{{i + 1}}</th>
-            <td>
-             <input type="text" placeholder="Insert a Literary Genre" required formControlName="booksTagInput">
-              <div class = "invalid-feedback d-block" *ngIf="validationErrors !== undefined && validationErrors.bookTags !== undefined">
-                {{validationErrors.bookTags}}
-              </div>
-            </td>
-            <td>
-              <i #circle [id]="i" class="bi bi-x-circle" (click)="deleteBooksTags(circle)"></i>
-            </td>
-          </tr>
-        </ng-container>
-        </tbody>
+              <td>
+                <mat-form-field appearance="fill">
+                    <input matInput type="text" [matAutocomplete]="auto2" (ngModelChange)="toggleAuthorSurnamePlaceholder()" placeholder="Insert an Author Surname" required formControlName="authorSurnameInput">
+                      <mat-autocomplete #auto2="matAutocomplete">
+                        <mat-option *ngFor="let authorSurname of filteredAuthorsSurnameList[i]" [value]="authorSurname">{{authorSurname}}</mat-option>
+                      </mat-autocomplete>
+                  </mat-form-field>
+
+                <div class="invalid-feedback d-block" *ngIf="validationErrors !== undefined && validationErrors['authors[' + i + '].surname'] !== undefined">
+                  {{validationErrors['authors[' + i + '].surname'][0]}}
+                </div>
+              </td>
+              <td>
+                <i #circle [id]="i" class="bi bi-x-circle" (click)="deleteAuthors(circle)"></i>
+              </td>
+
+            </tr>
+          </ng-container>
+          </tbody>
         </table>
-      <button type="button" class="btn btn-outline-primary" (click)="addNextBooksTag()">Add a next Book Tag</button>
-    </fieldset>
 
-    <fieldset class="col-10">
-      <label class="input label">Year publication</label>
-      <input type="number" name="yearOfPublication" placeholder="Insert a Year publication" required formControlName="yearOfPublicationInput">
-    </fieldset>
-    <div class="col-10" *ngIf="validationErrors !== null && validationErrors?.yearOfPublication">
-        <span class="text text-danger">{{validationErrors.yearOfPublication[0]}}</span>
+        <button type="button" class="btn btn-outline-primary" (click)="addNextAuthor()">Add a next Author</button>
+      </fieldset>
+
+      <fieldset class="input">
+        <label class="input label">Literary Genre</label>
+        <table class="table">
+          <thead>
+          <tr>
+            <th scope="col">Lp</th>
+            <th scope="col">Literary Genre</th>
+          </tr>
+          </thead>
+          <tbody>
+          <ng-container formArrayName="booksTags">
+
+            <tr *ngFor="let bookTag of myFormModel.get('booksTags')['controls']; let i = index;" formGroupName="{{ i }}">
+              <th>{{i + 1}}</th>
+              <td>
+                <mat-form-field appearance="fill">
+               <input matInput type="text" [matAutocomplete]="auto3" (ngModelChange)="toggleBookTagPlaceholder()" placeholder="Insert a Literary Genre" required formControlName="booksTagInput">
+                  <mat-autocomplete #auto3="matAutocomplete">
+                    <mat-option *ngFor="let literaryGenre of filteredBooksTagsList[i]" [value]="literaryGenre">{{literaryGenre}}</mat-option>
+                  </mat-autocomplete>
+                </mat-form-field>
+
+                  <div class = "invalid-feedback d-block" *ngIf="validationErrors !== undefined && validationErrors['booksTags[' + i + '].literaryGenre'] !== undefined">
+                  {{validationErrors['bookTags[' + i + '].literaryGenre'][0]}}
+                </div>
+              </td>
+              <td>
+                <i #circle [id]="i" class="bi bi-x-circle" (click)="deleteBooksTags(circle)"></i>
+              </td>
+            </tr>
+          </ng-container>
+          </tbody>
+          </table>
+        <button type="button" class="btn btn-outline-primary" (click)="addNextBooksTag()">Add a next Book Tag</button>
+      </fieldset>
+
+      <fieldset class="col-10">
+        <mat-form-field appearance="fill">
+
+          <label class="input label">Year publication</label>
+        <input  matInput type="text" [matAutocomplete]="auto" (ngModelChange)="toggleYearPlaceholder()" type="number" name="yearOfPublication" placeholder="Insert a Year publication" required formControlName="yearOfPublicationInput">
+          <mat-autocomplete #auto="matAutocomplete">
+            <mat-option *ngFor="let yearOfPublication of this.filteredYears" [value]="yearOfPublication">{{yearOfPublication}}</mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+
+        <div class="col-10" *ngIf="validationErrors !== null && validationErrors?.yearOfPublication">
+          <span class="text text-danger">{{validationErrors.yearOfPublication[0]}}</span>
+        </div>
+      </fieldset>
+
+      <fieldset class="mb-3">
+        <label class="input label">Book signature</label>
+        <input type="text" name="bookSignature" placeholder="Insert a Book signature" required formControlName="signatureInput">
+
+      <div class = "col-10" *ngIf="validationErrors !== null && validationErrors?.signature">
+        <span class="text text-danger">{{validationErrors.signature[0]}}</span>
       </div>
 
-    <fieldset class="input">
-      <label class="input label">Book signature</label>
-      <input type="text" name="bookSignature" placeholder="Insert a Book signature" required formControlName="signatureInput">
-    </fieldset>
-    <div class = "col-10" *ngIf="validationErrors !== null && validationErrors?.signature">
-      <span class="text text-danger">{{validationErrors.signature[0]}}</span>
-    </div>
+      <div class = "col-12">
+        <button class="btn btn-primary" type="submit" (click)="saveBook()">Submit</button>
+      </div>
 
-    <div class = "col-12">
-      <button class="btn btn-primary" type="submit" (click)="saveBook()">Submit</button>
-    </div>
-
-
-  </form>
-
+      </fieldset>
+  </mat-dialog-content>
+  <div id="button-close">
+  <button type="close" class="btn-close" aria-label="Close"></button>
+  </div>
 </section>
 
+    <button type="close" class="btn-close" aria-label="Close"></button>
 
+</div>

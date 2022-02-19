@@ -26,12 +26,14 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {CheckboxService} from '../services/checkbox.service';
-
+import {MatTooltipModule} from '@angular/material/tooltip';
+import {MatDialogModule} from '@angular/material/dialog';
+import {MatButtonModule} from '@angular/material/button';
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
     AppComponent,
-    AddBookComponent,
     UpdateComponent,
     DeleteComponent,
     AuthorsComponent,
@@ -39,10 +41,17 @@ import {CheckboxService} from '../services/checkbox.service';
     PageNotFoundComponent,
     BooksComponent,
     AddAuthorComponent,
-
+    AddBookComponent
+  ],
+  entryComponents: [
+    AddBookComponent
   ],
   imports: [
-   BrowserModule, HttpClientModule, FormsModule, ReactiveFormsModule, AppRoutingModule, BrowserAnimationsModule, MatAutocompleteModule, MatFormFieldModule, MatInputModule
+    // tslint:disable-next-line:max-line-length
+    BrowserModule, HttpClientModule, FormsModule, ReactiveFormsModule,
+    AppRoutingModule, BrowserAnimationsModule, MatAutocompleteModule,
+    MatFormFieldModule, MatInputModule, MatTooltipModule, MatDialogModule,
+    MatButtonModule, NgbModule
   ],
   providers: [BookService, HttpService, AuthorService, CheckboxService], // jak jest injectable root to nie musi byc tu
   bootstrap: [AppComponent]

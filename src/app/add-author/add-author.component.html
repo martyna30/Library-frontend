@@ -4,23 +4,35 @@
   <form [formGroup]="myFormModel" class="row g-3" method="post" [hidden]="isHidden">
     <fieldset class="col-10">
       <label for="validationAuthorForename" class="form-label">Author's Forename</label>
-      <input type="text" class="form-control " id="validationAuthorForename" placeholder="Insert an Author Forename" aria-describedby="validationServer03Feedback" required formControlName="authorForenameInput">
-      </fieldset>
+      <mat-form-field appearance="fill">
+      <input matInput type="text" [matAutocomplete]="auto" (ngModelChange)="toggleAuthorForenamePlaceholder()" placeholder="Insert an Author Forename" class="form-control " id="validationAuthorForename" aria-describedby="validationServer03Feedback" required formControlName="authorForenameInput">
+        <mat-autocomplete #auto="matAutocomplete">
+          <mat-option *ngFor="let authorForename of filteredAuthorsForenameList"  [value]="authorForename" matTooltip="{{authorForename}} | Population: {{authorForename}}">{{authorForename}}</mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+
       <div id="validationServer04Feedback" class="invalid-feedback d-block" *ngIf="validationErrors?.forename">
         <span class="text text-danger"> {{validationErrors.forename[0]}} </span>
       </div>
+    </fieldset>
 
     <fieldset class="col-10">
       <label for="validationAuthorSurname" class="form-label">Author's Surname</label>
-      <input type="text" class="form-control " id="validationAuthorSurname" placeholder="Insert an Author Surname" aria-describedby="validationServer03Feedback" required formControlName="authorSurnameInput">
-    </fieldset>
-    <div id="validationServer03Feedback" class="invalid-feedback d-block" *ngIf="validationErrors?.surname">
+      <mat-form-field appearance="fill">
+      <input matInput type="text" [matAutocomplete]="auto2" (ngModelChange)="toggleAuthorSurnamePlaceholder()" placeholder="Insert an Author Surname" aria-describedby="validationServer03Feedback" id="validationAuthorSurname" required formControlName="authorSurnameInput">
+        <mat-autocomplete #auto2="matAutocomplete">
+          <mat-option *ngFor="let authorSurname of filteredAuthorsSurnameList" [value]="authorSurname" matTooltip="{{authorSurname}} | Population: {{authorSurname}}">{{authorSurname}}</mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+
+      <div id="validationServer03Feedback" class="invalid-feedback d-block" *ngIf="validationErrors?.surname">
       <span class="text text-danger"> {{validationErrors.surname[0]}} </span>
     </div>
 
     <div class = "col-12">
       <button class="btn btn-primary" type="submit" (click)="saveAuthor()">Submit</button>
     </div>
+    </fieldset>
 
   </form>
 </section>

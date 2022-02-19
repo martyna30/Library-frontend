@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpErrorResponse, HttpHeaders, HttpParams} from '@angular/common/http';
 import {Book} from '../app/models-interface/book';
+import {ListBook} from '../app/models-interface/listBook';
 import {Observable, throwError} from 'rxjs';
 import {Author} from '../app/models-interface/author';
 import {observeOn} from 'rxjs/operators';
 import {AuthorService} from './author.service';
+import {BookTag} from '../app/models-interface/bookTag';
 
 
 @Injectable({
@@ -17,13 +19,32 @@ export class HttpService {
 
 
   constructor(private http: HttpClient) {
-    this.getBooks();
+   // this.getBooks(1, 10);
     this.getAuthors();
   }
 
-  getBooks(): Observable<Array<Book>> {
-    return this.http.get<Array<Book>>(this.URL_DB + 'getBooks');
+  /*getBooks(page: number, size: number): Observable<Array<Book>> {
+    const param = new HttpParams()
+      .set('page', page + '')
+      .set('size', size + '');
+    return this.http.get<Array<Book>>(this.URL_DB + 'getBooks', {
+      headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
+      observe: 'body',
+      params: param
+    });
+  }*/
+  getBooks(page: number, size: number): Observable<ListBook> {
+    const param = new HttpParams()
+      .set('page', page + '')
+      .set('size', size + '');
+    return this.http.get<ListBook>(this.URL_DB + 'getBooks' , {
+      headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
+      observe: 'body',
+      params: param
+    });
   }
+
+
 
   getAuthors(): Observable<Array<Author>> {
     return this.http.get<Array<Author>>(this.URL_DB + 'getAuthors');
@@ -129,7 +150,30 @@ export class HttpService {
     });
   }
 
+
+  getBooksTagsWithSpecifiedCharacters(bookTag: string): Observable<Array<BookTag>> {
+    const param = new HttpParams()
+      .set('bookTag', bookTag + '');
+    return this.http.get<Array<BookTag>>(this.URL_DB + 'getBooksTagsWithSpecifiedCharacters', {
+      headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
+      observe: 'body',
+      params: param
+    });
+  }
+
+  getBooksWithSpecifiedPublicationYear(yearOfPublication: number): Observable<Array<Book>> {
+    const param = new HttpParams()
+      .set('yearOfPublication', yearOfPublication + '');
+    return this.http.get<Array<Book>>(this.URL_DB + 'getBooksWithSpecifiedPublicationYear', {
+      headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
+      observe: 'body',
+      params: param
+    });
+  }
+
+
 }
+
 
 
 

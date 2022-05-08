@@ -1,4 +1,15 @@
-import {Component, EventEmitter, Inject, Input, OnInit} from '@angular/core';
+import {
+  AfterViewChecked,
+  AfterViewInit,
+  Component,
+  EventEmitter,
+  Inject,
+  Input,
+  OnChanges,
+  OnInit,
+  Optional, Output,
+  SimpleChanges
+} from '@angular/core';
 import {Book} from '../models-interface/book';
 import {BookService} from '../../services/book.service';
 import {AuthorService} from '../../services/author.service';
@@ -15,20 +26,23 @@ import {placeholdersToParams} from '@angular/compiler/src/render3/view/i18n/util
 import {ifTrue} from 'codelyzer/util/function';
 import {yearsPerPage} from '@angular/material/datepicker';
 import {MAT_DIALOG_DATA, MatDialogConfig, MatDialogRef} from '@angular/material/dialog';
-
+import {MatDialog} from '@angular/material/dialog';
 
 
 // @ts-ignore
 @Component({
   selector: 'app-add-book',
   templateUrl: './add-book.component.html',
-  styleUrls: ['./add-book.component.css']
+  styleUrls: ['./add-book.component.scss']
 })
-export class AddBookComponent implements OnInit {
+export class AddBookComponent implements  OnInit {
   @Input()
-  page;
+  page: number;
   @Input()
-  size;
+  size: number;
+
+  @Output()
+  loadData: EventEmitter<any> = new EventEmitter();
 
   isHidden = true;
   showTitlePlaceholder: boolean;
@@ -42,21 +56,33 @@ export class AddBookComponent implements OnInit {
   filteredAuthorsSurnameList = [];
   filteredBooksTagsList = [];
   filteredYears: number[];
-
+  filteredBooksSignature: string[] = [];
 
   myFormModel: FormGroup;
+  description: string;
   authors: FormArray;
   booksTags: FormArray;
 
   validationErrors: BookValidationError;
   private isCreated = false;
   private bookExist = false;
-   mode: string;
+  private mode;
   private checkedList: Map<number, number>;
   private idBook: number;
   private bookToModified: Book;
-  constructor(private fb: FormBuilder, private authorService: AuthorService, private bookService: BookService, private checkboxservice: CheckboxService) {// @Inject(MAT_DIALOG_DATA) data: {mode}) {   // private dialogRef: MatDialogRef<AddBookComponent>
+
+  constructor(private authorService: AuthorService,
+              private bookService: BookService,
+              private checkboxservice: CheckboxService,
+              private fb: FormBuilder,
+              private dialogRef: MatDialogRef<AddBookComponent>) {
   }
+//@Optional()
+  /*ngAfterViewChecked(): void {
+    console.log(this.size, this.page);
+    }*/
+    // @Optional() @Inject(MAT_DIALOG_DATA) public editData: any
+  // @Inject(MAT_DIALOG_DATA) data: {mode}) {   // private dialogRef: MatDialogRef<AddBookComponent>
 
   ngOnInit(): void {
     this.myFormModel = this.fb.group({
@@ -66,14 +92,31 @@ export class AddBookComponent implements OnInit {
       yearOfPublicationInput: '',
       signatureInput: ''
     });
+
+    /*if (this.editData === null) {
+      return;
+    }*/
+    // UWAGA metoda ngOnInit jest uruchamiana zanim ktoś cokolwiek kliknie i w editData wtedy jest
+    // przekazywany pusty obiekt
+    //if (Object.keys(this.dialogRef).length === 0) {
+     // return;
+
+   // }
+
     this.addNextAuthor();
     this.addNextBooksTag();
     this.checkTheChangeTitle();
     this.checkTheChangeYear();
-
   }
 
+  closeDialog(): void {
+    this.isHidden = true;
+  }
+
+
   showBookForm(): void {
+    this.mode = 'add';
+
     if (this.isHidden) {
       this.isHidden = !this.isHidden;
     } else {
@@ -217,12 +260,14 @@ export class AddBookComponent implements OnInit {
     this.checkTheChangeBookTag();
   }
 
-  showAddBookForm(): void {
+  /*showAddBookForm(): void {
         // this.mode = 'add';
         this.showBookForm();
-  }
+  }*/
   // tslint:disable-next-line:typedef
   changeBook() {
+    console.log('changeBook');
+    this.mode = 'edit';
     const book: Book = {
         id: this.idBook,
         title: this.myFormModel.get('titleInput').value,
@@ -251,8 +296,11 @@ export class AddBookComponent implements OnInit {
       console.log(modifiedBook);
       this.isCreated = true;
       if (this.isCreated === true) {
-        this.bookService.getBookListObservable(this.page, this.size);
+        //this.bookService.getBookListObservable(this.page, this.size);
+        this.loadData.emit();
+        this.dialogRef.close('edit');
       }},
+
         response => {
       console.log(response.error);
       this.validationErrors = response.error;
@@ -264,8 +312,13 @@ export class AddBookComponent implements OnInit {
 
   // tslint:disable-next-line:typedef
   showEditBookForm() {
-    // this.mode = 'edit';
-   this.showBookForm();
+    console.log('showEditBookForm');
+    this.mode = 'edit';
+    // this.showBookForm();
+    // if (this.editData) {
+      // this.mode = 'edit';
+   // }
+    this.isHidden = false;
     this.checkedList = this.checkboxservice.getBooksMap();
 
     if (this.checkboxservice.lengthBooksMap() === 1) {
@@ -349,6 +402,7 @@ export class AddBookComponent implements OnInit {
             );
             this.clearBookForm();
             this.clearValidationErrors();
+            console.log(this.dialogRef.close('add'));
 
             }},
         response => {
@@ -400,6 +454,12 @@ export class AddBookComponent implements OnInit {
     this.validationErrors.signature = '';
   }
 
+  // tslint:disable-next-line:typedef
+
+
+  /*closeDialog() {
+    this.dialogRef.close();
+  }*/
 
 }
 

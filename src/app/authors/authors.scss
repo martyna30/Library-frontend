@@ -1,0 +1,48 @@
+@import 'src/customize-bootstrap.scss';
+
+@import 'src/scss/01-settings/_settings.scss';
+@import 'src/scss/02-tools/_tools.scss';
+@import 'src/scss/03-generic/_generic.scss';
+@import 'src/scss/04-elements/_elements.scss';
+@import 'src/scss/05-objects/_objects.scss';
+@import 'src/scss/06-components/_components.scss';
+@import 'src/scss/07-templates/_templates.scss';
+@import 'src/scss/08-utilities/_utilities.scss';
+
+table {
+  color: $dark-blue;
+  max-height: 100%;
+  border: 1px solid #3B99E1;
+  text-align: center;
+  background-color: mintcream;
+  padding: 2em;
+  flex-wrap: wrap;
+  margin-top: $grid-base*3;
+
+}
+
+.button-group {
+  text-align: center;
+  margin: 0 auto;
+  justify-content: space-around;
+
+  @include large-up {
+    max-width: 800px;
+  }
+}
+
+td {
+  max-height: 400px;
+  vertical-align: middle;
+  text-align: center;
+  display: table-cell;
+
+  margin-left: auto;
+  margin-right: auto;
+  max-height: 100%;
+
+}
+.form-check-input {
+  margin-left: auto;
+  margin-right: auto;
+}

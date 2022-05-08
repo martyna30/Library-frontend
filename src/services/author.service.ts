@@ -11,16 +11,24 @@ import {Book} from '../app/models-interface/book';
 })
 export class AuthorService {
 
-  private authorsListObs = new BehaviorSubject<Array<Author>>([]);
+  private authorsListObs$ = new BehaviorSubject<Array<Author>>([]);
+
+  private totalCountAuthors$ = new BehaviorSubject<number>(0);
 
   constructor(private httpService: HttpService) {
-    this.httpService.getAuthors().subscribe((authors) => {
-      this.authorsListObs.next(authors);
-    });
+    this.getAuthorsFromAuthorsService();
   }
 
-  getAuthorsListObservable(): Observable<Array<Author>> {
-    return this.httpService.getAuthors();
+  getAuthorsListObservable(page: any, size: number): Observable<Array<Author>> {
+    this.httpService.getAuthors(page, size).subscribe((listAuthors) => {
+      this.authorsListObs$.next(listAuthors.authors);
+      this.totalCountAuthors$.next(listAuthors.total);
+    });
+    return;
+  }
+
+  getTotalCountOfAuthors(): Observable<number> {
+    return this.totalCountAuthors$.asObservable();
   }
 
   getIdByName(forename, surname): Observable<number> {
@@ -49,19 +57,14 @@ export class AuthorService {
 
   // @ts-ignore
   getAuthorsFromAuthorsService(): Observable<Array<Author>> {
-    return this.authorsListObs.asObservable();
+    return this.authorsListObs$.asObservable();
   }
 
-  geAuthorsListObservable(): Observable<Array<Author>> {
-    return this.httpService.getAuthors();
-  }
-
-  // tslint:disable-next-line:typedef
-  addAuthor(author: Author) {
+  /*addAuthor(author: Author) {
     const authorsList = this.authorsListObs.getValue();
     authorsList.push(author);
     this.authorsListObs.next(authorsList);
-  }
+  }*/
 
   saveAuthor(author: Author): Observable<Author> {
     return this.httpService.saveAuthor(author);
@@ -74,11 +77,7 @@ export class AuthorService {
   }
   // @ts-ignore
   updateAuthor(author: Author): Observable<Author> {
-    this.httpService.updateAuthor(author).subscribe(() => {
-      this.getAuthorsListObservable().subscribe((newList) => {
-        this.authorsListObs.next(newList);
-      });
-    });
+    return this.httpService.updateAuthor(author);
   }
   // tslint:disable-next-line:typedef
   getAuthorsForenameWithSpecifiedCharacters(forename: string) {

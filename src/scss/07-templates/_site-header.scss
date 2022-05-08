@@ -1,0 +1,85 @@
+.t-side-header {
+
+
+  &_top {
+
+    padding-top: $grid-base*2.5;
+    padding-left: $grid-base*2.5;
+    padding-right: $grid-base*2.5;
+    height: 100px;
+    width: 1140px;
+    display: inline-block;
+    justify-content: space-between;
+    background-color: $blue;
+
+    @include medium-up {
+      padding-bottom: $grid-base*2.5;
+      height: 150px;
+    }
+  }
+
+  &_menu {
+
+    margin-top: $grid-base*2;
+
+
+    @include large-up {
+      text-align: right;
+      margin-top: 0;
+    }
+  }
+  &_divider {
+    background-color: $white;
+    height: 1px;
+    opacity:  .75;
+  }
+
+  &_hero {
+    background-color: $blue;
+    padding-bottom: $grid-base*4;
+    text-align: center;
+    margin: 0 auto;
+    height: 150px;
+    margin-bottom: $grid-base*4;
+
+
+    @include large-up {
+      //padding-bottom: $grid-base *2;
+      //text-align: center;
+      //padding-top: $grid-base*2;
+      max-width: 800px;
+      margin-bottom: 40px;
+    }
+  }
+
+
+  &_intro-text {
+    color: $white;
+    text-transform: uppercase;
+    display: block;
+    font-size: $font-size-5;
+    padding-bottom: $grid-base *.75;
+    padding-top: $grid-base * 3;
+    text-align: center;
+    width: 100%;
+    letter-spacing: 2px;
+
+    @include large-up {
+      font-size:  $font-size-4;
+    }
+  }
+
+  &_btn-divider {
+    color: $white;
+    display: block;
+    font-size: $font-size-5;
+    font-weight: 700;
+    //margin: $grid-base*5;
+
+    @include medium-up {
+      display: inline-block;
+    }
+  }
+
+
+}

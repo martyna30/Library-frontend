@@ -1,11 +1,12 @@
-<div id="modal-container>">
+
 <section class="custom-modalbox" [hidden]="isHidden">
-  <h2 mat-dialog-title>{{mode}}</h2>
-  <mat-dialog-content  [formGroup]="myFormModel" class="row g-3" method="post">
-    <fieldset class="mb-3">
-    <label id="title">Title</label>
+  <h2 mat-dialog-title></h2>
+  <mat-dialog-content  [formGroup]="myFormModel" class="mat-dialog" method="post">
+
+    <fieldset class="input-fieldset">
+      <label class="input-label">Title</label>
       <mat-form-field appearance="fill">
-        <input matInput type="text" [matAutocomplete]="auto" (ngModelChange)="toggleTitlePlaceholder()"  placeholder="Insert a Title" required formControlName="titleInput"/>
+        <input matInput type="text" [matAutocomplete]="auto" (ngModelChange)="toggleTitlePlaceholder()" placeholder="Insert a Title" required formControlName="titleInput"/>
         <mat-autocomplete #auto="matAutocomplete">
           <mat-option *ngFor="let bookTitle of this.filteredTitles" [value]="bookTitle">{{bookTitle}}</mat-option>
         </mat-autocomplete>
@@ -15,16 +16,14 @@
       </div>
   </fieldset>
 
-
-
-      <fieldset class="input">
-        <label class="input label">Authors</label>
-        <table class = "table">
+    <fieldset class="input-fieldset">
+      <label class="input-label">Authors</label>
+        <table class="table table-striped">
           <thead>
           <tr>
             <th scope="col">Lp</th>
-            <th scope = "col">Author's forename</th>
-            <th scope = "col">Author's surname</th>
+            <th scope="col">Author's forename</th>
+            <th scope="col">Author's surname</th>
           </tr>
           </thead>
           <tbody>
@@ -77,9 +76,9 @@
         <button type="button" class="btn btn-outline-primary" (click)="addNextAuthor()">Add a next Author</button>
       </fieldset>
 
-      <fieldset class="input">
-        <label class="input label">Literary Genre</label>
-        <table class="table">
+      <fieldset class="input-fieldset">
+        <label class="input-label">Literary Genre</label>
+        <table class=" table table-striped">
           <thead>
           <tr>
             <th scope="col">Lp</th>
@@ -113,11 +112,10 @@
         <button type="button" class="btn btn-outline-primary" (click)="addNextBooksTag()">Add a next Book Tag</button>
       </fieldset>
 
-      <fieldset class="col-10">
+      <fieldset class="input-fieldset">
+        <label class="input-label">Year publication</label>
         <mat-form-field appearance="fill">
-
-          <label class="input label">Year publication</label>
-        <input  matInput type="text" [matAutocomplete]="auto" (ngModelChange)="toggleYearPlaceholder()" type="number" name="yearOfPublication" placeholder="Insert a Year publication" required formControlName="yearOfPublicationInput">
+          <input  matInput [matAutocomplete]="auto" (ngModelChange)="toggleYearPlaceholder()" type="number" name="yearOfPublication" placeholder="Insert a Year publication" required formControlName="yearOfPublicationInput">
           <mat-autocomplete #auto="matAutocomplete">
             <mat-option *ngFor="let yearOfPublication of this.filteredYears" [value]="yearOfPublication">{{yearOfPublication}}</mat-option>
           </mat-autocomplete>
@@ -128,25 +126,29 @@
         </div>
       </fieldset>
 
-      <fieldset class="mb-3">
-        <label class="input label">Book signature</label>
-        <input type="text" name="bookSignature" placeholder="Insert a Book signature" required formControlName="signatureInput">
+      <fieldset class="input-fieldset">
+        <label class="input-label">Book signature</label>
+        <mat-form-field appearance="fill">
+         <input matInput type="text" placeholder="Insert a Book signature" required formControlName="signatureInput"/>
+        </mat-form-field>
 
-      <div class = "col-10" *ngIf="validationErrors !== null && validationErrors?.signature">
+        <div class="col-10" *ngIf="validationErrors !== null && validationErrors?.signature">
         <span class="text text-danger">{{validationErrors.signature[0]}}</span>
-      </div>
-
-      <div class = "col-12">
-        <button class="btn btn-primary" type="submit" (click)="saveBook()">Submit</button>
-      </div>
-
+        </div>
       </fieldset>
+
   </mat-dialog-content>
-  <div id="button-close">
-  <button type="close" class="btn-close" aria-label="Close"></button>
+  <div mat-dialog-actions [align]="'end'" class="button-group">
+    <button mat-raised-button  class="mat-raised-button btn-lg" type="submit" (click)="saveBook()">Submit</button>
+    <button mat-raised-button (click)="closeDialog()" >Close </button>
   </div>
+
 </section>
 
-    <button type="close" class="btn-close" aria-label="Close"></button>
 
-</div>
+
+
+
+
+
+

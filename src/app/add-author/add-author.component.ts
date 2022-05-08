@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {FormArray, FormBuilder, FormGroup} from '@angular/forms';
 import {AuthorValidationError} from '../models-interface/authorValidationError';
 import {CheckboxService} from '../../services/checkbox.service';
@@ -10,34 +10,35 @@ import {AuthorService} from '../../services/author.service';
 @Component({
   selector: 'app-add-author',
   templateUrl: './add-author.component.html',
-  styleUrls: ['./add-author.component.css']
+  styleUrls: ['./add-author.component.scss']
 })
 export class AddAuthorComponent implements OnInit {
+  @Input()
+  page;
+  @Input()
+  size;
 
-
-  constructor(private fb: FormBuilder, private authorService: AuthorService, private checkboxservice: CheckboxService) {
-  }
-
-  myFormModel: FormGroup;
-  // authors: FormArray;
-
-
-  validationErrors: AuthorValidationError;
   isHidden = true;
   isButtonHidden: boolean;
-  private mode: string;
-  private isCreated = false;
-  private authorExist = false;
-  private checkedList: Map<number, number>;
-  private idAuthor: number;
 
   showAuthorForenamePlaceholder: boolean;
   showAuthorSurnamePlaceholder: boolean;
   filteredAuthorsForenameList: string[];
   filteredAuthorsSurnameList: string[];
 
-  // tslint:disable-next-line:typedef
+  myFormModel: FormGroup;
+  // authors: FormArray;
 
+
+  validationErrors: AuthorValidationError;
+  mode: string;
+  private isCreated = false;
+  private authorExist = false;
+  private checkedList: Map<number, number>;
+  private idAuthor: number;
+
+  constructor(private fb: FormBuilder, private authorService: AuthorService, private checkboxservice: CheckboxService) {
+  }
 
   ngOnInit(): void {
     this.myFormModel = this.fb.group({
@@ -128,8 +129,11 @@ export class AddAuthorComponent implements OnInit {
             this.isCreated = true;
             this.authorExist = false;
             if (this.isCreated) {
-              this.authorService.addAuthor(author);
+              this.authorService.getAuthorsListObservable(this.page, this.size).subscribe(
+
+              );
               this.clearAuthorForm();
+              this.clearValidationErrors();
             }
           },
           response => {
@@ -146,7 +150,11 @@ export class AddAuthorComponent implements OnInit {
       this.myFormModel.get('authorSurnameInput').setValue('');
   }
 
-  // tslint:disable-next-line:typedef
+  clearValidationErrors() {
+    this.validationErrors.forename = '';
+    // @ts-ignore
+    this.validationErrors.surname = '';
+  }
   checkTheChangeAuthorForename() {
     this.myFormModel.get('authorForenameInput').valueChanges.subscribe(
       forename => this.filterForename(forename)

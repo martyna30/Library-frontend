@@ -1,14 +1,19 @@
 
   <section id="booksList">
-    <div class="button">
-      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" mat-raised-button (click)="openDialog('add')">Add a book></button>
+    <div class="d-md-block d-lg-flex button-group">
+      <button type="button" class="c-btn c-btn--primary" data-bs-toggle="modal" data-bs-target="#exampleModal"
+              mat-raised-button (click)="openDialog('add')">Add a book</button>
 
-      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"  mat-raised-button (click)="openDialog('edit')" >Modify a book</button>
+      <button type="button" class="c-btn c-btn--primary" data-bs-toggle="modal" data-bs-target="#exampleModal"
+              mat-raised-button (click)="openDialog('edit')" >Modify a book</button>
+
+    <button type="button" class="c-btn c-btn--primary" data-bs-toggle="modal" data-bs-target="#exampleModal"
+            mat-raised-button >Delete a book</button>
     </div>
     <ng-container *ngIf="bookslist !== null; else noBooks">
       <p [ngStyle]="{color: getColor()}"></p>
 
-      <table class="table table-striped">
+      <table class="table table-striped ">
         <thead>
         <tr input class="form-check-input me-1" type="checkbox" value="" aria-label="..."  class="table-primary">
           <th scope="row"> # </th>
@@ -18,7 +23,7 @@
           <th scope="row">Literary genre</th>
           <th scope="row">Year of publication</th>
           <th scope="row">Signature</th>
-          <th scope="row">amountOfbook</th>
+          <th scope="row">Amount of book</th>
         </tr>
         </thead>
         <tbody *ngIf="bookslist as list">
@@ -30,25 +35,22 @@
           <th scope="row">{{(page-1) * size + i+1}}</th>
           <td>{{book.title}}</td>
           <td>
-            <ul>
-              <li *ngFor="let author of book.authors">{{author.forename}} {{author.surname}}</li>
+            <ul class="c-list c-list--unstyled">
+              <li class="c-list_item" *ngFor="let author of book.authors">{{author.forename}} {{author.surname}}</li>
             </ul>
           </td>
           <td>
-            <ul>
-              <li *ngFor="let bookTag of book.bookTags">{{bookTag.literaryGenre}}</li>
+            <ul class="c-list c-list--unstyled">
+              <li class="c-list_item" *ngFor="let bookTag of book.bookTags">{{bookTag.literaryGenre}}</li>
             </ul>
           </td>
           <td>{{book.yearOfPublication}}</td>
           <td>{{book.signature}}</td>
           <td>{{book.amountOfbook}}</td>
         </tr>
-
         </tbody>
-
       </table>
     </ng-container>
-
 
     <ng-template #noBooks>
       <p>No books</p>
@@ -87,10 +89,9 @@
       <hr>
 
       <pre>Current page: {{page}}</pre>
-
 </div>
+  <app-add-book #childAddRef (loadData)="loadData()" [page]="page" [size]="size"  ></app-add-book>
 
-  <app-add-book #childAddRef [page]="page" [size]="size"  ></app-add-book>
-<app-delete #childDeleteRef [page]="page" [size]="size" ></app-delete>
   </section>
+
 

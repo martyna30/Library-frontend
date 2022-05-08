@@ -16,7 +16,7 @@ export class BookService {
 
   private bookListObs$ = new BehaviorSubject<Array<Book>>([]);
 
-  private totalCountBooks = new BehaviorSubject<number>(0);
+  private totalCountBooks$ = new BehaviorSubject<number>(0);
 
   constructor(private httpService: HttpService) {
   this.getBooksFromBooksService();
@@ -24,15 +24,15 @@ export class BookService {
 
 
   // @ts-ignore
-  getBookListObservable(page: any, pageSize: number): Observable<Array<Book>> {
-    this.httpService.getBooks(page, pageSize).subscribe((listBook) => {
+  getBookListObservable(page: any, size: number): Observable<Array<Book>> {
+    this.httpService.getBooks(page, size).subscribe((listBook) => {
         this.bookListObs$.next(listBook.books);
-        this.totalCountBooks.next(listBook.total)
+        this.totalCountBooks$.next(listBook.total);
       });
   }
 
   getTotalCountBooks(): Observable<number> {
-    return this.totalCountBooks.asObservable();
+    return this.totalCountBooks$.asObservable();
   }
 
   getBooksFromBooksService(): Observable<Array<Book>> {

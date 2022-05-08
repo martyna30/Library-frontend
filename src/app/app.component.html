@@ -1,34 +1,62 @@
-<body>
-<div id="container">
-<header id="header">
-  <img class="logoHeader" src="/assets/img/logo.png" alt="logo"/>
-  <h4 class="logo-text"> Library </h4>
-</header>
+<header class="t-side-header">
+    <div class="o-container">
+      <div class="t-side-header_top">
+      <div class="o-row o-row--center-y">
+        <div class="d-flex o-col o-col--lg25">
+          <img class="align-self-baseline logoHeader" src="assets/img/logo.png" alt="logo"/>
+          <h4 class="c-heading c-heading--level1 c-heading--white"> Library </h4>
+        </div>
 
-  <nav id="navbar">
-    <a class ="logo" routerLink="/"><h4>Library</h4></a>
+        <div class="o-col o-col--lg75">
 
-    <div class="row">
-      <div class="col">
-        <div ngbDropdown class="d-inline-block">
-          <button class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle>Lists</button>
-          <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
-            <button ngbDropdownItem>  <li><a routerLink="/books" routerLinkActive="active">List of Books</a></li> </button>
-            <button ngbDropdownItem>    <li><a routerLink="/authors" routerLinkActive="active">List of Authors</a></li> </button>
-            <button ngbDropdownItem>   <li><a routerLink="/tags" routerLinkActive="active">List of Book tags</a></li> </button>
-          </div>
+          <ul class="nav flex-column flex-md-row justify-content-lg-end  text-uppercase">
+            <li class="nav-item">
+              <a class="nav-link text-white sk-header-item-link" href="#">Zaloguj się</a>
+            </li>
+            <li class="nav-item">
+
+              <div class="row">
+                <div class="col">
+                  <div ngbDropdown class="d-inline-block">
+                    <button type="button" class="c-btn--outline" id="dropdownBasic1" ngbDropdownToggle>Moje konto</button>
+                    <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                      <button ngbDropdownItem>Action - 1</button>
+                      <button ngbDropdownItem>Another Action</button>
+                      <button ngbDropdownItem>Something else is here</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </li>
+          </ul>
         </div>
       </div>
+
+      </div>
+      <div class="t-side-header_divider">
+      </div>
+
+      <div class="d-md-block t-side-header_hero">
+        <p class="t-side-header_intro-text">Select the list</p>
+          <a routerLink="/books" routerLinkActive="active" class="c-btn c-btn--accent" >List of Books</a>
+          <a routerLink="/authors"  class="mx-sm-5 c-btn c-btn--accent" href="#">List of Authors</a>
+          <a routerLink="/" class="c-btn c-btn--accent" href="#">List of Book tags</a>
+
+      </div>
+
     </div>
-  </nav>
-  <router-outlet></router-outlet>
 
-  <main id="main">
-    <app-update></app-update>
 
-    <aside id="sidemenu">
+  </header>
 
-    </aside>
-  </main>
-</div>
-</body>
+  <div class="sk-result-list">
+    <div class="sk-result-list-content">
+      <div class="container">
+       <div class="row">
+         <div class="col">
+           <router-outlet></router-outlet>
+         </div>
+       </div>
+    </div>
+    </div>
+  </div>

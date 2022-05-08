@@ -7,6 +7,7 @@ import {Author} from '../app/models-interface/author';
 import {observeOn} from 'rxjs/operators';
 import {AuthorService} from './author.service';
 import {BookTag} from '../app/models-interface/bookTag';
+import {ListAuthors} from '../app/models-interface/ListAuthors';
 
 
 @Injectable({
@@ -17,22 +18,8 @@ export class HttpService {
   private httpHeader = {headers: new HttpHeaders({'Content-Type': 'application/json'})};
   private httpHeader2 = {headers2: new HttpHeaders({'Access-Control-Allow-Origin': '*'})};
 
+  constructor(private http: HttpClient) {}
 
-  constructor(private http: HttpClient) {
-   // this.getBooks(1, 10);
-    this.getAuthors();
-  }
-
-  /*getBooks(page: number, size: number): Observable<Array<Book>> {
-    const param = new HttpParams()
-      .set('page', page + '')
-      .set('size', size + '');
-    return this.http.get<Array<Book>>(this.URL_DB + 'getBooks', {
-      headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
-      observe: 'body',
-      params: param
-    });
-  }*/
   getBooks(page: number, size: number): Observable<ListBook> {
     const param = new HttpParams()
       .set('page', page + '')
@@ -45,9 +32,15 @@ export class HttpService {
   }
 
 
-
-  getAuthors(): Observable<Array<Author>> {
-    return this.http.get<Array<Author>>(this.URL_DB + 'getAuthors');
+  getAuthors(page: number, size: number): Observable<ListAuthors> {
+    const param = new HttpParams()
+      .set('page', page + '')
+      .set('size', size + '');
+    return this.http.get<ListAuthors>(this.URL_DB + 'getAuthors',  {
+        headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
+        observe: 'body',
+        params: param
+      });
   }
 
 

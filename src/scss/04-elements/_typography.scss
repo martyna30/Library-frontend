@@ -1,0 +1,26 @@
+p{
+  font-size: $font-size-5;
+  font-weight: 400;
+  line-height: $line-height-base;
+  margin: 0;
+  margin-bottom: $grid-base;
+
+}
+
+h1,h2,h3,h4,h5,h6 {
+  font-size: $font-size-4;
+  line-height: $line-height-base;
+  margin: 0;
+}
+
+a{
+  color: $dark-blue;
+  text-decoration: none;
+
+  &:hover {
+    color: $dark-blue;
+    text-decoration: underline;
+  }
+}
+
+

@@ -10,7 +10,6 @@ import {AppComponent} from './app.component';
 const routes: Routes = [
   {path: '', redirectTo: '/', pathMatch: 'full' },
   {path: 'books', component: BooksComponent },
-  {path: 'books/side', component: BooksComponent },
   {path: 'authors', component: AuthorsComponent },
   {path: '**', component: PageNotFoundComponent },
 ];

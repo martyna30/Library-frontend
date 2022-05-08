@@ -1,0 +1,61 @@
+@import 'src/customize-bootstrap.scss';
+
+@import 'src/scss/01-settings/_settings.scss';
+@import 'src/scss/02-tools/_tools.scss';
+@import 'src/scss/03-generic/_generic.scss';
+@import 'src/scss/04-elements/_elements.scss';
+@import 'src/scss/05-objects/_objects.scss';
+@import 'src/scss/06-components/_components.scss';
+@import 'src/scss/07-templates/_templates.scss';
+@import 'src/scss/08-utilities/_utilities.scss';
+
+/*.o-container {
+  border: 1px solid grey;
+  display: flex;
+  height: 900px;
+  //width: 1600px;
+  position: relative;
+
+
+}
+
+.c-nav {
+  /*height: 100px;
+  width: 300px;
+  justify-content: flex-start;
+  text-underline: none;
+  background-color: $blue;
+
+.nav-header-container {
+  /*height: 150px;
+  width: 1600px;
+  display: flex;
+  justify-content: space-between;
+
+
+.nav-container {
+
+
+}
+
+#header {
+  /*height: 150px;
+  width: 600px;
+  display: flex;
+  align-items: start;*/
+
+
+
+
+
+.logoHeader {
+
+  width: $font-size-1;
+
+  @include large-up {
+    width: $font-size-1*1.5;
+}
+}
+
+
+

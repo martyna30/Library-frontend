@@ -1,5 +1,5 @@
 // @ts-ignore
-
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
@@ -27,9 +27,13 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {CheckboxService} from '../services/checkbox.service';
 import {MatTooltipModule} from '@angular/material/tooltip';
-import {MatDialogModule} from '@angular/material/dialog';
+import {MAT_DIALOG_DATA, MAT_DIALOG_DEFAULT_OPTIONS, MatDialog, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {MatButtonModule} from '@angular/material/button';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+// @ts-ignore
+
+import {MatIconModule} from '@angular/material/icon';
+import {MatToolbarModule} from '@angular/material/toolbar';
 
 @NgModule({
   declarations: [
@@ -43,17 +47,22 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
     AddAuthorComponent,
     AddBookComponent
   ],
-  entryComponents: [
+   entryComponents: [
     AddBookComponent
-  ],
+   ],
   imports: [
-    // tslint:disable-next-line:max-line-length
     BrowserModule, HttpClientModule, FormsModule, ReactiveFormsModule,
     AppRoutingModule, BrowserAnimationsModule, MatAutocompleteModule,
     MatFormFieldModule, MatInputModule, MatTooltipModule, MatDialogModule,
-    MatButtonModule, NgbModule
+    MatButtonModule, NgbModule, MatIconModule, MatToolbarModule,
+    CommonModule
   ],
-  providers: [BookService, HttpService, AuthorService, CheckboxService], // jak jest injectable root to nie musi byc tu
+  providers: [
+    {provide: MatDialogRef, useValue: {}},
+    { provide: MAT_DIALOG_DATA, useValue: {} },
+
+    BookService, HttpService, AuthorService, CheckboxService], // jak jest injectable root to nie musi byc tu
   bootstrap: [AppComponent]
 })
 export class AppModule { }
+

@@ -1,9 +1,12 @@
-<section class="datatable">
-  <button type="button" class="btn btn-primary" (click)="showAddAuthorForm()">Add a author</button>
-  <button type="button" class="btn btn-secondary" (click)="showEditAuthorForm()">Modify a author</button>
-  <form [formGroup]="myFormModel" class="row g-3" method="post" [hidden]="isHidden">
+<section class="custom-modalbox" [hidden]="isHidden">
+  <h2 mat-dialog-title>{{mode}}</h2>
+  <mat-dialog-content  [formGroup]="myFormModel" class="row g-3" method="post">
+
+
     <fieldset class="col-10">
       <label for="validationAuthorForename" class="form-label">Author's Forename</label>
+
+
       <mat-form-field appearance="fill">
       <input matInput type="text" [matAutocomplete]="auto" (ngModelChange)="toggleAuthorForenamePlaceholder()" placeholder="Insert an Author Forename" class="form-control " id="validationAuthorForename" aria-describedby="validationServer03Feedback" required formControlName="authorForenameInput">
         <mat-autocomplete #auto="matAutocomplete">
@@ -34,5 +37,6 @@
     </div>
     </fieldset>
 
-  </form>
+   </mat-dialog-content>
+    <button type="close" class="btn-close" aria-label="Close"></button>
 </section>

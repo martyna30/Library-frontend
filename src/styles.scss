@@ -1,17 +1,38 @@
 /* You can add global styles to this file, and also import other style files */
+@import 'customize-bootstrap.scss';
+@import '../node_modules/bootstrap/scss/bootstrap';
+
+//bootstrap zmienne
+@import 'custom/base/variables';
+@import 'custom/components/button';
+//@import 'custom/base/mixins';
+//@import 'custom/base/typhography';
+//@import 'custom/components/components';
+
+
+//własne zmienne
+
+@import 'scss/01-settings/_settings.scss';
+@import 'scss/02-tools/_tools.scss';
+@import 'scss/03-generic/_generic.scss';
+@import 'scss/04-elements/_elements.scss';
+@import 'scss/05-objects/_objects.scss';
+@import 'scss/06-components/_components.scss';
+@import 'scss/07-templates/_templates.scss';
+@import 'scss/08-utilities/_utilities.scss';
+
+
 
 *{
   font-family: sans-serif;
-
-
 }
 
 .active {
-  color: mediumblue;
+  color: blue;
 }
 
 .custom-modalbox {
-  color: blue;
+  color: $blue;
   border: 1px solid #000;
   height: auto;
   width: 550px;

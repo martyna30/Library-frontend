@@ -29,39 +29,27 @@ export class BooksComponent implements OnInit {
   size = 10;
   total: Observable<number>;
 
-  private dialogRef: MatDialogRef<AddBookComponent>;
 
+  constructor( private bookService: BookService, private checkboxService: CheckboxService,
+               private dialog: MatDialog) {}
 
-  constructor(  private cdRef: ChangeDetectorRef, config: NgbPaginationConfig, private bookService: BookService, private checkboxService: CheckboxService,
-                private dialog: MatDialog) {}
-
-  /*ngAfterViewChecked() {
-    this.cdRef.detectChanges();
-  }*/
-  // tslint:disable-next-line:typedef
   @ViewChild('childAddRef')
   childComponent: AddBookComponent;
 
-  // @ViewChild('childDeleteRef')
-  // child2Component: DeleteComponent;
-// <app-delete #childDeleteRef [page]="page" [size]="size" ></app-delete>
+  @ViewChild('childDeleteRef')
+  child2Component: DeleteComponent;
+
   bookId: string;
   bookslist: Observable<Array<Book>>;
   private stan;
 
-  // tslint:disable-next-line:typedef
+
   ngOnInit() { // uruchamia sie jako 2 metoda tylko raz inicjalizuje dane w komponencie(lepiej ją uzywać niż konstruktor)
     this.loadData();
-    console.log(this.page, this.size);
   }
-  // tslint:disable-next-line:typedef
-
-
-  // tslint:disable-next-line:typedef
 
 
   getColor(): string {
-    // return this.bookslist.length >= 0 ? 'blue' : 'white';
     return 'blue';
   }
 
@@ -82,12 +70,10 @@ export class BooksComponent implements OnInit {
     dialogConfig.autoFocus = true;
     dialogConfig.data = mode;
     this.stan = mode;
-
-    //// tslint:disable-next-line:no-unused-expression
     dialogConfig.panelClass = 'custom-modalbox';
 
-    this.dialogRef = this.dialog.open(AddBookComponent, dialogConfig);
-    console.log(this.dialogRef);
+    this.dialog.open(AddBookComponent, dialogConfig);
+
     if (mode === 'edit') {
         this.childComponent.showEditBookForm();
     }
@@ -95,12 +81,6 @@ export class BooksComponent implements OnInit {
       this.childComponent.showBookForm();
     }
 
-    // this.dialogRef.afterClosed().subscribe(result => {
-      // console.log(result);
-   // });
-    // his.matDialog.closeAll();*/
-
-    this.cdRef.detectChanges();
   }
 
   // tslint:disable-next-line:typedef
@@ -137,9 +117,9 @@ export class BooksComponent implements OnInit {
 
 
   // tslint:disable-next-line:typedef
-  /*deleteBook() {
+  deleteBook() {
     this.child2Component.deleteBook();
-  }* ///(click)="deleteBook()"*/
+  }
 }
 
 

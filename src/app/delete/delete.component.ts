@@ -1,7 +1,8 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {CheckboxService} from '../../services/checkbox.service';
 import {BookService} from '../../services/book.service';
 import {AuthorService} from '../../services/author.service';
+import {HttpErrorResponse} from '@angular/common/http';
 
 @Component({
   selector: 'app-delete',
@@ -13,6 +14,12 @@ export class DeleteComponent implements OnInit {
   page;
   @Input()
   size;
+
+  @Output()
+  loadData: EventEmitter<any> = new EventEmitter();
+
+  private isDeleted = false;
+  private error: string;
   isHidden = true;
   private checkedList: Map<number, number>;
   private idBook: number;
@@ -23,20 +30,6 @@ export class DeleteComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  /*DeleteABook() {
-    if (this.isHidden) {
-      this.isHidden = !this.isHidden;
-    } else {
-      this.isHidden = true;
-    }*/
-
-  // tslint:disable-next-line:typedef
-  confirmMethod(id: number) {
-    if (confirm('Are you sure to delete book ' + id)) {
-      console.log('Implement delete functionality here');
-    }
-  }
-
   // tslint:disable-next-line:typedef
   deleteBook() {
     // @ts-ignore
@@ -45,40 +38,53 @@ export class DeleteComponent implements OnInit {
       const bookId = Number(this.checkedList.keys().next().value);
 
       if (confirm('Are you sure to delete book ')) {
-        this.bookService.deleteBook(bookId);
-        this.bookService.getBookListObservable(this.page, this.size);
+        this.bookService.deleteBook(bookId).subscribe(
+          (deletedBook) => {
+            console.log('the book nr' + deletedBook + 'had been deleted');
+            this.isDeleted = true;
+            if (this.isDeleted) {
+              this.loadData.emit();
+            }
+          },
+          (response: HttpErrorResponse) => {
+            console.log(response.error);
+            this.error = response.error;
+            this.isDeleted = false;
+            console.log(response);
+          }
+        );
       }
-    }
-    if (this.checkboxService.lengthBooksMap() > 1) {
-      alert('jest zaznaczony więcj niż jeden, może byc jeden');
-    }
-    // @ts-ignore
-    if (this.checkboxService.lengthBooksMap() === 0) {
-      alert('Brak zaznaczonego');
+      if (this.checkboxService.lengthBooksMap() > 1) {
+        alert('jest zaznaczony więcj niż jeden, może byc jeden');
+      }
+      // @ts-ignore
+      if (this.checkboxService.lengthBooksMap() === 0) {
+        alert('Brak zaznaczonego');
+      }
+
     }
 
+    /*deleteAuthor() {
+      // @ts-ignore
+      if (this.checkboxService.lengthAuthorsMap() === 1) {
+        this.checkedList = this.checkboxService.getAuthorsMap();
+        const authorId = Number(this.checkedList.keys().next().value);
+
+        if (confirm('Are you sure to delete book ')) {
+          this.authorService.deleteAuthor(authorId);
+          this.bookService.getBookListObservable(this.page, this.size);
+        }
+      }
+      if (this.checkboxService.lengthBooksMap() > 1) {
+        alert('jest zaznaczony więcj niż jeden, może byc jeden');
+      }
+      // @ts-ignore
+      if (this.checkboxService.lengthBooksMap() === 0) {
+        alert('Brak zaznaczonego');
+      }
+
+    }*/
   }
-
-  /*deleteAuthor() {
-    // @ts-ignore
-    if (this.checkboxService.lengthAuthorsMap() === 1) {
-      this.checkedList = this.checkboxService.getAuthorsMap();
-      const authorId = Number(this.checkedList.keys().next().value);
-
-      if (confirm('Are you sure to delete book ')) {
-        this.authorService.deleteAuthor(authorId);
-        this.bookService.getBookListObservable(this.page, this.size);
-      }
-    }
-    if (this.checkboxService.lengthBooksMap() > 1) {
-      alert('jest zaznaczony więcj niż jeden, może byc jeden');
-    }
-    // @ts-ignore
-    if (this.checkboxService.lengthBooksMap() === 0) {
-      alert('Brak zaznaczonego');
-    }
-
-  }*/
 }
 
 

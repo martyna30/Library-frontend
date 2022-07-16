@@ -11,7 +11,7 @@
 
           <ul class="nav flex-column flex-md-row justify-content-lg-end  text-uppercase">
             <li class="nav-item">
-              <a class="nav-link text-white sk-header-item-link" href="#">Zaloguj się</a>
+              <a routerLink="/login" routerLinkActive="active" class="nav-link text-white sk-header-item-link" href="#">Sign in</a>
             </li>
             <li class="nav-item">
 
@@ -20,7 +20,7 @@
                   <div ngbDropdown class="d-inline-block">
                     <button type="button" class="c-btn--outline" id="dropdownBasic1" ngbDropdownToggle>Moje konto</button>
                     <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
-                      <button ngbDropdownItem>Action - 1</button>
+                      <button><a routerLink="/login" routerLinkActive="active" ngbDropdownItem>Sign in</a></button>
                       <button ngbDropdownItem>Another Action</button>
                       <button ngbDropdownItem>Something else is here</button>
                     </div>

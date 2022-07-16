@@ -34,6 +34,11 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
 import {MatIconModule} from '@angular/material/icon';
 import {MatToolbarModule} from '@angular/material/toolbar';
+import { LoginComponent } from './login/login.component';
+
+import {UserAuthService} from '../services/user-auth.service';
+import {UserComponent} from './add-user/user.component';
+
 
 @NgModule({
   declarations: [
@@ -45,7 +50,9 @@ import {MatToolbarModule} from '@angular/material/toolbar';
     PageNotFoundComponent,
     BooksComponent,
     AddAuthorComponent,
-    AddBookComponent
+    AddBookComponent,
+    LoginComponent,
+    UserComponent
   ],
    entryComponents: [
     AddBookComponent
@@ -61,7 +68,7 @@ import {MatToolbarModule} from '@angular/material/toolbar';
     {provide: MatDialogRef, useValue: {}},
     { provide: MAT_DIALOG_DATA, useValue: {} },
 
-    BookService, HttpService, AuthorService, CheckboxService], // jak jest injectable root to nie musi byc tu
+    BookService, HttpService, AuthorService, CheckboxService, UserAuthService], // jak jest injectable root to nie musi byc tu
   bootstrap: [AppComponent]
 })
 export class AppModule { }

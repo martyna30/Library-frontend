@@ -8,7 +8,7 @@
               mat-raised-button (click)="openDialog('edit')" >Modify a book</button>
 
     <button type="button" class="c-btn c-btn--primary" data-bs-toggle="modal" data-bs-target="#exampleModal"
-            mat-raised-button >Delete a book</button>
+            mat-raised-button (click)="deleteBook()" >Delete a book</button>
     </div>
     <ng-container *ngIf="bookslist !== null; else noBooks">
       <p [ngStyle]="{color: getColor()}"></p>
@@ -90,8 +90,8 @@
 
       <pre>Current page: {{page}}</pre>
 </div>
-  <app-add-book #childAddRef (loadData)="loadData()" [page]="page" [size]="size"  ></app-add-book>
-
+  <app-add-book #childAddRef (loadData)="loadData()" [page]="page" [size]="size"></app-add-book>
+    <app-delete #childDeleteRef  (loadData)="loadData()" [page]="page" [size]="size" ></app-delete>
   </section>
 
 

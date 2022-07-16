@@ -38,14 +38,9 @@
                   <input matInput type="text" [matAutocomplete]="auto"  (ngModelChange)="toggleAuthorForenamePlaceholder()" placeholder="Insert an Author Forename" required formControlName="authorForenameInput">
 
                   <mat-autocomplete #auto="matAutocomplete">
-
-                    <mat-option *ngFor="let authorForename of filteredAuthorsForenameList[i]"  [value]="authorForename">
-                    {{authorForename}}
-                    </mat-option>
+                    <mat-option *ngFor="let authorForename of filteredAuthorsForenameList[i]"  [value]="authorForename">{{authorForename}}</mat-option>
                   </mat-autocomplete>
                 </mat-form-field>
-
-
 
                 <div class="invalid-feedback d-block" *ngIf="validationErrors !== undefined && validationErrors['authors[' + i + '].forename'] !== undefined">
                   {{validationErrors['authors[' + i + '].forename'][0]}}
@@ -65,7 +60,7 @@
                 </div>
               </td>
               <td>
-                <i #circle [id]="i" class="bi bi-x-circle" (click)="deleteAuthors(circle)"></i>
+                <i #circle [id]="i" class="bi-bi-x-circle" (click)="deleteAuthors(circle)">X</i>
               </td>
 
             </tr>
@@ -73,7 +68,7 @@
           </tbody>
         </table>
 
-        <button type="button" class="btn btn-outline-primary" (click)="addNextAuthor()">Add a next Author</button>
+      <button type="button" class="btn btn-outline-primary" (click)="addNextAuthor()">Add a next Author</button>
       </fieldset>
 
       <fieldset class="input-fieldset">
@@ -86,24 +81,26 @@
           </tr>
           </thead>
           <tbody>
-          <ng-container formArrayName="booksTags">
+          <ng-container formArrayName="bookTags">
 
-            <tr *ngFor="let bookTag of myFormModel.get('booksTags')['controls']; let i = index;" formGroupName="{{ i }}">
+            <tr *ngFor="let bookTag of myFormModel.get('bookTags')['controls']; let i = index;" formGroupName="{{ i }}">
               <th>{{i + 1}}</th>
               <td>
                 <mat-form-field appearance="fill">
-               <input matInput type="text" [matAutocomplete]="auto3" (ngModelChange)="toggleBookTagPlaceholder()" placeholder="Insert a Literary Genre" required formControlName="booksTagInput">
+               <input matInput type="text" [matAutocomplete]="auto3" (ngModelChange)="toggleBookTagPlaceholder()"
+                      placeholder="Insert a Literary Genre" required formControlName="booksTagInput">
                   <mat-autocomplete #auto3="matAutocomplete">
                     <mat-option *ngFor="let literaryGenre of filteredBooksTagsList[i]" [value]="literaryGenre">{{literaryGenre}}</mat-option>
                   </mat-autocomplete>
                 </mat-form-field>
 
-                  <div class = "invalid-feedback d-block" *ngIf="validationErrors !== undefined && validationErrors['booksTags[' + i + '].literaryGenre'] !== undefined">
+                  <div class="invalid-feedback d-block" *ngIf="validationErrors?.bookTags && validationErrors['bookTags[' + i + '].literaryGenre'] !== undefined">
                   {{validationErrors['bookTags[' + i + '].literaryGenre'][0]}}
                 </div>
               </td>
+
               <td>
-                <i #circle [id]="i" class="bi bi-x-circle" (click)="deleteBooksTags(circle)"></i>
+                <i class="bi-bi-x-circle" (click)="deleteBooksTags(i)">X</i>
               </td>
             </tr>
           </ng-container>
@@ -132,18 +129,23 @@
          <input matInput type="text" placeholder="Insert a Book signature" required formControlName="signatureInput"/>
         </mat-form-field>
 
-        <div class="col-10" *ngIf="validationErrors !== null && validationErrors?.signature">
-        <span class="text text-danger">{{validationErrors.signature[0]}}</span>
+        <div id="validationServer04Feedback" class="invalid-feedback d-block"  *ngIf="validationErrors !== null && validationErrors?.signature">
+       {{validationErrors.signature[0]}}
         </div>
+
+
       </fieldset>
 
   </mat-dialog-content>
+
+
   <div mat-dialog-actions [align]="'end'" class="button-group">
     <button mat-raised-button  class="mat-raised-button btn-lg" type="submit" (click)="saveBook()">Submit</button>
-    <button mat-raised-button (click)="closeDialog()" >Close </button>
+    <button mat-raised-button (click)="closeDialog()">Close </button>
   </div>
 
 </section>
+
 
 
 

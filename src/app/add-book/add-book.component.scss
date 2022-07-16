@@ -11,22 +11,18 @@
 
 
 .input-fieldset {
-  //margin-top: $gutter*2;
   margin-bottom: $gutter*2;
 }
 
 .mat-dialog {
   label {
-
     font-size: $font-size-5;
     text-transform: uppercase;
     display: block;
   }
 }
 
-.mat-form-field {
-  display: block;
-}
+
 
 td {
   position: relative;
@@ -40,10 +36,17 @@ td {
   margin-right: auto;
   max-height: 100%;
 }
-.bi bi-x-circle {
-  width: 50px;
-  height: 50px;
+.bi-bi-x-circle {
+  width: auto;
+  height: auto;
+  min-height: 20px;
+  min-width: 20px;
   position: absolute;
+  color: black;
+  bottom: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  cursor: pointer;
 }
 
 
@@ -56,9 +59,6 @@ td {
 }
 
 table {
-  //max-height: 100%;
-  //max-width: 80%;
-  //text-align: start;
   padding: 2em;
   flex-wrap: wrap;
   margin-top: $grid-base*3;
@@ -70,20 +70,19 @@ table {
   color: black;
   height: auto;
   width: auto;
-  min-width: 550px;
+  min-width: 500px;
   max-width: 1200px;
-  min-height: 550px;
+  min-height: 400px;
   max-height: 1500px;
   background-color: #fff;
-  justify-content: flex-start;
-  align-items: start;
   position: absolute;
-  bottom: 20%;
+  bottom: 45%;
   left: 50%;
   transform: translateX(-50%);
-  padding:  $grid-base*3 $grid-base*3 $grid-base*3 $grid-base*3;
+  padding:  $grid-base*4 $grid-base*3 $grid-base*3 $grid-base*3;
   overflow: scroll;
 
 
 
 }
+

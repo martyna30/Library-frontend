@@ -49,8 +49,8 @@ export class BookService {
   }
 
   // tslint:disable-next-line:typedef
-  deleteBook(id: number) {
-    this.httpService.deleteBook(id);
+  deleteBook(id: number): Observable<Book> {
+    return this.httpService.deleteBook(id);
  }
 
  // @ts-ignore

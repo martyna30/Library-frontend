@@ -1,9 +1,10 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {FormArray, FormBuilder, FormGroup} from '@angular/forms';
 import {AuthorValidationError} from '../models-interface/authorValidationError';
 import {CheckboxService} from '../../services/checkbox.service';
 import {Author} from '../models-interface/author';
 import {AuthorService} from '../../services/author.service';
+import {HttpErrorResponse} from '@angular/common/http';
 
 
 
@@ -17,6 +18,9 @@ export class AddAuthorComponent implements OnInit {
   page;
   @Input()
   size;
+
+  @Output()
+  loadData: EventEmitter<any> = new EventEmitter();
 
   isHidden = true;
   isButtonHidden: boolean;
@@ -104,9 +108,11 @@ export class AddAuthorComponent implements OnInit {
           this.isCreated = true;
           if (this.isCreated) {
             this.clearAuthorForm();
+            this.loadData.emit();
+            this.closeDialog();
           }
         },
-        response => {
+      (response: HttpErrorResponse) => {
           console.log(response.error);
           this.validationErrors = response.error;
           this.isCreated = false;
@@ -129,14 +135,13 @@ export class AddAuthorComponent implements OnInit {
             this.isCreated = true;
             this.authorExist = false;
             if (this.isCreated) {
-              this.authorService.getAuthorsListObservable(this.page, this.size).subscribe(
-
-              );
+              this.loadData.emit();
               this.clearAuthorForm();
               this.clearValidationErrors();
+              this.closeDialog();
             }
           },
-          response => {
+        (response: HttpErrorResponse) => {
             console.log(response.error);
             this.validationErrors = response.error;
             this.isCreated = false;
@@ -186,4 +191,11 @@ export class AddAuthorComponent implements OnInit {
   toggleAuthorSurnamePlaceholder() {
     this.showAuthorSurnamePlaceholder = this.myFormModel.get('authorSurnameInput').value === '';
   }
+
+  closeDialog(): void {
+    this.isHidden = true;
+
+  }
+
+
 }

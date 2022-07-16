@@ -18,13 +18,14 @@ export class HttpService {
   private httpHeader = {headers: new HttpHeaders({'Content-Type': 'application/json'})};
   private httpHeader2 = {headers2: new HttpHeaders({'Access-Control-Allow-Origin': '*'})};
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+  }
 
   getBooks(page: number, size: number): Observable<ListBook> {
     const param = new HttpParams()
       .set('page', page + '')
       .set('size', size + '');
-    return this.http.get<ListBook>(this.URL_DB + 'getBooks' , {
+    return this.http.get<ListBook>(this.URL_DB + 'getBooks', {
       headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
       observe: 'body',
       params: param
@@ -36,11 +37,11 @@ export class HttpService {
     const param = new HttpParams()
       .set('page', page + '')
       .set('size', size + '');
-    return this.http.get<ListAuthors>(this.URL_DB + 'getAuthors',  {
-        headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
-        observe: 'body',
-        params: param
-      });
+    return this.http.get<ListAuthors>(this.URL_DB + 'getAuthors', {
+      headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
+      observe: 'body',
+      params: param
+    });
   }
 
 
@@ -165,14 +166,39 @@ export class HttpService {
   }
 
 
+  // tslint:disable-next-line:typedef
+  // @ts-ignore
+  generateToken(username: string, password: string): Observable<string> {
+    const param = new HttpParams()
+      .set('username', username + '')
+      .set('password', password + '');
+    //localStorage.getItem('acess_token', '');
+    return this.http.post<string>('http://localhost:8080/v1/library/login', param, {
+      responseType: 'text' as 'json',
+      //headers: {'Content-Type': 'application/x-www-form-urlencoded', 'Access-Control-Allow-Origin': '*' },
+      observe: 'body'
+    });
+  }
+
 }
 
 
 
 
 
-
-
+/*post(url: string, body: any | null, options: {
+  headers?: HttpHeaders | {
+    [header: string]: string | string[];
+};
+  observe?: 'body';
+  params?: HttpParams | {
+    [param: string]: string | string[];
+};
+  reportProgress?: boolean;
+  responseType: 'text';
+  withCredentials?: boolean;
+}): Observable<string>;
+*/
 
 
 

@@ -11,33 +11,52 @@
 @import 'src/scss/08-utilities/_utilities.scss';
 
 
-.row g-3 {
-  display: flex;
-  flex-direction: column;
-}
-.col-10 {
-  display: flex;
-  flex-direction: column;
+
+.form-label {
+    font-size: $font-size-5;
+    text-transform: uppercase;
+    display: block;
 }
 
+
+.mat-form-field {
+  display: block;
+}
+
+
+.col-10 {
+  margin-bottom: $gutter*2;
+  margin-top: $gutter;
+}
+.button-group {
+
+  text-align: center;
+  margin: 0 auto;
+  justify-content: space-between;
+}
 
 .custom-modalbox {
   border: 1px solid #000;
-  display: flex;
+  color: black;
   height: auto;
-  min-width: 550px;
-  max-width: 1000px;
+  min-width: 380px;
+  max-width: 500px;
   width: auto;
-  min-height: 550px;
-  max-height: 1500px;
+  height: auto;
+  min-height: 300px;
+  max-height: 500px;
   background-color: #fff;
-  justify-content: flex-start;
-  align-items: start;
   position: absolute;
-  bottom: 20%;
+  bottom: 70%;
   left: 50%;
   transform: translateX(-50%);
-  padding:  $grid-base*3 $grid-base*3 $grid-base*3 $grid-base*3;
+  padding:  $grid-base*4 $grid-base*3 $grid-base*3 $grid-base*3;
   overflow: hidden;
 
 }
+
+
+
+
+
+

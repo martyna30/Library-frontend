@@ -16,7 +16,7 @@ import {Observable} from 'rxjs';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
-  private token: string;
+  private token: Observable<string>;
   private isLoggedIn = false;
   validationErrors: LoggingValidationError;
 
@@ -31,22 +31,18 @@ export class LoginComponent implements OnInit {
 
   // tslint:disable-next-line:typedef
   public signIn() {
-    this.userAuthService.login(this.username, this.password).subscribe((token) => {
-        this.token = token;
-
-        // this.token = this.userAuthService.getTokenFromService();
-        console.log(this.token);
-        if (this.token !== null || undefined || '') {
-         this.router.navigate(['/users']);
-    }} , (response: HttpErrorResponse) => {
-        console.log(response.error);
-        this.validationErrors = response.error;
-        this.isLoggedIn = false;
-        console.log(response);
-        console.log('login incorrect');
-      });
+    this.userAuthService.login(this.username, this.password); // .subscribe((token) => {
+    // this.token = token;
+    // this.token = this.userAuthService.getTokenFromService();
+    console.log(this.token);
+    if (this.token !== null || undefined || '') {
+      this.router.navigate(['/users']);
+      this.isLoggedIn = true;
+    }
+    else {
+      console.log('login incorrect');
+    }
   }
-
 }
 
 

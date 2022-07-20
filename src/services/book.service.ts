@@ -8,17 +8,20 @@ import {BookTag} from '../app/models-interface/bookTag';
 import {any} from 'codelyzer/util/function';
 import {map, switchMap, tap} from 'rxjs/operators';
 import {ListBook} from '../app/models-interface/listBook';
+import {UserAuthService} from './user-auth.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class BookService {
 
+
+
   private bookListObs$ = new BehaviorSubject<Array<Book>>([]);
 
   private totalCountBooks$ = new BehaviorSubject<number>(0);
 
-  constructor(private httpService: HttpService) {
+  constructor(private httpService: HttpService, private userAuthService: UserAuthService) {
   this.getBooksFromBooksService();
   }
 
@@ -40,6 +43,7 @@ export class BookService {
   }
 
   saveBookToDB(book: Book): Observable<Book> {
+
     return this.httpService.saveBook(book);
  }
     // tslint:disable-next-line:typedef

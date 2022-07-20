@@ -10,6 +10,8 @@ import {BookTag} from '../app/models-interface/bookTag';
 import {ListAuthors} from '../app/models-interface/ListAuthors';
 
 
+
+
 @Injectable({
   providedIn: 'root'
 })
@@ -18,7 +20,13 @@ export class HttpService {
   private httpHeader = {headers: new HttpHeaders({'Content-Type': 'application/json'})};
   private httpHeader2 = {headers2: new HttpHeaders({'Access-Control-Allow-Origin': '*'})};
 
+ // rivate token: Observable<string>;
+
+
+
   constructor(private http: HttpClient) {
+    // this.token = userAuthService.getTokenFromService();
+
   }
 
   getBooks(page: number, size: number): Observable<ListBook> {
@@ -26,7 +34,7 @@ export class HttpService {
       .set('page', page + '')
       .set('size', size + '');
     return this.http.get<ListBook>(this.URL_DB + 'getBooks', {
-      headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
+     // headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
       observe: 'body',
       params: param
     });
@@ -68,15 +76,7 @@ export class HttpService {
     });
   }
 
-  deleteBook(id: number): Observable<Book> {
-    const param = new HttpParams()
-      .set('bookId', id + '');
-    return this.http.delete<Book>(this.URL_DB + 'deleteBook', {
-      headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
-      observe: 'body',
-      params: param
-    });
-  }
+
 
   updateBook(book: Book): Observable<Book> {
     return this.http.put<Book>(this.URL_DB + 'updateBook', book);
@@ -172,13 +172,31 @@ export class HttpService {
     const param = new HttpParams()
       .set('username', username + '')
       .set('password', password + '');
-    //localStorage.getItem('acess_token', '');
+
     return this.http.post<string>('http://localhost:8080/v1/library/login', param, {
       responseType: 'text' as 'json',
-      //headers: {'Content-Type': 'application/x-www-form-urlencoded', 'Access-Control-Allow-Origin': '*' },
-      observe: 'body'
+      observe: 'body',
+     // headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'}
+
+    });
+
+  }
+
+  deleteBook(id: number): Observable<Book> {
+    const param = new HttpParams()
+      .set('bookId', id + '');
+    const token = localStorage.getItem('acess_token');
+
+    return this.http.delete<Book>(this.URL_DB + 'deleteBook', {
+      // headers: { Authorization: `Bearer ${token}`},
+      headers: {'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+      observe: 'body',
+      params: param,
+      responseType: 'json',
+
     });
   }
+
 
 }
 
@@ -186,19 +204,11 @@ export class HttpService {
 
 
 
-/*post(url: string, body: any | null, options: {
-  headers?: HttpHeaders | {
-    [header: string]: string | string[];
-};
-  observe?: 'body';
-  params?: HttpParams | {
-    [param: string]: string | string[];
-};
-  reportProgress?: boolean;
-  responseType: 'text';
-  withCredentials?: boolean;
-}): Observable<string>;
-*/
+
+
+
+
+
 
 
 

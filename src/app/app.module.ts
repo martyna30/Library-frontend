@@ -10,7 +10,7 @@ import { DeleteComponent } from './delete/delete.component';
 import {BookService} from '../services/book.service';
 import {HttpService} from '../services/http.service';
 import {AuthorsComponent } from './authors/authors.component';
-import {HttpClient, HttpClientModule} from '@angular/common/http';
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {AuthorService} from '../services/author.service';
 import {AdDirective} from './directive/ad.directive';
@@ -38,6 +38,7 @@ import { LoginComponent } from './login/login.component';
 
 import {UserAuthService} from '../services/user-auth.service';
 import {UserComponent} from './add-user/user.component';
+
 
 
 @NgModule({

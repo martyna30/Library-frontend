@@ -1,6 +1,6 @@
 {
   "http://localhost:4200": {
-    "target": "http://localhost:8080/v1/library/login/**",
+    "target": "http://localhost:8080/**",
     "secure": false
   }
 }

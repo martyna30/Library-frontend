@@ -21,7 +21,6 @@
   &--primary {
     background-color: $blue-light;
     color: $blue-text;
-
       &:hover {
         background-color: darken($blue-light, 15%);
         color: $white;
@@ -44,6 +43,16 @@
 
     &:hover {
       background-color: darken($green, 15%);
+      color: $white;
+    }
+  }
+
+  &--orange {
+    background-color: $orange;
+    color: $white;
+
+    &:hover {
+      background-color: darken($orange, 15%);
       color: $white;
     }
   }

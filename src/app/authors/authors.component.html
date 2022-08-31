@@ -6,6 +6,8 @@
     <button type="button" class="c-btn c-btn--primary" data-bs-toggle="modal" data-bs-target="#exampleModal"
             mat-raised-button (click)="openDialog('edit')" >Modify a Author</button>
 
+    <button type="button" class="c-btn c-btn--primary" data-bs-toggle="modal" data-bs-target="#exampleModal"
+            mat-raised-button (click)="deleteAuthor()">Delete a Author</button>
 
   </div>
 
@@ -79,5 +81,5 @@
 
 
   <app-add-author #childAddRef [page]="page" [size]="size" ></app-add-author>
-
+  <app-delete #childDeleteRef  (loadBookData)="loadData()"  ></app-delete>
 </section>

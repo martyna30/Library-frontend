@@ -77,13 +77,7 @@ export class AddBookComponent implements  OnInit {
               private bookService: BookService,
               private checkboxservice: CheckboxService,
               private fb: FormBuilder) {}
-// <pre>{{myFormModel.value | json }}</pre>
-// @Optional()
-  /*ngAfterViewChecked(): void {
-    console.log(this.size, this.page);
-    }*/
-    // @Optional() @Inject(MAT_DIALOG_DATA) public editData: any
-  // @Inject(MAT_DIALOG_DATA) data: {mode}) {   // private dialogRef: MatDialogRef<AddBookComponent>
+
 
   ngOnInit(): void {
     this.myFormModel = this.fb.group({
@@ -94,16 +88,6 @@ export class AddBookComponent implements  OnInit {
       signatureInput: ''
     });
 
-    /*if (this.editData === null) {
-      return;
-    }*/
-    // UWAGA metoda ngOnInit jest uruchamiana zanim ktoś cokolwiek kliknie i w editData wtedy jest
-    // przekazywany pusty obiekt
-    // if (Object.keys(this.dialogRef).length === 0) {
-     // return;
-
-   // }
-
     this.addNextAuthor();
     this.addNextBooksTag();
     this.checkTheChangeTitle();
@@ -112,8 +96,8 @@ export class AddBookComponent implements  OnInit {
 
   closeDialog(): void {
     this.isHidden = true;
-    this.clearValidationErrors();
     this.clearBookForm();
+    this.clearValidationErrors();
   }
 
 
@@ -175,10 +159,7 @@ export class AddBookComponent implements  OnInit {
     yearOfPublication => this.filterYear(yearOfPublication)
     );
   }
-  /*displayFn(subject) {
-    return subject ? subject.name : undefined;
-  }*/
-  // tslint:disable-next-line:typedef
+
   toggleTitlePlaceholder() {
      this.showTitlePlaceholder = (this.myFormModel.get('titleInput').value === '');
   }
@@ -233,9 +214,9 @@ export class AddBookComponent implements  OnInit {
   }
   // tslint:disable-next-line:typedef
   private filterYear(yearOfPublication: number) {
-    this.bookService.getBooksWithSpecifiedPublicationYear(yearOfPublication).subscribe( books => {
-      this.filteredYears = books.map(book => book.yearOfPublication);
-  });
+    // this.bookService.getBooksWithSpecifiedPublicationYear(yearOfPublication).subscribe( books => {
+     // this.filteredYears = books.map(book => book.yearOfPublication);
+  // });
   }
     // return this.authorslist.map(author => author.forename)
      // .filter(authorForename => authorForename.toLowerCase().includes(filterValue)
@@ -294,8 +275,9 @@ export class AddBookComponent implements  OnInit {
         literaryGenre: booksTagControl.get('booksTagInput').value
       };
       book.bookTags.push(bookTag);
+    });
       // @ts-ignore
-      this.bookService.updateBook(book).subscribe((modifiedBook) => {
+    this.bookService.updateBook(book).subscribe((modifiedBook) => {
       console.log(modifiedBook);
       this.isCreated = true;
       if (this.isCreated) {
@@ -308,17 +290,9 @@ export class AddBookComponent implements  OnInit {
         this.validationErrors = response.error;
         this.isCreated = false;
       });
-    });
-  }
-
-
-  // tslint:disable-next-line:typedef
-  showEditBookForm() {
+    }
+    showEditBookForm() {
     this.mode = 'edit';
-    // this.showBookForm();
-    // if (this.editData) {
-      // this.mode = 'edit';
-   // }
     this.isHidden = false;
     this.checkedList = this.checkboxservice.getBooksMap();
 
@@ -392,31 +366,23 @@ export class AddBookComponent implements  OnInit {
         };
         book.bookTags.push(bookTag);
       });
-      this.bookService.saveBookToDB(book).subscribe(
-        createdBook => {
-            console.log(createdBook);
-            this.isCreated = true;
-            this.bookExist = false;
-            if (this.isCreated) {
-              this.loadData.emit();
-              this.clearBookForm();
-              this.clearValidationErrors();
-              this.closeDialog();
-
-            }},
-        (response: HttpErrorResponse) => {
-            this.validationErrors = response.error;
-            this.isCreated = false;
-            if (response.status === 400) {
-              this.isCreated = false;
-              this.bookExist = true;
+      this.bookService.saveBookToDB(book).subscribe(saveBook => {
+        if (saveBook !== undefined) {
+          this.isCreated = true;
+        }
+        if (this.isCreated) {
+            this.loadData.emit();
+            this.closeDialog();
           }
-            console.log(response);
+        },
+        (response: HttpErrorResponse) => {
+          console.log(response.error);
+          this.validationErrors = response.error;
+          this.isCreated = false;
         });
     }
   }
 
-  // tslint:disable-next-line:typedef
   deleteAuthors(circle: HTMLElement) {
     this.authors.removeAt(Number(circle.id));
   }
@@ -445,24 +411,25 @@ export class AddBookComponent implements  OnInit {
   // tslint:disable-next-line:typedef
 
   clearValidationErrors() {
-   this.validationErrors.title = '';
-    // @ts-ignore
-   this.validationErrors.authors.forEach((author, index) => {
-      this.authorSurnameError[index] = author.forename = '';
-    });
-   this.validationErrors.authors.forEach((author, index) => {
-     this.authorSurnameError[index] = author.surname = '';
-    });
+   this.validationErrors.title = null;
 
+   console.log(this.validationErrors);
+    // @ts-ignore
+   // console.log(this.validationErrors['authors[0].forename']);
+    //this.validationErrors.authors[0].forename = null;
+    this.validationErrors['authors[0].forename'][0] = '';
     // this.validationErrors.bookTags. = '';
-   this.validationErrors.yearOfPublication = '';
-   this.validationErrors.signature = '';
+   this.validationErrors.yearOfPublication = null;
+   this.validationErrors.signature = null;
+    this.validationErrors = undefined;
   }
   // this.showYearOfPublicationPlaceholder = this.myFormModel.get('yearOfPublicationInput').value === '';
 
+ // validationErrors['authors[' + i + '].forename'][0]
 
 
-
+  /*this.validationErrors.authors.forEach((author, index) => {
+  this.authorSurnameError[index] = author.surname[index] = null;*/
 
 }
 

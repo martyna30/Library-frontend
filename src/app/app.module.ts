@@ -38,8 +38,23 @@ import { LoginComponent } from './login/login.component';
 
 import {UserAuthService} from '../services/user-auth.service';
 import {UserComponent} from './add-user/user.component';
+import {AuthGuard} from './auth/auth.guard';
+import {AuthTokenInterceptor} from './interceptors/auth-token-interceptor';
 
+// import { StoreModule } from '@ngrx/store';
+// import { counterReducer } from './counter.reducer';
+import {JWT_OPTIONS, JwtModule} from '@auth0/angular-jwt';
 
+// tslint:disable-next-line:typedef
+export function jwtOptionsFactory(http: HttpService) {
+  return {
+    tokenGetter: () => {
+      return http.getAccessToken();
+    },
+   allowedDomains: ['localhost:8080'],
+    // disallowedRoutes: ['http://localhost:8080/v1/library/login', 'http://localhost:8080/v1/library/token/refresh']
+  };
+}
 
 @NgModule({
   declarations: [
@@ -53,7 +68,9 @@ import {UserComponent} from './add-user/user.component';
     AddAuthorComponent,
     AddBookComponent,
     LoginComponent,
-    UserComponent
+    UserComponent,
+
+
   ],
    entryComponents: [
     AddBookComponent
@@ -63,13 +80,23 @@ import {UserComponent} from './add-user/user.component';
     AppRoutingModule, BrowserAnimationsModule, MatAutocompleteModule,
     MatFormFieldModule, MatInputModule, MatTooltipModule, MatDialogModule,
     MatButtonModule, NgbModule, MatIconModule, MatToolbarModule,
-    CommonModule
-  ],
+    CommonModule,
+    JwtModule.forRoot({
+    jwtOptionsProvider: {
+    provide: JWT_OPTIONS,
+      useFactory: jwtOptionsFactory,
+      deps: [HttpService]
+    }
+  })
+  ], // StoreModule.forRoot({ count: counterReducer })],
   providers: [
     {provide: MatDialogRef, useValue: {}},
-    { provide: MAT_DIALOG_DATA, useValue: {} },
-
-    BookService, HttpService, AuthorService, CheckboxService, UserAuthService], // jak jest injectable root to nie musi byc tu
+    {provide: MAT_DIALOG_DATA, useValue: {} },
+    {provide: HTTP_INTERCEPTORS,
+    useClass: AuthTokenInterceptor,
+    multi: true
+    },
+   BookService, HttpService, AuthorService, CheckboxService, AuthGuard, UserAuthService], // jak jest injectable root to nie musi byc tu
   bootstrap: [AppComponent]
 })
 export class AppModule { }

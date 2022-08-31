@@ -87,6 +87,11 @@ export class AuthorService {
   getAuthorsSurnameWithSpecifiedCharacters(surname: string) {
     return this.httpService.getAuthorsSurnameWithSpecifiedCharacters(surname);
   }
+
+  // tslint:disable-next-line:typedef
+  deleteAuthor(authorId: number) {
+    return this.httpService.deleteAuthor(authorId);
+  }
 }
 
 

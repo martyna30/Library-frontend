@@ -1,4 +1,4 @@
-<section id="login">
+<section id="login" [hidden]="isHidden">
   <div class="card card-container">
     <h3 class="text-center text-uppercase">Log in to the catalogue</h3>
     <form class="form-signin">
@@ -6,8 +6,9 @@
       <input [(ngModel)]="username" name="username" type="text" id="inputEmail" class="form-control" placeholder="Login">
 
       <input [(ngModel)]="password" name="password" type="password" id="inputPassword" class="form-control" placeholder="Password">
-      <button type="submit" class="c-btn c-btn--primary"(click)="signIn()">Sign in</button>
+      <button type="submit" class="c-btn c-btn--primary" (click)="signIn()">Sign in</button>
+
     </form>
   </div>
-  <p> login, password, token</p>
+
 </section>

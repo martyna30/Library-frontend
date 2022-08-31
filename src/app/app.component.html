@@ -11,7 +11,8 @@
 
           <ul class="nav flex-column flex-md-row justify-content-lg-end  text-uppercase">
             <li class="nav-item">
-              <a routerLink="/login" routerLinkActive="active" class="nav-link text-white sk-header-item-link" href="#">Sign in</a>
+              <a  routerLink="/login" routerLinkActive="active" class="cursor-pointer" class="nav-link text-white sk-header-item-link"  *ngIf="!isloggedin" (click)="showLoginForm()">Sign in</a>
+              <a routerLinkActive="active" class="nav-link text-white sk-header-item-link" *ngIf="isloggedin" (click)="logout()">Log out</a>
             </li>
             <li class="nav-item">
 
@@ -43,6 +44,7 @@
           <a routerLink="/" class="c-btn c-btn--accent" href="#">List of Book tags</a>
 
       </div>
+      <app-login  [isHidden]="isHidden"  (eventLogin)="change()"></app-login>
 
     </div>
 

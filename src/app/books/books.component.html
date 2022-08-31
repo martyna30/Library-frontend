@@ -91,7 +91,7 @@
       <pre>Current page: {{page}}</pre>
 </div>
   <app-add-book #childAddRef (loadData)="loadData()" [page]="page" [size]="size"></app-add-book>
-    <app-delete #childDeleteRef  (loadData)="loadData()" [page]="page" [size]="size" ></app-delete>
+    <app-delete #childDeleteRef  (loadBookData)="loadData()" [page]="page" [size]="size" ></app-delete>
   </section>
 
 

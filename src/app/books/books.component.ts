@@ -14,6 +14,7 @@ import {DeleteComponent} from '../delete/delete.component';
 import {NgbPaginationConfig} from '@ng-bootstrap/ng-bootstrap';
 import {MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { ChangeDetectorRef, AfterViewChecked} from '@angular/core';
+import {Token} from '../models-interface/token';
 
 const FILTER_PAG_REGEX = /[^0-9]/g;
 
@@ -30,8 +31,9 @@ export class BooksComponent implements OnInit {
   total: Observable<number>;
 
 
-  constructor( private bookService: BookService, private checkboxService: CheckboxService,
-               private dialog: MatDialog) {}
+  constructor(private bookService: BookService, private checkboxService: CheckboxService,
+              private dialog: MatDialog) {
+  }
 
   @ViewChild('childAddRef')
   childComponent: AddBookComponent;
@@ -44,6 +46,7 @@ export class BooksComponent implements OnInit {
   private stan;
 
 
+  // tslint:disable-next-line:typedef
   ngOnInit() { // uruchamia sie jako 2 metoda tylko raz inicjalizuje dane w komponencie(lepiej ją uzywać niż konstruktor)
     this.loadData();
   }
@@ -61,9 +64,11 @@ export class BooksComponent implements OnInit {
 
     } else {
       this.checkboxService.removeFromBooksMap(Number(checkboxOfBook.value));
+
     }
   }
 
+  // tslint:disable-next-line:typedef
   openDialog(mode: any) {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
@@ -72,23 +77,28 @@ export class BooksComponent implements OnInit {
     this.stan = mode;
     dialogConfig.panelClass = 'custom-modalbox';
 
-    this.dialog.open(AddBookComponent, dialogConfig);
+    const accesstoken = localStorage.getItem('access_token');
 
-    if (mode === 'edit') {
+    // const token = JSON.parse(tokens) as Token;
+    // const acessToken =  token.access_token;
+    if (accesstoken !== null) {
+      this.dialog.open(AddBookComponent, dialogConfig);
+      if (mode === 'edit') {
         this.childComponent.showEditBookForm();
+      } else {
+        this.childComponent.showBookForm();
+      }
+    } else {
+      alert('Function only available for the administrator');
     }
-    else {
-      this.childComponent.showBookForm();
-    }
-
   }
 
   // tslint:disable-next-line:typedef
   selectPage(page: string) {
-      this.page = parseInt(page, 10) || 1;
+    this.page = parseInt(page, 10) || 1;
 
-      console.log(this.page);
-      this.loadData();
+    console.log(this.page);
+    this.loadData();
   }
 
   // tslint:disable-next-line:typedef
@@ -100,12 +110,13 @@ export class BooksComponent implements OnInit {
   loadPage(page: any) {
     console.log(page);
     if (page !== 1) {
-        this.page = page;
-        console.log(page);
-        this.loadData();
-      }
+      this.page = page;
+      console.log(page);
+      this.loadData();
     }
-    // tslint:disable-next-line:typedef
+  }
+
+  // tslint:disable-next-line:typedef
   loadData() {
     const page = this.page - 1;
     this.bookService.getBookListObservable(page, this.size);
@@ -113,12 +124,20 @@ export class BooksComponent implements OnInit {
     this.total = this.bookService.getTotalCountBooks();
     console.log(this.bookslist);
   }
+
   // tslint:disable-next-line:typedef
 
 
   // tslint:disable-next-line:typedef
   deleteBook() {
-    this.child2Component.deleteBook();
+    const accesstoken = localStorage.getItem('access_token');
+
+    if (accesstoken !== null) {
+      this.child2Component.deleteBook();
+    }
+    else {
+      alert('Function only available for the administrator');
+    }
   }
 }
 

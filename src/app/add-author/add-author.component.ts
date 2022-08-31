@@ -107,7 +107,6 @@ export class AddAuthorComponent implements OnInit {
           console.log(modifiedAuthor);
           this.isCreated = true;
           if (this.isCreated) {
-            this.clearAuthorForm();
             this.loadData.emit();
             this.closeDialog();
           }
@@ -136,8 +135,6 @@ export class AddAuthorComponent implements OnInit {
             this.authorExist = false;
             if (this.isCreated) {
               this.loadData.emit();
-              this.clearAuthorForm();
-              this.clearValidationErrors();
               this.closeDialog();
             }
           },
@@ -194,7 +191,8 @@ export class AddAuthorComponent implements OnInit {
 
   closeDialog(): void {
     this.isHidden = true;
-
+    this.clearAuthorForm();
+    this.clearValidationErrors();
   }
 
 

@@ -16,7 +16,10 @@ export class DeleteComponent implements OnInit {
   size;
 
   @Output()
-  loadData: EventEmitter<any> = new EventEmitter();
+  loadBookData: EventEmitter<any> = new EventEmitter();
+
+  @Output()
+  loadAuthorData: EventEmitter<any> = new EventEmitter();
 
   private isDeleted = false;
   private error: string;
@@ -32,59 +35,81 @@ export class DeleteComponent implements OnInit {
 
   // tslint:disable-next-line:typedef
   deleteBook() {
+
+    if (this.checkboxService.lengthBooksMap() > 1) {
+      alert('jest zaznaczony więcj niż jeden, może byc jeden');
+    }
+    // @ts-ignore
+    if (this.checkboxService.lengthBooksMap() === 0) {
+      alert('Brak zaznaczonego');
+    }
     // @ts-ignore
     if (this.checkboxService.lengthBooksMap() === 1) {
       this.checkedList = this.checkboxService.getBooksMap();
       const bookId = Number(this.checkedList.keys().next().value);
-
       if (confirm('Are you sure to delete book ')) {
         this.bookService.deleteBook(bookId).subscribe(
           (deletedBook) => {
             console.log('the book nr' + deletedBook + 'had been deleted');
             this.isDeleted = true;
             if (this.isDeleted) {
-              this.loadData.emit();
+              this.loadBookData.emit();
             }
           },
           (response: HttpErrorResponse) => {
             console.log(response.error);
             this.error = response.error;
             this.isDeleted = false;
-            console.log(response);
+            if (response.status === 403) {
+              this.isDeleted = false;
+              console.log(response);
+              alert('Function only available for the administrator');
+            }
           }
         );
       }
-      if (this.checkboxService.lengthBooksMap() > 1) {
-        alert('jest zaznaczony więcj niż jeden, może byc jeden');
-      }
-      // @ts-ignore
-      if (this.checkboxService.lengthBooksMap() === 0) {
-        alert('Brak zaznaczonego');
-      }
-
     }
-
-    /*deleteAuthor() {
-      // @ts-ignore
-      if (this.checkboxService.lengthAuthorsMap() === 1) {
-        this.checkedList = this.checkboxService.getAuthorsMap();
-        const authorId = Number(this.checkedList.keys().next().value);
-
-        if (confirm('Are you sure to delete book ')) {
-          this.authorService.deleteAuthor(authorId);
-          this.bookService.getBookListObservable(this.page, this.size);
-        }
-      }
-      if (this.checkboxService.lengthBooksMap() > 1) {
-        alert('jest zaznaczony więcj niż jeden, może byc jeden');
-      }
-      // @ts-ignore
-      if (this.checkboxService.lengthBooksMap() === 0) {
-        alert('Brak zaznaczonego');
-      }
-
-    }*/
   }
+
+  // tslint:disable-next-line:typedef
+  deleteAuthor() {
+
+    if (this.checkboxService.lengthBooksMap() > 1) {
+      alert('jest zaznaczony więcj niż jeden, może byc jeden');
+    }
+    if (this.checkboxService.lengthBooksMap() === 0) {
+      alert('Brak zaznaczonego');
+    }
+    if (this.checkboxService.lengthAuthorsMap() === 1) {
+      this.checkedList = this.checkboxService.getAuthorsMap();
+      const authorId = Number(this.checkedList.keys().next().value);
+      if (confirm('Are you sure to delete book ')) {
+        this.authorService.deleteAuthor(authorId).subscribe(
+            (deletedAuthor) => {
+              console.log('the author nr' + deletedAuthor + 'had been deleted');
+              this.isDeleted = true;
+              if (this.isDeleted) {
+                this.loadAuthorData.emit();
+              }
+            },
+            (response: HttpErrorResponse) => {
+              console.log(response.error);
+              this.error = response.error;
+              this.isDeleted = false;
+              if (response.status === 403) {
+                this.isDeleted = false;
+                console.log(response);
+                alert('Function only available for the administrator');
+              }
+            }
+          );
+      }
+    }
+  }
+
+
+
+
 }
 
 

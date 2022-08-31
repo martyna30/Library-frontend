@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {Book} from '../app/models-interface/book';
 import {HttpService} from './http.service';
-import {HttpParams} from '@angular/common/http';
+import {HttpErrorResponse, HttpParams} from '@angular/common/http';
 import {Author} from '../app/models-interface/author';
 import {BookTag} from '../app/models-interface/bookTag';
 import {any} from 'codelyzer/util/function';
@@ -14,9 +14,6 @@ import {UserAuthService} from './user-auth.service';
   providedIn: 'root'
 })
 export class BookService {
-
-
-
   private bookListObs$ = new BehaviorSubject<Array<Book>>([]);
 
   private totalCountBooks$ = new BehaviorSubject<number>(0);
@@ -78,9 +75,9 @@ export class BookService {
     return this.httpService.getBooksTagsWithSpecifiedCharacters(bookTag);
   }
 
-  getBooksWithSpecifiedPublicationYear(yearOfPublication: number): Observable<Array<Book>> {
+  /*getBooksWithSpecifiedPublicationYear(yearOfPublication: number): Observable<Array<Book>> {
     return this.httpService.getBooksWithSpecifiedPublicationYear(yearOfPublication);
-  }
+  }*/
 }
 
 

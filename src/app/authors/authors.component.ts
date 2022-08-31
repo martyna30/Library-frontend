@@ -10,6 +10,7 @@ import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
 import {AddBookComponent} from '../add-book/add-book.component';
 import {DeleteComponent} from '../delete/delete.component';
 import {AddAuthorComponent} from '../add-author/add-author.component';
+import {Token} from '../models-interface/token';
 
 const FILTER_PAG_REGEX = /[^0-9]/g;
 
@@ -64,13 +65,19 @@ export class AuthorsComponent implements OnInit {
     dialogConfig.autoFocus = true;
     // tslint:disable-next-line:no-unused-expression
     dialogConfig.panelClass = 'custom-modalbox';
+    const accesstoken = localStorage.getItem('access_token');
 
-    this.dialog.open(AddAuthorComponent, dialogConfig);
-
-    if (mode === 'edit') {
-      this.childComponent.showEditAuthorForm();
+    // const token = JSON.parse(tokens) as Token;
+    // const acessToken =  token.access_token;
+    if (accesstoken !== null) {
+      this.dialog.open(AddAuthorComponent, dialogConfig);
+      if (mode === 'edit') {
+        this.childComponent.showEditAuthorForm();
+      } else {
+        this.childComponent.showAddAuthorForm();
+      }
     } else {
-      this.childComponent.showAddAuthorForm();
+      alert('Function only available for the administrator');
     }
   }
 
@@ -106,8 +113,15 @@ export class AuthorsComponent implements OnInit {
     console.log(this.authorslist);
   }
 
-  /*deleteAuthor() {
-    this.child2Component.deleteAuthor(); //dopisz dla autora!!
-  }*/
+  deleteAuthor() {
+    const accesstoken = localStorage.getItem('access_token');
+
+    if (accesstoken !== null) {
+      this.child2Component.deleteAuthor();
+    }
+    else {
+      alert('Function only available for the administrator');
+    }
+  }
 }
 

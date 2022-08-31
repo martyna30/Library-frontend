@@ -1,14 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Injectable, OnInit, Output, EventEmitter, Input} from '@angular/core';
 import {UserAuthService} from '../../services/user-auth.service';
 import {User} from '../models-interface/user';
 import {FormGroup} from '@angular/forms';
 import {Router} from '@angular/router';
 import {HttpErrorResponse} from '@angular/common/http';
 import {AuthorValidationError} from '../models-interface/authorValidationError';
-import {logging} from 'protractor';
+
 import {LoggingValidationError} from '../models-interface/LoggingValidationError';
 import {Observable} from 'rxjs';
+import {HttpService} from '../../services/http.service';
+import {Token} from '../models-interface/token';
 
+@Injectable({
+  providedIn: 'root'
+})
 
 @Component({
   selector: 'app-login',
@@ -16,33 +21,58 @@ import {Observable} from 'rxjs';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
-  private token: Observable<string>;
-  private isLoggedIn = false;
-  validationErrors: LoggingValidationError;
+   private token: boolean;
 
-  username = '';
-  password = '';
+  isloggedin: boolean;
 
-  constructor(private userAuthService: UserAuthService, private router: Router) {
-  }
+   @Input()
+   isHidden = true;
 
-  ngOnInit(): void {
-  }
+   @Output()
+   eventLogin: EventEmitter<boolean> = new EventEmitter<boolean>();
+
+   username = '';
+   password = '';
+
+   payload: Token = {
+     access_token: '',
+     refresh_token: ''
+   };
+
+   constructor(private userAuthService: UserAuthService, private http: HttpService, private router: Router) {
+   }
+
+   ngOnInit(): void {
+   }
 
   // tslint:disable-next-line:typedef
-  public signIn() {
-    this.userAuthService.login(this.username, this.password); // .subscribe((token) => {
-    // this.token = token;
+   public signIn(){
+     console.log(this.http);
+     console.log(this.username);
+     console.log(this.password);
+
+     this.http.generateToken(this.username, this.password).subscribe(
+       (token) => {
+         this.token = token;
+         if (token) {
+           this.isloggedin = true;
+           this.eventLogin.emit(this.isloggedin);
+           if (this.isloggedin === true) {
+             this.isHidden = true;
+           }
+           this.router.navigate(['/users']);
+         } else {
+           console.log('login incorrect');
+         }
+       });
     // this.token = this.userAuthService.getTokenFromService();
-    console.log(this.token);
-    if (this.token !== null || undefined || '') {
-      this.router.navigate(['/users']);
-      this.isLoggedIn = true;
-    }
-    else {
-      console.log('login incorrect');
-    }
-  }
+    // console.log(this.token);
+     // if (this.token !== null) {
+   }
+
+
+
+
 }
 
 

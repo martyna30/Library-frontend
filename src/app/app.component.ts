@@ -15,7 +15,7 @@ import {Observable} from 'rxjs';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-  private token?: Observable<UserProfile | null>;
+  private userdata: string;
 
     constructor(private http: HttpService, private userAuth: UserAuthService, private router: Router) {
   }
@@ -29,23 +29,23 @@ export class AppComponent implements OnInit {
     this.checkStatus();
     // localStorage.clear();
   }
-  // tslint:disable-next-line:typedef
   checkStatus(): void {
-   // this.http.token$.subscribe((data) => {
-   this.http.getTokenFromService().subscribe(data => {
-     this.token = data;
-   });
-   if (this.token !== null) {
+    this.http.token$.subscribe(data => {
+      this.userdata = data;
+    });
+    if (this.userdata !== null && this.userdata !== undefined) {
       this.isloggedin = true;
-   }
-    else  {
-     this.isloggedin = !this.isloggedin;
+      console.log('zalog');
+    }
+    else {
+      // this.isloggedin = !this.isloggedin;
+      this.isloggedin = false;
+      console.log(' nie zalog');
     }
   }
 
   logout() {
-    localStorage.removeItem('refresh_token');
-    localStorage.removeItem('access_token');
+    localStorage.clear();
     this.router.navigate(['/login']);
     this.change();
     this.showLoginForm();

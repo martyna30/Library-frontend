@@ -15,6 +15,9 @@ import {NgbPaginationConfig} from '@ng-bootstrap/ng-bootstrap';
 import {MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { ChangeDetectorRef, AfterViewChecked} from '@angular/core';
 import {Token} from '../models-interface/token';
+import {UserProfile} from '../models-interface/user-profile';
+import {HttpService} from '../../services/http.service';
+import {getToken} from 'codelyzer/angular/styles/cssLexer';
 
 const FILTER_PAG_REGEX = /[^0-9]/g;
 
@@ -32,7 +35,7 @@ export class BooksComponent implements OnInit {
 
 
   constructor(private bookService: BookService, private checkboxService: CheckboxService,
-              private dialog: MatDialog) {
+              private dialog: MatDialog, private http: HttpService) {
   }
 
   @ViewChild('childAddRef')
@@ -44,7 +47,7 @@ export class BooksComponent implements OnInit {
   bookId: string;
   bookslist: Observable<Array<Book>>;
   private stan;
-
+  private token: string;
 
   // tslint:disable-next-line:typedef
   ngOnInit() { // uruchamia sie jako 2 metoda tylko raz inicjalizuje dane w komponencie(lepiej ją uzywać niż konstruktor)
@@ -67,8 +70,7 @@ export class BooksComponent implements OnInit {
 
     }
   }
-
-  // tslint:disable-next-line:typedef
+// tslint:disable-next-line:typedef
   openDialog(mode: any) {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
@@ -76,13 +78,16 @@ export class BooksComponent implements OnInit {
     dialogConfig.data = mode;
     this.stan = mode;
     dialogConfig.panelClass = 'custom-modalbox';
-
-    const accesstoken = localStorage.getItem('access_token');
-
-    // const token = JSON.parse(tokens) as Token;
-    // const acessToken =  token.access_token;
-    if (accesstoken !== null) {
-      this.dialog.open(AddBookComponent, dialogConfig);
+    /*const token = this.userdata as UserProfile;
+      const exp = token.exp;
+      const expired = (Date.now() >= exp * 1000);
+      if (!expired) {
+   }*/
+    this.dialog.open(AddBookComponent, dialogConfig);
+    this.http.token$.subscribe((token) => {
+      this.token = token;
+    });
+    if (this.token !== null && this.token !== undefined) {
       if (mode === 'edit') {
         this.childComponent.showEditBookForm();
       } else {
@@ -125,20 +130,24 @@ export class BooksComponent implements OnInit {
     console.log(this.bookslist);
   }
 
+
+
   // tslint:disable-next-line:typedef
 
 
   // tslint:disable-next-line:typedef
   deleteBook() {
-    const accesstoken = localStorage.getItem('access_token');
-
-    if (accesstoken !== null) {
+    // const accesstoken = localStorage.getItem('access_token');
+    const token = this.http.token$.getValue();
+    if (token !== null && token !== undefined) {
       this.child2Component.deleteBook();
     }
     else {
       alert('Function only available for the administrator');
     }
   }
+
+
 }
 
 

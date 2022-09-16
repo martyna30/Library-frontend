@@ -10,6 +10,7 @@ import {LoggingValidationError} from '../models-interface/LoggingValidationError
 import {Observable} from 'rxjs';
 import {HttpService} from '../../services/http.service';
 import {Token} from '../models-interface/token';
+import {AuthTokenInterceptor} from '../interceptors/auth-token-interceptor';
 
 @Injectable({
   providedIn: 'root'
@@ -21,7 +22,7 @@ import {Token} from '../models-interface/token';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
-   private token: boolean;
+   private token: any;
 
   isloggedin: boolean;
 

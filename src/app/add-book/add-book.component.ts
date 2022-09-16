@@ -416,12 +416,12 @@ export class AddBookComponent implements  OnInit {
    console.log(this.validationErrors);
     // @ts-ignore
    // console.log(this.validationErrors['authors[0].forename']);
-    //this.validationErrors.authors[0].forename = null;
-    this.validationErrors['authors[0].forename'][0] = '';
+    // this.validationErrors.authors[0].forename = null;
+   this.validationErrors['authors[0].forename'][0] = '';
     // this.validationErrors.bookTags. = '';
    this.validationErrors.yearOfPublication = null;
    this.validationErrors.signature = null;
-    this.validationErrors = undefined;
+   this.validationErrors = undefined;
   }
   // this.showYearOfPublicationPlaceholder = this.myFormModel.get('yearOfPublicationInput').value === '';
 

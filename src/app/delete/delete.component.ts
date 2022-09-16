@@ -74,10 +74,10 @@ export class DeleteComponent implements OnInit {
   // tslint:disable-next-line:typedef
   deleteAuthor() {
 
-    if (this.checkboxService.lengthBooksMap() > 1) {
+    if (this.checkboxService.lengthAuthorsMap() > 1) {
       alert('jest zaznaczony więcj niż jeden, może byc jeden');
     }
-    if (this.checkboxService.lengthBooksMap() === 0) {
+    if (this.checkboxService.lengthAuthorsMap() === 0) {
       alert('Brak zaznaczonego');
     }
     if (this.checkboxService.lengthAuthorsMap() === 1) {

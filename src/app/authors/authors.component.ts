@@ -69,7 +69,7 @@ export class AuthorsComponent implements OnInit {
 
     // const token = JSON.parse(tokens) as Token;
     // const acessToken =  token.access_token;
-    if (accesstoken !== null) {
+    if (accesstoken !== null && accesstoken !== undefined) {
       this.dialog.open(AddAuthorComponent, dialogConfig);
       if (mode === 'edit') {
         this.childComponent.showEditAuthorForm();
@@ -115,8 +115,7 @@ export class AuthorsComponent implements OnInit {
 
   deleteAuthor() {
     const accesstoken = localStorage.getItem('access_token');
-
-    if (accesstoken !== null) {
+    if (accesstoken !== null && accesstoken !== undefined) {
       this.child2Component.deleteAuthor();
     }
     else {

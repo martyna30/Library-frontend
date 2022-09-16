@@ -32,21 +32,5 @@ export class UserAuthService {
     }, response => {
       console.log(response);
     });*/
-
-
-  getTokenFromService(): Observable<any> {
-    return this.httpService.getTokenFromService();
-  }
-
-
-
-
-
-
-
-
-
-
-
-
 }
+

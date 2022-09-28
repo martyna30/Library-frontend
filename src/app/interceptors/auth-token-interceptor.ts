@@ -1,22 +1,22 @@
 import {HttpClient, HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
-import {Injectable, Injector } from '@angular/core';
+import {EventEmitter, Injectable, Injector, Input, Output} from '@angular/core';
 import {Token} from '../models-interface/token';
-import {Observable, throwError} from 'rxjs';
+import {BehaviorSubject, Observable, throwError} from 'rxjs';
 import {catchError, map, switchMap} from 'rxjs/operators';
 import {HttpService} from '../../services/http.service';
+import {Router} from '@angular/router';
 
 
 @Injectable()
 export class AuthTokenInterceptor implements HttpInterceptor {
-  constructor(private injector: Injector, private http: HttpClient) {
-  }
 
+  private islogout = false;
   static accessToken = '';
   static refreshToken = '';
   refresh = false;
 
-  // intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-  // tslint:disable-next-line:typedef
+  constructor(private injector: Injector, private http: HttpClient, private httpService: HttpService) {}
+
   intercept(request, next) {
     // if (request.url.indexOf('login') > -1 || request.url.indexOf('refreshToken') > -1) {
 
@@ -25,20 +25,6 @@ export class AuthTokenInterceptor implements HttpInterceptor {
           Authorization: `Bearer ${AuthTokenInterceptor.accessToken}`
         }
       });
-      /*this.httpService.token$.next(null);
-        localStorage.removeItem('access_token');
-        localStorage.removeItem('refresh_token');
-        this.httpService = this.injector.get(HttpService);
-         const accessToken = AuthTokenInterceptor.accessToken;
-      const refreshToken = AuthTokenInterceptor.refreshToken;
-      const isAccessTokenExpired = this.httpService.isTokenExpired(accessToken);
-      const isRefreshTokenExpired = this.httpService.isTokenExpired(refreshToken);
-    if(AuthTokenInterceptor.accessToken !== null && AuthTokenInterceptor.refreshToken !== null
-    && isAccessTokenExpired && !isRefreshTokenExpired )*/
-    /*const refreshreq = request.clone({
-      setHeaders: {
-        Authorization: `Bearer ${AuthTokenInterceptor.refreshToken}`
-      }});*/
       return next.handle(req).pipe(catchError((err: HttpErrorResponse) => {
         if (err.status === 403 && !this.refresh) {
           this.refresh = true;
@@ -48,7 +34,9 @@ export class AuthTokenInterceptor implements HttpInterceptor {
             switchMap((res: any) => {
               const newtoken = res as Token;
               AuthTokenInterceptor.accessToken = newtoken.access_token;
-
+              localStorage.clear();
+              localStorage.setItem('new_token', newtoken.access_token);
+              this.httpService.token$.next(newtoken.access_token);
               return next.handle(request.clone({
                 setHeaders: {
                   Authorization: `Bearer ${AuthTokenInterceptor.accessToken}`
@@ -57,7 +45,35 @@ export class AuthTokenInterceptor implements HttpInterceptor {
             })
           );
         }
-        this.refresh = false;
+        if (err.status === 403 && this.refresh === true && !this.islogout && AuthTokenInterceptor.accessToken !== null) {
+          this.islogout = true;
+          AuthTokenInterceptor.accessToken = '';
+          const httpService = this.injector.get(HttpService);
+          return httpService.logout();
+          /*return this.http.post('http://localhost:8080/v1/library/logout', {}, {}).pipe(
+            map(res => {
+                const response = res as string;
+                AuthTokenInterceptor.accessToken = response;
+                localStorage.clear();
+                this.httpService.token$.next(null);
+                this.isloggedin = false;
+                this.isloggedin$.next(this.isloggedin);
+                // this.event.emit(this.isloggedin);
+                // this.router.navigate(['/login']);
+              })
+            );*/
+          // AuthTokenInterceptor.accessToken = '';
+         // localStorage.clear();
+          // this.httpService.token$.next(null);
+        }
+        if (err.status === 422 && !this.islogout) {
+          return next.handle(req);
+        }
+
+        if (err.status === 403 && this.islogout) {
+          return next.handle(req);
+        }
+        // this.refresh = false;
         return throwError(() => err);
       }));
     }

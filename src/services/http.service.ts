@@ -27,12 +27,12 @@ export class HttpService {
   private httpHeader2 = {headers2: new HttpHeaders({'Access-Control-Allow-Origin': '*'})};
 
   token$ = new BehaviorSubject<string | null>(null);
+  isloggedin$ = new BehaviorSubject<boolean | null>(null);
   jwtHelper = new JwtHelperService();
 
   constructor(private http: HttpClient) {
   }
 
-  // tslint:disable-next-line:typedef
   isTokenExpired(accesstoken?): boolean {
     //  const accesstoken = localStorage.getItem('access_token');
     try {
@@ -47,35 +47,6 @@ export class HttpService {
       return null;
     }
   }
-
-  getAccessToken() {
-    const accesstoken = localStorage.getItem('access_token');
-    /*if (accesstoken) {
-     // const isTokenExpired = this.jwtHelper.isTokenExpired(accesstoken);
-    //  if (isTokenExpired) {
-      //  this.token$.next(null);
-        return '';*/
-    // const userData = this.jwtHelper.decodeToken(accesstoken) as UserProfile;
-    // this.token$.next(accesstoken);  //tu usówam
-    return accesstoken;
-  }
-
-  // tslint:disable-next-line:typedef
-  getRefreshToken() {
-    const refreshtoken = localStorage.getItem('refresh_token');
-    return refreshtoken;
-  }
-
-
-  getTokenFromService() {
-    return this.token$.getValue();
-    console.log(this.token$.getValue());
-  }
-
-  getTokenObservable() {
-    return this.token$.asObservable();
-  }
-
 
   getBook(id: number): Observable<Book> {
     const param = new HttpParams()
@@ -274,7 +245,7 @@ export class HttpService {
         const tokens = response as Token;
         localStorage.setItem('access_token', tokens.access_token);
         localStorage.setItem('refresh_token', tokens.refresh_token);
-          // this.token$.next(tokens.access_token);
+        this.token$.next(tokens.access_token);
         AuthTokenInterceptor.accessToken = response.access_token;
         AuthTokenInterceptor.refreshToken = response.refresh_token;
         return true;
@@ -285,9 +256,22 @@ export class HttpService {
       })
     );
   }
+   logout() {
+     return this.http.post('http://localhost:8080/v1/library/logout', {}, {}).pipe(
+              map(res => {
+                localStorage.clear();
+                this.token$.next(null);
+                const isLoggedin = false;
+                this.isloggedin$.next(isLoggedin);
+              })
+     );
+   }
+
+
+
 
   // tslint:disable-next-line:typedef
-  refreshToken(payload) {
+  /*refreshToken(payload) {
     // @ts-ignore
     return this.http.post<Token>(this.URL_DB + 'token/refresh', payload, {
       headers: {'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json', Authorization: `Bearer ${payload}`},
@@ -307,8 +291,8 @@ export class HttpService {
     console.log(errors);
     return of(false);
     })
-  );*/
-  }
+  )/*/
+
 }
 
 

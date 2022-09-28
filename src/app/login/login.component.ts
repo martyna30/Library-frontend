@@ -22,7 +22,7 @@ import {AuthTokenInterceptor} from '../interceptors/auth-token-interceptor';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
-   private token: any;
+   private isComming: boolean;
 
   isloggedin: boolean;
 
@@ -53,9 +53,9 @@ export class LoginComponent implements OnInit {
      console.log(this.password);
 
      this.http.generateToken(this.username, this.password).subscribe(
-       (token) => {
-         this.token = token;
-         if (token) {
+       (tokenIsComming) => {
+         this.isComming = tokenIsComming;
+         if (this.isComming) {
            this.isloggedin = true;
            this.eventLogin.emit(this.isloggedin);
            if (this.isloggedin === true) {

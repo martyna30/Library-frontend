@@ -36,6 +36,9 @@ export class BooksComponent implements OnInit {
 
   constructor(private bookService: BookService, private checkboxService: CheckboxService,
               private dialog: MatDialog, private http: HttpService) {
+      this.http.token$.subscribe((token) => {
+      this.token = token;
+    });
   }
 
   @ViewChild('childAddRef')
@@ -83,11 +86,9 @@ export class BooksComponent implements OnInit {
       const expired = (Date.now() >= exp * 1000);
       if (!expired) {
    }*/
-    this.dialog.open(AddBookComponent, dialogConfig);
-    this.http.token$.subscribe((token) => {
-      this.token = token;
-    });
+
     if (this.token !== null && this.token !== undefined) {
+      this.dialog.open(AddBookComponent, dialogConfig);
       if (mode === 'edit') {
         this.childComponent.showEditBookForm();
       } else {
@@ -137,9 +138,9 @@ export class BooksComponent implements OnInit {
 
   // tslint:disable-next-line:typedef
   deleteBook() {
-    // const accesstoken = localStorage.getItem('access_token');
-    const token = this.http.token$.getValue();
-    if (token !== null && token !== undefined) {
+    // const token = this.http.token$.getValue();
+    if (this.token !== null && this.token !== undefined) {
+    // if (token !== null && token !== undefined) {
       this.child2Component.deleteBook();
     }
     else {

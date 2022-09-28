@@ -22,26 +22,32 @@ export class AppComponent implements OnInit {
 
   title = 'library-frontend';
 
-  isloggedin = true;
+  isloggedin: boolean;
   isHidden = true;
 
   ngOnInit(): void {
+    this.checkToken();
     this.checkStatus();
     // localStorage.clear();
   }
-  checkStatus(): void {
+  checkToken(): void {
     this.http.token$.subscribe(data => {
       this.userdata = data;
     });
     if (this.userdata !== null && this.userdata !== undefined) {
       this.isloggedin = true;
       console.log('zalog');
-    }
-    else {
+    } else {
       // this.isloggedin = !this.isloggedin;
       this.isloggedin = false;
       console.log(' nie zalog');
     }
+  }
+
+  checkStatus(): void {
+    this.http.isloggedin$.subscribe(isLoggedin => {
+      this.isloggedin = isLoggedin;
+    });
   }
 
   logout() {

@@ -11,6 +11,7 @@ import {AddBookComponent} from '../add-book/add-book.component';
 import {DeleteComponent} from '../delete/delete.component';
 import {AddAuthorComponent} from '../add-author/add-author.component';
 import {Token} from '../models-interface/token';
+import {HttpService} from '../../services/http.service';
 
 const FILTER_PAG_REGEX = /[^0-9]/g;
 
@@ -24,12 +25,14 @@ export class AuthorsComponent implements OnInit {
   page = 1;
   size = 10;
   total: Observable<number>;
-  // authorslist: Array<Author> = [];
+  private token: string;
 
-  constructor(config: NgbPaginationConfig, private authorService: AuthorService, private checkboxService: CheckboxService, private dialog: MatDialog) {}
-  // authors: Observable<Author[]>;
-  // @ts-ignore
-
+  constructor(config: NgbPaginationConfig, private authorService: AuthorService, private http: HttpService,
+              private checkboxService: CheckboxService, private dialog: MatDialog) {
+      this.http.token$.subscribe((token) => {
+      this.token = token;
+    });
+  }
 
   @ViewChild('childAddRef')
   childComponent: AddAuthorComponent;
@@ -65,11 +68,8 @@ export class AuthorsComponent implements OnInit {
     dialogConfig.autoFocus = true;
     // tslint:disable-next-line:no-unused-expression
     dialogConfig.panelClass = 'custom-modalbox';
-    const accesstoken = localStorage.getItem('access_token');
 
-    // const token = JSON.parse(tokens) as Token;
-    // const acessToken =  token.access_token;
-    if (accesstoken !== null && accesstoken !== undefined) {
+    if (this.token !== null && this.token !== undefined) {
       this.dialog.open(AddAuthorComponent, dialogConfig);
       if (mode === 'edit') {
         this.childComponent.showEditAuthorForm();
@@ -114,8 +114,7 @@ export class AuthorsComponent implements OnInit {
   }
 
   deleteAuthor() {
-    const accesstoken = localStorage.getItem('access_token');
-    if (accesstoken !== null && accesstoken !== undefined) {
+    if (this.token !== null && this.token !== undefined) {
       this.child2Component.deleteAuthor();
     }
     else {

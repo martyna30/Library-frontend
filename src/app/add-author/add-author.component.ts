@@ -99,24 +99,27 @@ export class AddAuthorComponent implements OnInit {
   // tslint:disable-next-line:typedef
   private changeAuthor() {
     const author: Author = {
-        id: this.idAuthor,
-        forename: this.myFormModel.get('authorForenameInput').value,
-        surname: this.myFormModel.get('authorSurnameInput').value,
-      };
+      id: this.idAuthor,
+      forename: this.myFormModel.get('authorForenameInput').value,
+      surname: this.myFormModel.get('authorSurnameInput').value,
+    };
     this.authorService.updateAuthor(author).subscribe((modifiedAuthor) => {
-          console.log(modifiedAuthor);
-          this.isCreated = true;
-          if (this.isCreated) {
-            this.loadData.emit();
-            this.closeDialog();
-          }
-        },
-      (response: HttpErrorResponse) => {
-          console.log(response.error);
-          this.validationErrors = response.error;
-          this.isCreated = false;
-        });
-    }
+      if (modifiedAuthor !== undefined) {
+        this.isCreated = true;
+      }
+      if (this.isCreated) {
+        this.loadData.emit();
+        this.closeDialog();
+      }
+    }, (response: HttpErrorResponse) => {
+      console.log(response.error);
+      this.validationErrors = response.error;
+      this.isCreated = false;
+      if (response.status === 403) {
+        alert('Access denied, you have to log in');
+      }
+    });
+  }
   // tslint:disable-next-line:typedef
   saveAuthor() {
     // @ts-ignore
@@ -128,11 +131,12 @@ export class AddAuthorComponent implements OnInit {
           forename: this.myFormModel.get('authorForenameInput').value,
           surname: this.myFormModel.get('authorSurnameInput').value
         };
-      this.authorService.saveAuthor(author).subscribe(
-          createdAuthor => {
+      this.authorService.saveAuthor(author).subscribe(createdAuthor => {
+            if (createdAuthor !== undefined) {
+              this.isCreated = true;
+              this.authorExist = false;
+            }
             console.log(createdAuthor);
-            this.isCreated = true;
-            this.authorExist = false;
             if (this.isCreated) {
               this.loadData.emit();
               this.closeDialog();
@@ -142,7 +146,9 @@ export class AddAuthorComponent implements OnInit {
             console.log(response.error);
             this.validationErrors = response.error;
             this.isCreated = false;
-            console.log(response);
+            if (response.status === 403) {
+            alert('Access denied, you have to log in');
+            }
           });
       }
     }
@@ -157,6 +163,7 @@ export class AddAuthorComponent implements OnInit {
     // @ts-ignore
     this.validationErrors.surname = '';
   }
+  // tslint:disable-next-line:typedef
   checkTheChangeAuthorForename() {
     this.myFormModel.get('authorForenameInput').valueChanges.subscribe(
       forename => this.filterForename(forename)
@@ -197,3 +204,4 @@ export class AddAuthorComponent implements OnInit {
 
 
 }
+

@@ -13,6 +13,20 @@
 
  <ng-container *ngIf="authorslist != null; else noAuthors">
    <p [ngStyle]="{color: getColor()}"></p>
+
+   <fieldset [formGroup]="myFormModel"  class="input-fieldset">
+     <mat-form-field class="search-form-field" appearance="fill">
+       <input matInput type="text" [matAutocomplete]="auto" (ngModelChange)="toggleNamePlaceholder()" [(ngModel)]="objectToSearch"
+              placeholder="Enter author's name" required formControlName="nameInput"/>
+       <mat-autocomplete #auto="matAutocomplete">
+         <mat-option *ngFor="let objectName of this.searchedObjectsName" [value]="objectName">{{objectName}}</mat-option>
+       </mat-autocomplete>
+     </mat-form-field>
+   </fieldset>
+
+
+
+
    <table class="table table-striped">
      <thead>
      <tr input class="form-check-input me-1" type="checkbox" value="" aria-label="..."  class="table-primary">
@@ -24,7 +38,7 @@
      </thead>
      <tbody *ngIf="authorslist as list">
 
-     <tr *ngFor="let author of list | async let i = index">
+     <tr *ngFor="let author of list | async | filter:objectToSearch; let i = index">
        <td>
          <input #self class="form-check-input" type="checkbox" [value]="author.id" (change)="changeCheckboxList(self)">
        </td>
@@ -80,6 +94,6 @@
 
 
 
-  <app-add-author #childAddRef [page]="page" [size]="size" ></app-add-author>
-  <app-delete #childDeleteRef  (loadBookData)="loadData()"  ></app-delete>
+  <app-add-author #childAddRef (loadData)="loadData()" [page]="page" [size]="size" [checkboxOfAuthor]="checkboxOfAuthor"></app-add-author>
+  <app-delete #childDeleteRef  (loadAuthorData)="loadData()" ></app-delete>
 </section>

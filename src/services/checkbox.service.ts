@@ -27,19 +27,19 @@ export class CheckboxService {
   }
 
   getAuthorsMap(): Map<number, number> {
-    return this.booksMap;
+    return this.authorsMap;
   }
 
   addToAuthorsMap(id: number): void {
-    this.booksMap.set(id, 1);
+    this.authorsMap.set(id, 1);
   }
 
   removeFromAuthorsMap(id: number): void {
-    this.booksMap.delete(id);
+    this.authorsMap.delete(id);
   }
 
   lengthAuthorsMap(): number {
-    return this.booksMap.size;
+    return this.authorsMap.size;
   }
 
 

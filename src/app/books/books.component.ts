@@ -18,6 +18,9 @@ import {Token} from '../models-interface/token';
 import {UserProfile} from '../models-interface/user-profile';
 import {HttpService} from '../../services/http.service';
 import {getToken} from 'codelyzer/angular/styles/cssLexer';
+import {ListBook} from '../models-interface/listBook';
+import {FormBuilder, FormGroup} from '@angular/forms';
+import {ObjectService} from '../../services/object.service';
 
 const FILTER_PAG_REGEX = /[^0-9]/g;
 
@@ -32,12 +35,32 @@ export class BooksComponent implements OnInit {
   page = 1;
   size = 10;
   total: Observable<number>;
+  private token: string;
+  private user: Array<string>;
+  checkboxOfBook: number;
+  myFormModel: FormGroup;
+
+  bookId: string;
+  booksList: Observable<Array<Book>>;
+  bookslist: any[];
+
+  objectToSearch: string;
+
+  private stan;
+
+
+  private searchedObjectsName: string[] = [];
+  private showNamePlaceholder: boolean;
 
 
   constructor(private bookService: BookService, private checkboxService: CheckboxService,
-              private dialog: MatDialog, private http: HttpService) {
-      this.http.token$.subscribe((token) => {
+              private dialog: MatDialog, private objectService: ObjectService,
+              private http: HttpService, private fb: FormBuilder) {
+    this.http.token$.subscribe((token) => {
       this.token = token;
+    });
+    this.http.userProfile$.subscribe((userRole) => {
+      this.user = userRole;
     });
   }
 
@@ -47,14 +70,15 @@ export class BooksComponent implements OnInit {
   @ViewChild('childDeleteRef')
   child2Component: DeleteComponent;
 
-  bookId: string;
-  bookslist: Observable<Array<Book>>;
-  private stan;
-  private token: string;
 
   // tslint:disable-next-line:typedef
   ngOnInit() { // uruchamia sie jako 2 metoda tylko raz inicjalizuje dane w komponencie(lepiej ją uzywać niż konstruktor)
+    this.myFormModel = this.fb.group({
+      nameInput: '',
+    });
+
     this.loadData();
+    this.checkTheChangeName();
   }
 
 
@@ -66,13 +90,15 @@ export class BooksComponent implements OnInit {
   changeCheckboxList(checkboxOfBook: HTMLInputElement) {    // checkboxOfBook: HTMLInputElement
     // tslint:disable-next-line:align
     if (checkboxOfBook.checked) {
-      this.checkboxService.addToBooksMap(Number(checkboxOfBook.value));
+      this.checkboxOfBook = Number(checkboxOfBook.value);
+      this.checkboxService.addToBooksMap(Number(this.checkboxOfBook));
 
     } else {
-      this.checkboxService.removeFromBooksMap(Number(checkboxOfBook.value));
+      this.checkboxService.removeFromBooksMap(Number(this.checkboxOfBook));
 
     }
   }
+
 // tslint:disable-next-line:typedef
   openDialog(mode: any) {
     const dialogConfig = new MatDialogConfig();
@@ -81,21 +107,19 @@ export class BooksComponent implements OnInit {
     dialogConfig.data = mode;
     this.stan = mode;
     dialogConfig.panelClass = 'custom-modalbox';
-    /*const token = this.userdata as UserProfile;
-      const exp = token.exp;
-      const expired = (Date.now() >= exp * 1000);
-      if (!expired) {
-   }*/
-
     if (this.token !== null && this.token !== undefined) {
-      this.dialog.open(AddBookComponent, dialogConfig);
-      if (mode === 'edit') {
-        this.childComponent.showEditBookForm();
-      } else {
-        this.childComponent.showBookForm();
+      console.log(this.user.toString());
+      // tslint:disable-next-line:triple-equals
+      if (this.user.toString() === 'ROLE_ADMIN' || this.user.toString() === 'ROLE_LIBRARIAN') {
+        this.dialog.open(AddBookComponent, dialogConfig);
+        if (mode === 'edit') {
+          this.childComponent.showEditBookForm();
+        } else {
+          this.childComponent.showBookForm();
+        }
       }
     } else {
-      alert('Function only available for the administrator');
+      alert('Function available only for the administrator');
     }
   }
 
@@ -126,29 +150,56 @@ export class BooksComponent implements OnInit {
   loadData() {
     const page = this.page - 1;
     this.bookService.getBookListObservable(page, this.size);
-    this.bookslist = this.bookService.getBooksFromBooksService();
+    this.booksList = this.bookService.getBooksFromBooksService();
+    this.booksList.subscribe(books => {
+      this.bookslist = books;
+    });
     this.total = this.bookService.getTotalCountBooks();
     console.log(this.bookslist);
+    if (this.checkboxService.lengthBooksMap() > 0) {
+      this.checkboxService.removeFromBooksMap(this.checkboxOfBook);
+    }
   }
 
-
-
-  // tslint:disable-next-line:typedef
-
-
-  // tslint:disable-next-line:typedef
   deleteBook() {
-    // const token = this.http.token$.getValue();
     if (this.token !== null && this.token !== undefined) {
-    // if (token !== null && token !== undefined) {
-      this.child2Component.deleteBook();
+      if (this.user.toString() === 'ROLE_ADMIN') {
+        this.child2Component.deleteBook();
+      }
+      else {
+        alert('Function available only for the administrator');
+      }
+    }else {
+      alert('Function available only for the administrator');
     }
-    else {
-      alert('Function only available for the administrator');
+  }
+
+  // tslint:disable-next-line:typedef
+  toggleNamePlaceholder() {
+    this.showNamePlaceholder = (this.myFormModel.get('nameInput').value === '');
+  }
+
+  checkTheChangeName() {
+    this.myFormModel.get('nameInput').valueChanges.subscribe(
+        response => this.searchObjectsWithSpecifiedTitleOrAuthor(response)
+      );
+
+  }
+
+  // tslint:disable-next-line:typedef
+  searchObjectsWithSpecifiedTitleOrAuthor(objectToSearch) {
+    if (objectToSearch !== undefined && objectToSearch !== '') {
+      this.objectService.getObjectsWithSpecifiedTitleOrAuthor(objectToSearch).subscribe(objectName => {
+        // tslint:disable-next-line:no-shadowed-variable
+        this.searchedObjectsName = objectName.map(objectName => objectName.name);
+      });
     }
   }
 
 
 }
+
+
+
 
 

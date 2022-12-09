@@ -9,21 +9,22 @@
 
         <div class="o-col o-col--lg75">
 
-          <ul class="nav flex-column flex-md-row justify-content-lg-end  text-uppercase">
+          <ul class="nav flex-column flex-md-row justify-content-lg-end">
             <li class="nav-item">
-              <a  routerLink="/login" routerLinkActive="active" class="cursor-pointer" class="nav-link text-white sk-header-item-link"  *ngIf="!isloggedin" (click)="showLoginForm()">Sign in</a>
-              <a routerLinkActive="active" class="nav-link text-white sk-header-item-link" *ngIf="isloggedin" (click)="logout()">Log out</a>
+              <a  routerLink="/login" routerLinkActive="active" class="cursor-pointer" class="nav-link text-white sk-header-item-link  text-uppercase" *ngIf="!isloggedin">Sign in</a>
+              <a routerLinkActive="active" class="nav-link text-white sk-header-item-link  text-uppercase" *ngIf="isloggedin" (click)="logout()">Log out</a>
             </li>
             <li class="nav-item">
 
               <div class="row">
                 <div class="col">
                   <div ngbDropdown class="d-inline-block">
-                    <button type="button" class="c-btn--outline" id="dropdownBasic1" ngbDropdownToggle>Moje konto</button>
+                    <button type="button" class="c-btn--outline" id="dropdownBasic1"  ngbDropdownToggle>Moje konto</button>
                     <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
-                      <button><a routerLink="/login" routerLinkActive="active" ngbDropdownItem>Sign in</a></button>
-                      <button ngbDropdownItem>Another Action</button>
-                      <button ngbDropdownItem>Something else is here</button>
+                      <a routerLink="/login" routerLinkActive="active" ngbDropdownItem *ngIf="!isloggedin">Sign in</a>
+                      <a ngbDropdownItem *ngIf="isloggedin" (click)="logout()">Log out </a>
+                      <a ngbDropdownItem *ngIf="isloggedin">My borrowed books</a>
+                      <a ngbDropdownItem *ngIf="isloggedin">My ordered books</a>
                     </div>
                   </div>
                 </div>
@@ -44,7 +45,8 @@
           <a routerLink="/" class="c-btn c-btn--accent" href="#">List of Book tags</a>
 
       </div>
-      <app-login  [isHidden]="isHidden"  (eventLogin)="change()"></app-login>
+      <app-login [loginFormIsHidden]="loginFormIsHidden" ></app-login>
+
 
     </div>
 

@@ -18,6 +18,9 @@ export class AddAuthorComponent implements OnInit {
   page;
   @Input()
   size;
+  @Input()
+  checkboxOfAuthor: number;
+
 
   @Output()
   loadData: EventEmitter<any> = new EventEmitter();
@@ -46,7 +49,6 @@ export class AddAuthorComponent implements OnInit {
 
   ngOnInit(): void {
     this.myFormModel = this.fb.group({
-     // authors: this.fb.array([])
       authorForenameInput: '',
       authorSurnameInput: ''
     });
@@ -82,19 +84,15 @@ export class AddAuthorComponent implements OnInit {
         this.myFormModel.get('authorSurnameInput').setValue(authorFromDb.surname);
       });
     }
-    if (this.checkboxservice.lengthBooksMap() === 0) {
+    if (this.checkboxservice.lengthAuthorsMap() === 0) {
       alert('Brak zaznaczonego');
+      this.isHidden = true;
     }
-    if (this.checkboxservice.lengthBooksMap() > 1) {
+    if (this.checkboxservice.lengthAuthorsMap() > 1) {
       alert('jest zaznaczony więcj niż jeden, może byc jeden');
+      this.isHidden = true;
     }
   }
-
-
-  // tslint:disable-next-line:typedef
-  /*deleteAuthors(circle: HTMLElement) {
-    this.authors.removeAt(Number(circle.id));
-  }*/
 
   // tslint:disable-next-line:typedef
   private changeAuthor() {
@@ -115,8 +113,8 @@ export class AddAuthorComponent implements OnInit {
       console.log(response.error);
       this.validationErrors = response.error;
       this.isCreated = false;
-      if (response.status === 403) {
-        alert('Access denied, you have to log in');
+      if (response.status === 403 || response.status === 401) {
+        alert('Function available only for the administrator');
       }
     });
   }
@@ -146,8 +144,8 @@ export class AddAuthorComponent implements OnInit {
             console.log(response.error);
             this.validationErrors = response.error;
             this.isCreated = false;
-            if (response.status === 403) {
-            alert('Access denied, you have to log in');
+          if (response.status === 403 || response.status === 401) {
+              alert('Function available only for the administrator');
             }
           });
       }
@@ -159,9 +157,7 @@ export class AddAuthorComponent implements OnInit {
   }
 
   clearValidationErrors() {
-    this.validationErrors.forename = '';
-    // @ts-ignore
-    this.validationErrors.surname = '';
+    this.validationErrors = undefined;
   }
   // tslint:disable-next-line:typedef
   checkTheChangeAuthorForename() {
@@ -200,6 +196,7 @@ export class AddAuthorComponent implements OnInit {
     this.isHidden = true;
     this.clearAuthorForm();
     this.clearValidationErrors();
+    this.checkboxservice.removeFromAuthorsMap(this.checkboxOfAuthor);
   }
 
 

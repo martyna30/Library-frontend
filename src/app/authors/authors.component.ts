@@ -12,6 +12,9 @@ import {DeleteComponent} from '../delete/delete.component';
 import {AddAuthorComponent} from '../add-author/add-author.component';
 import {Token} from '../models-interface/token';
 import {HttpService} from '../../services/http.service';
+import {FormBuilder, FormGroup} from '@angular/forms';
+import {Book} from '../models-interface/book';
+import {ObjectService} from '../../services/object.service';
 
 const FILTER_PAG_REGEX = /[^0-9]/g;
 
@@ -26,11 +29,33 @@ export class AuthorsComponent implements OnInit {
   size = 10;
   total: Observable<number>;
   private token: string;
+  private user: Array<string>;
+  checkboxOfAuthor: number;
+  myFormModel: FormGroup;
 
-  constructor(config: NgbPaginationConfig, private authorService: AuthorService, private http: HttpService,
-              private checkboxService: CheckboxService, private dialog: MatDialog) {
+
+  // authorId: string;
+  // authorList: Observable<Array<Book>>;
+  // bookslist: any[];
+
+  objectToSearch: string;
+
+  private stan;
+
+
+
+  private searchedObjectsName: string[] = [];
+  private showNamePlaceholder: boolean;
+
+  constructor(config: NgbPaginationConfig,  private objectService: ObjectService,
+              private authorService: AuthorService, private http: HttpService,
+              private checkboxService: CheckboxService, private dialog: MatDialog,
+              private fb: FormBuilder) {
       this.http.token$.subscribe((token) => {
       this.token = token;
+      this.http.userProfile$.subscribe((userRole) => {
+          this.user = userRole;
+        });
     });
   }
 
@@ -42,10 +67,11 @@ export class AuthorsComponent implements OnInit {
 
   authorslist: Observable<Array<Author>>;
   ngOnInit(): void {
-    /*this.authorService.getAuthorsFromAuthorsService().subscribe(authors => {
-      this.authorslist = authors; });*/
-
+    this.myFormModel = this.fb.group({
+      nameInput: '',
+    });
     this.loadData();
+    this.checkTheChangeName();
   }
 
   getColor(): string {
@@ -55,10 +81,11 @@ export class AuthorsComponent implements OnInit {
   // tslint:disable-next-line:typedef
    changeCheckboxList(checkboxOfAuthor: HTMLInputElement) {
     if (checkboxOfAuthor.checked) {
-      this.checkboxService.addToAuthorsMap(Number(checkboxOfAuthor.value));
+      this.checkboxOfAuthor = Number(checkboxOfAuthor.value);
+      this.checkboxService.addToAuthorsMap(Number(this.checkboxOfAuthor));
     }
     else {
-     this.checkboxService.removeFromAuthorsMap(Number(checkboxOfAuthor.value));
+     this.checkboxService.removeFromAuthorsMap(Number(this.checkboxOfAuthor));
     }
   }
   // tslint:disable-next-line:typedef
@@ -70,14 +97,16 @@ export class AuthorsComponent implements OnInit {
     dialogConfig.panelClass = 'custom-modalbox';
 
     if (this.token !== null && this.token !== undefined) {
-      this.dialog.open(AddAuthorComponent, dialogConfig);
-      if (mode === 'edit') {
-        this.childComponent.showEditAuthorForm();
-      } else {
-        this.childComponent.showAddAuthorForm();
+      if (this.user.toString() === 'ROLE_ADMIN' || this.user.toString() === 'ROLE_LIBRARIAN') {
+        this.dialog.open(AddAuthorComponent, dialogConfig);
+        if (mode === 'edit') {
+          this.childComponent.showEditAuthorForm();
+        } else {
+          this.childComponent.showAddAuthorForm();
+        }
       }
-    } else {
-      alert('Function only available for the administrator');
+    }else {
+      alert('Function available only for the administrator');
     }
   }
 
@@ -104,22 +133,50 @@ export class AuthorsComponent implements OnInit {
     }
   }
 
-  // tslint:disable-next-line:typedef
   loadData() {
     const page = this.page - 1;
     this.authorService.getAuthorsListObservable(page, this.size);
     this.authorslist = this.authorService.getAuthorsFromAuthorsService();
     this.total = this.authorService.getTotalCountOfAuthors();
     console.log(this.authorslist);
+    if (this.checkboxService.lengthAuthorsMap() > 0) {
+      this.checkboxService.removeFromAuthorsMap(this.checkboxOfAuthor);
+    }
   }
 
   deleteAuthor() {
     if (this.token !== null && this.token !== undefined) {
-      this.child2Component.deleteAuthor();
+      if (this.user.toString() === 'ROLE_ADMIN') {
+        this.child2Component.deleteAuthor();
+      } else {
+        alert('Function available only for the administrator');
+      }
     }
     else {
-      alert('Function only available for the administrator');
+      alert('Function available only for the administrator');
     }
   }
+  // tslint:disable-next-line:typedef
+  toggleNamePlaceholder() {
+    this.showNamePlaceholder = (this.myFormModel.get('nameInput').value === '');
+  }
+  // tslint:disable-next-line:typedef
+  checkTheChangeName() {
+    this.myFormModel.get('nameInput').valueChanges.subscribe(
+      response => this.searchObjectsWithSpecifiedAuthor(response)
+    );
+
+  }
+
+  // tslint:disable-next-line:typedef
+  searchObjectsWithSpecifiedAuthor(objectToSearch) {
+    if (objectToSearch !== undefined && objectToSearch !== '') {
+      this.objectService.getObjectsWithSpecifiedTitleOrAuthor(objectToSearch).subscribe(objectName => {
+        // tslint:disable-next-line:no-shadowed-variable
+        this.searchedObjectsName = objectName.map(objectName => objectName.name);
+      });
+    }
+  }
+
 }
 

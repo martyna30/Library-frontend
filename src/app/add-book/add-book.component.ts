@@ -43,6 +43,9 @@ export class AddBookComponent implements  OnInit {
   @Input()
   size: number;
 
+  @Input()
+  checkboxOfBook: number;
+
   @Output()
   loadData: EventEmitter<any> = new EventEmitter();
 
@@ -91,14 +94,13 @@ export class AddBookComponent implements  OnInit {
     this.addNextAuthor();
     this.addNextBooksTag();
     this.checkTheChangeTitle();
-    this.checkTheChangeYear();
-
   }
 
   closeDialog(): void {
     this.isHidden = true;
     this.clearBookForm();
     this.clearValidationErrors();
+    this.checkboxservice.removeFromBooksMap(this.checkboxOfBook);
   }
 
 
@@ -154,12 +156,7 @@ export class AddBookComponent implements  OnInit {
       bookTag => this.filterBookTags(bookTag, index)
     );
   }
-  // tslint:disable-next-line:typedef
-  checkTheChangeYear() {
-    this.myFormModel.get('yearOfPublicationInput').valueChanges.subscribe(
-    yearOfPublication => this.filterYear(yearOfPublication)
-    );
-  }
+
 
   toggleTitlePlaceholder() {
      this.showTitlePlaceholder = (this.myFormModel.get('titleInput').value === '');
@@ -207,12 +204,6 @@ export class AddBookComponent implements  OnInit {
     this.bookService.getBooksTagsWithSpecifiedCharacters(bookTag).subscribe( booksTags => {
       this.filteredBooksTagsList[index] = booksTags.map(bookTags => bookTags.literaryGenre);
     });
-  }
-  // tslint:disable-next-line:typedef
-  private filterYear(yearOfPublication: number) {
-    // this.bookService.getBooksWithSpecifiedPublicationYear(yearOfPublication).subscribe( books => {
-     // this.filteredYears = books.map(book => book.yearOfPublication);
-  // });
   }
 
   createAuthor(): FormGroup {
@@ -287,8 +278,8 @@ export class AddBookComponent implements  OnInit {
       if (this.validationErrors.signature !== undefined) {
         this.validationErrors.signature = undefined;
       }
-      if (response.status === 403) {
-        alert('Access denied, you have to log in');
+      if (response.status === 403 || response.status === 401) {
+        alert('Function available only for the administrator');
       }
     });
   }
@@ -332,11 +323,11 @@ export class AddBookComponent implements  OnInit {
 
     if (this.checkboxservice.lengthBooksMap() === 0) {
         alert('Brak zaznaczonego');
+        this.isHidden = true;
     }
     if (this.checkboxservice.lengthBooksMap() > 1) {
       alert('jest zaznaczony więcj niż jeden, może byc jeden');
-      console.log(alert());
-      console.log(this.checkboxservice.lengthBooksMap());
+      this.isHidden = true;
     }
   }
 
@@ -380,8 +371,8 @@ export class AddBookComponent implements  OnInit {
       }, (response: HttpErrorResponse) => {
           this.validationErrors = response.error;
           this.isCreated = false;
-          if (response.status === 403) {
-          alert('Access denied, you have to log in');
+          if (response.status === 403 || response.status === 401) {
+          alert('Function available only for the administrator');
           }
       });
     }
@@ -415,17 +406,7 @@ export class AddBookComponent implements  OnInit {
   // tslint:disable-next-line:typedef
 
   clearValidationErrors() {
-   //this.validationErrors.title = null;
-
-   //console.log(this.validationErrors);
-    // @ts-ignore
-   // console.log(this.validationErrors['authors[0].forename']);
-    // this.validationErrors.authors[0].forename = null;
-   //this.validationErrors['authors[0].forename'][0] = '';
-    // this.validationErrors.bookTags. = '';
-   //this.validationErrors.yearOfPublication = null;
-   //this.validationErrors.signature = null;
-   this.validationErrors = undefined;
+    this.validationErrors = undefined;
   }
 
 

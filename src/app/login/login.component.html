@@ -1,14 +1,50 @@
-<section id="login" [hidden]="isHidden">
+<ng-container>
+<section id="login" [hidden]="loginFormIsHidden">
   <div class="card card-container">
     <h3 class="text-center text-uppercase">Log in to the catalogue</h3>
-    <form class="form-signin">
+    <form class="form-signin" [formGroup]="myFormModel">
 
-      <input [(ngModel)]="username" name="username" type="text" id="inputEmail" class="form-control" placeholder="Login">
+      <input name="username" type="text"  id="inputUsername" class="form-control"  placeholder="Login" required formControlName="loginInput">
+      <div class="col-10" *ngIf="loggingValidationError !== null && loggingValidationError?.username">
+        <span class="text text-danger">{{loggingValidationError.username[0]}}</span>
+      </div>
 
-      <input [(ngModel)]="password" name="password" type="password" id="inputPassword" class="form-control" placeholder="Password">
+      <input name="password" type="password" id="inputPassword" class="form-control" placeholder="Password" required formControlName="passwordInput">
+      <div class="col-10" *ngIf="loggingValidationError !== null && loggingValidationError?.password">
+        <span class="text text-danger">{{loggingValidationError.password[0]}}</span>
+      </div>
       <button type="submit" class="c-btn c-btn--primary" (click)="signIn()">Sign in</button>
+      <button type="button" class="c-btn c-btn--dark-blue" (click)="registerNewUser()">Create an account</button>
+    </form>
+
+  </div>
+</section>
+
+<section id="register" [hidden]="registerFormIsHidden">
+  <div class="card card-container">
+    <h3 class="text-center text-uppercase">Register to the catalogue</h3>
+    <form class="form-signin" [formGroup]="myFormModel">
+
+      <input name="username" type="text" id="inputUsername2"  class="form-control"  placeholder="Login" required formControlName="loginInput">
+      <div class="col-10" *ngIf="loggingValidationError !== null && loggingValidationError?.username">
+        <span class="text text-danger">{{loggingValidationError.username[0]}}</span>
+      </div>
+
+      <input name="password" type="password" id="inputPassword2" class="form-control" placeholder="Password" required formControlName="passwordInput">
+      <div class="col-10" *ngIf="loggingValidationError !== null && loggingValidationError?.password">
+        <span class="text text-danger">{{loggingValidationError.password[0]}}</span>
+      </div>
+
+      <input name="email" type="email" id="inputEmail" class="form-control" placeholder="Email" required formControlName="emailInput">
+      <div class="col-10" *ngIf="loggingValidationError !== null && loggingValidationError?.email">
+        <span class="text text-danger">{{loggingValidationError.email[0]}}</span>
+      </div>
+      <button type="submit" class="c-btn c-btn--dark-blue" (click)="register()">Register</button>
 
     </form>
-  </div>
 
+  </div>
 </section>
+
+</ng-container>
+

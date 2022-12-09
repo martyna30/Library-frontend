@@ -3,13 +3,15 @@ import { Injectable } from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
 
 import {HttpService} from './http.service';
-import {User} from '../app/models-interface/user';
+
 import {Book} from '../app/models-interface/book';
 import {Author} from '../app/models-interface/author';
 import {BookTag} from '../app/models-interface/bookTag';
 import {HttpErrorResponse} from '@angular/common/http';
 import {error} from 'protractor';
 import {decode} from 'querystring';
+import {NewUserDto} from '../app/models-interface/newUserDto';
+
 
 
 @Injectable({
@@ -32,5 +34,9 @@ export class UserAuthService {
     }, response => {
       console.log(response);
     });*/
+  // tslint:disable-next-line:typedef
+  register(user: NewUserDto): Observable<string> {
+    return this.httpService.register(user);
+  }
 }
 

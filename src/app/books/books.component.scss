@@ -10,6 +10,12 @@
 @import 'src/scss/07-templates/_templates.scss';
 @import 'src/scss/08-utilities/_utilities.scss';
 
+
+#booksList {
+  position: relative;
+}
+
+
 table {
   color: $dark-blue;
   max-height: 100%;
@@ -47,6 +53,13 @@ td {
 .form-check-input {
   margin-left: auto;
   margin-right: auto;
+}
+#mat-input-12 {
+  width: 250px;
+}
+
+.mat-input-element {
+  max-width: 150%;
 }
 
 

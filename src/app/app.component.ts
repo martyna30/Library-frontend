@@ -16,31 +16,47 @@ import {Observable} from 'rxjs';
 })
 export class AppComponent implements OnInit {
   private userdata: string;
+  private tokenFromService: string;
 
     constructor(private http: HttpService, private userAuth: UserAuthService, private router: Router) {
-  }
+    }
 
   title = 'library-frontend';
 
+
   isloggedin: boolean;
-  isHidden = true;
+  loginFormIsHidden = true;
+
 
   ngOnInit(): void {
     this.checkToken();
-    this.checkStatus();
+    // this.checkStatus();
     // localStorage.clear();
   }
   checkToken(): void {
     this.http.token$.subscribe(data => {
       this.userdata = data;
     });
+    const accesstoken = localStorage.getItem('access_token');
+    const newtoken = localStorage.getItem('new_token');
     if (this.userdata !== null && this.userdata !== undefined) {
       this.isloggedin = true;
+      this.http.isloggedin$.next(this.isloggedin);
+      this.checkStatus();
       console.log('zalog');
     } else {
-      // this.isloggedin = !this.isloggedin;
-      this.isloggedin = false;
-      console.log(' nie zalog');
+      /*this.isloggedin = true;
+      this.http.isloggedin$.next(this.isloggedin);
+      if (accesstoken !== null && accesstoken !== undefined) {
+        this.http.token$.next(accesstoken);
+      } else {
+        this.http.token$.next(newtoken);
+      }*/
+      this.http.getTokenFromService().subscribe(token => {
+        this.tokenFromService = token;
+      });
+      this.checkStatus();
+      console.log('zalog');
     }
   }
 
@@ -51,24 +67,25 @@ export class AppComponent implements OnInit {
   }
 
   logout() {
-    localStorage.clear();
-    this.router.navigate(['/login']);
-    this.change();
-    this.showLoginForm();
-
+    this.http.logout();
+    this.isloggedin = false;
   }
 
-  change() {
-    if (this.isloggedin) {
-      this.isloggedin = !this.isloggedin;
-    } else {
-      this.isloggedin = true;
+
+  showLoginForm() {
+    if (this.loginFormIsHidden === true) {
+      this.loginFormIsHidden = false;
     }
   }
 
-  showLoginForm() {
-    this.isHidden = !this.isHidden;
-  }
+  /*changeStatus() {
+    if (!this.isRegister) {
+     this.isRegister = true;
+    } else {
+      this.isRegister = false;
+    }*/
+  // <app-login [loginFormIsHidden]="loginFormIsHidden" (eventRegister)="changeStatus()"></app-login>
+  // *ngIf="!isloggedin" (click)="showLoginForm()"
 }
 
 

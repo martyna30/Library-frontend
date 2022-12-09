@@ -44,16 +44,19 @@ import {AuthTokenInterceptor} from './interceptors/auth-token-interceptor';
 // import { StoreModule } from '@ngrx/store';
 // import { counterReducer } from './counter.reducer';
 import {JWT_OPTIONS, JwtModule} from '@auth0/angular-jwt';
+import {MatTableModule} from '@angular/material/table';
+import {Ng2SearchPipe, Ng2SearchPipeModule} from 'ng2-search-filter';
 
-// tslint:disable-next-line:typedef
-/*export function jwtOptionsFactory(http: HttpService) {
+
+export function jwtOptionsFactory(http: HttpService) {
   return {
     tokenGetter: () => {
       return http.getTokenFromService();
     },
-   allowedDomains: ['localhost:8080'],
+    allowedDomains: ['localhost:8080'],
     disallowedRoutes: ['http://localhost:8080/v1/library/login', 'http://localhost:8080/v1/library/token/refresh']
   };
+}
   /*JwtModule.forRoot({
     jwtOptionsProvider: {
     provide: JWT_OPTIONS,
@@ -87,8 +90,14 @@ import {JWT_OPTIONS, JwtModule} from '@auth0/angular-jwt';
     AppRoutingModule, BrowserAnimationsModule, MatAutocompleteModule,
     MatFormFieldModule, MatInputModule, MatTooltipModule, MatDialogModule,
     MatButtonModule, NgbModule, MatIconModule, MatToolbarModule,
-    CommonModule,
-
+    CommonModule, Ng2SearchPipeModule,
+    JwtModule.forRoot({
+        jwtOptionsProvider: {
+          provide: JWT_OPTIONS,
+          useFactory: jwtOptionsFactory,
+          deps: [HttpService]
+        }
+      })
   ], // StoreModule.forRoot({ count: counterReducer })],
   providers: [
     {provide: MatDialogRef, useValue: {}},

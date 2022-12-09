@@ -63,7 +63,7 @@ export class DeleteComponent implements OnInit {
             if (response.status === 403) {
               this.isDeleted = false;
               console.log(response);
-              alert('Function only available for the administrator');
+              alert('Function available only for the administrator');
             }
           }
         );
@@ -83,7 +83,7 @@ export class DeleteComponent implements OnInit {
     if (this.checkboxService.lengthAuthorsMap() === 1) {
       this.checkedList = this.checkboxService.getAuthorsMap();
       const authorId = Number(this.checkedList.keys().next().value);
-      if (confirm('Are you sure to delete book ')) {
+      if (confirm('Are you sure to delete author ')) {
         this.authorService.deleteAuthor(authorId).subscribe(
             (deletedAuthor) => {
               console.log('the author nr' + deletedAuthor + 'had been deleted');
@@ -99,7 +99,7 @@ export class DeleteComponent implements OnInit {
               if (response.status === 403) {
                 this.isDeleted = false;
                 console.log(response);
-                alert('Function only available for the administrator');
+                alert('Function available only for the administrator');
               }
             }
           );

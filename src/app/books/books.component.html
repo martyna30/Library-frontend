@@ -10,10 +10,24 @@
     <button type="button" class="c-btn c-btn--primary" data-bs-toggle="modal" data-bs-target="#exampleModal"
             mat-raised-button (click)="deleteBook()" >Delete a book</button>
     </div>
+
+
     <ng-container *ngIf="bookslist !== null; else noBooks">
       <p [ngStyle]="{color: getColor()}"></p>
 
-      <table class="table table-striped ">
+
+      <fieldset [formGroup]="myFormModel"  class="input-fieldset">
+        <mat-form-field class="search-form-field" appearance="fill">
+      <input matInput type="text" [matAutocomplete]="auto" (ngModelChange)="toggleNamePlaceholder()" [(ngModel)]="objectToSearch"
+             placeholder="Enter title or author's name" required formControlName="nameInput"/>
+          <mat-autocomplete #auto="matAutocomplete">
+            <mat-option *ngFor="let objectName of this.searchedObjectsName" [value]="objectName">{{objectName}}</mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+        </fieldset>
+
+
+      <table  class="table table-striped" >
         <thead>
         <tr input class="form-check-input me-1" type="checkbox" value="" aria-label="..."  class="table-primary">
           <th scope="row"> # </th>
@@ -26,12 +40,12 @@
           <th scope="row">Amount of book</th>
         </tr>
         </thead>
-        <tbody *ngIf="bookslist as list">
+        <tbody>
 
-        <tr *ngFor="let book of list | async let i = index">
-          <td>
+        <tr *ngFor="let book of bookslist | filter:objectToSearch;let i = index;">
+
             <input #self class="form-check-input" type="checkbox"  [value]="book.id" id="BookIdInput" (change)="changeCheckboxList(self)">
-          </td>
+
           <th scope="row">{{(page-1) * size + i+1}}</th>
           <td>{{book.title}}</td>
           <td>
@@ -49,6 +63,13 @@
           <td>{{book.amountOfbook}}</td>
         </tr>
         </tbody>
+
+
+        <tr *matNoDataRow>
+          <td>
+            The filter does not match any item in the data for this text
+          </td>
+        </tr>
       </table>
     </ng-container>
 
@@ -90,7 +111,7 @@
 
       <pre>Current page: {{page}}</pre>
 </div>
-  <app-add-book #childAddRef (loadData)="loadData()" [page]="page" [size]="size"></app-add-book>
+  <app-add-book #childAddRef (loadData)="loadData()" [page]="page" [size]="size" [checkboxOfBook]="checkboxOfBook"></app-add-book>
     <app-delete #childDeleteRef  (loadBookData)="loadData()" [page]="page" [size]="size" ></app-delete>
   </section>
 

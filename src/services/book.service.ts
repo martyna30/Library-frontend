@@ -75,9 +75,8 @@ export class BookService {
     return this.httpService.getBooksTagsWithSpecifiedCharacters(bookTag);
   }
 
-  /*getBooksWithSpecifiedPublicationYear(yearOfPublication: number): Observable<Array<Book>> {
-    return this.httpService.getBooksWithSpecifiedPublicationYear(yearOfPublication);
-  }*/
+
+
 }
 
 

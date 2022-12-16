@@ -6,7 +6,7 @@
     padding-top: $grid-base*2.5;
     padding-left: $grid-base*2.5;
     padding-right: $grid-base*2.5;
-    height: 100px;
+    height: 125px;
     width: 1140px;
     display: inline-block;
     justify-content: space-between;
@@ -14,7 +14,7 @@
 
     @include medium-up {
       padding-bottom: $grid-base*2.5;
-      height: 150px;
+      height: 125px;
     }
   }
 
@@ -37,18 +37,24 @@
   &_hero {
     background-color: $blue;
     padding-bottom: $grid-base*4;
+    padding-top: $grid-base*4;
+    padding-left: $grid-base*4;
+    padding-right: $grid-base*2.5;
+    display: flex;
     text-align: center;
+    justify-content: space-between;
     margin: 0 auto;
-    height: 150px;
-    margin-bottom: $grid-base*4;
+    height: 125px;
+    width: 1140px;
+    //margin-bottom: $grid-base*2;
 
 
     @include large-up {
       //padding-bottom: $grid-base *2;
       //text-align: center;
       //padding-top: $grid-base*2;
-      max-width: 800px;
-      margin-bottom: 40px;
+      //max-width: 800px;
+     // margin-bottom: $grid-base*2;
     }
   }
 

@@ -7,12 +7,23 @@
           <h4 class="c-heading c-heading--level1 c-heading--white"> Library </h4>
         </div>
 
-        <div class="o-col o-col--lg75">
+        <div class="o-col o-col--lg50">
+          <ul class="nav flex-column flex-md-row justify-content-lg-end">
+          <nav class="c-nav">
 
+             <a class="c-nav-item text-uppercase" routerLinkActive="active" routerLink="/books">Books</a>
+             <a class="c-nav-item text-uppercase"  routerLinkActive="active" routerLink="/authors">Authors</a>
+             <a class="c-nav-item text-uppercase" routerLinkActive="active" routerLink="/tags">Tags</a>
+
+          </nav>
+          </ul>
+        </div>
+         <div class="o-col o-col--lg25">
           <ul class="nav flex-column flex-md-row justify-content-lg-end">
             <li class="nav-item">
               <a  routerLink="/login" routerLinkActive="active" class="cursor-pointer" class="nav-link text-white sk-header-item-link  text-uppercase" *ngIf="!isloggedin">Sign in</a>
               <a routerLinkActive="active" class="nav-link text-white sk-header-item-link  text-uppercase" *ngIf="isloggedin" (click)="logout()">Log out</a>
+              <a  routerLinkActive="active" class="witaj text-uppercase"  *ngIf="isloggedin">Witaj {{loggedInUsername}}</a>
             </li>
             <li class="nav-item">
 
@@ -23,6 +34,7 @@
                     <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
                       <a routerLink="/login" routerLinkActive="active" ngbDropdownItem *ngIf="!isloggedin">Sign in</a>
                       <a ngbDropdownItem *ngIf="isloggedin" (click)="logout()">Log out </a>
+                      <a class="username" ngbDropdownItem *ngIf="isloggedin">{{loggedInUsername}}</a>
                       <a ngbDropdownItem *ngIf="isloggedin">My borrowed books</a>
                       <a ngbDropdownItem *ngIf="isloggedin">My ordered books</a>
                     </div>
@@ -31,20 +43,12 @@
               </div>
             </li>
           </ul>
+
         </div>
       </div>
 
       </div>
-      <div class="t-side-header_divider">
-      </div>
 
-      <div class="d-md-block t-side-header_hero">
-        <p class="t-side-header_intro-text">Select the list</p>
-          <a routerLink="/books" routerLinkActive="active" class="c-btn c-btn--accent" >List of Books</a>
-          <a routerLink="/authors"  class="mx-sm-5 c-btn c-btn--accent" href="#">List of Authors</a>
-          <a routerLink="/" class="c-btn c-btn--accent" href="#">List of Book tags</a>
-
-      </div>
       <app-login [loginFormIsHidden]="loginFormIsHidden" ></app-login>
 
 

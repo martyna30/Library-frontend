@@ -8,6 +8,7 @@ import {UserAuthService} from '../services/user-auth.service';
 import {Router} from '@angular/router';
 import {UserProfile} from './models-interface/user-profile';
 import {Observable} from 'rxjs';
+import {colors} from '@angular/cli/utilities/color';
 
 @Component({
   selector: 'app-root',
@@ -18,56 +19,55 @@ export class AppComponent implements OnInit {
   private userdata: string;
   private tokenFromService: string;
 
-    constructor(private http: HttpService, private userAuth: UserAuthService, private router: Router) {
+    constructor(private http: HttpService, private userAuthService: UserAuthService, private router: Router) {
     }
 
   title = 'library-frontend';
 
-
+  loggedInUsername: string;
   isloggedin: boolean;
   loginFormIsHidden = true;
 
 
   ngOnInit(): void {
     this.checkToken();
-    // this.checkStatus();
+    this.checkStatus();
     // localStorage.clear();
   }
   checkToken(): void {
-    this.http.token$.subscribe(data => {
+    this.userAuthService.token$.subscribe(data => {
       this.userdata = data;
     });
     const accesstoken = localStorage.getItem('access_token');
     const newtoken = localStorage.getItem('new_token');
     if (this.userdata !== null && this.userdata !== undefined) {
-      this.isloggedin = true;
-      this.http.isloggedin$.next(this.isloggedin);
-      this.checkStatus();
       console.log('zalog');
     } else {
-      /*this.isloggedin = true;
-      this.http.isloggedin$.next(this.isloggedin);
-      if (accesstoken !== null && accesstoken !== undefined) {
-        this.http.token$.next(accesstoken);
-      } else {
-        this.http.token$.next(newtoken);
-      }*/
-      this.http.getTokenFromService().subscribe(token => {
+      this.userAuthService.getTokenFromService().subscribe(token => {
         this.tokenFromService = token;
       });
-      this.checkStatus();
       console.log('zalog');
     }
   }
 
+  getUrl(): string {
+    return this.router.url;
+  }
+
   checkStatus(): void {
-    this.http.isloggedin$.subscribe(isLoggedin => {
+    this.userAuthService.isloggedin$.subscribe(isLoggedin => {
       this.isloggedin = isLoggedin;
     });
+
+    if (this.isloggedin) {
+      this.userAuthService.loggedInUsername$.subscribe(username => {
+       this.loggedInUsername = username;
+      });
+    }
   }
 
   logout() {
-    this.http.logout();
+    this.userAuthService.logout();
     this.isloggedin = false;
   }
 
@@ -78,14 +78,10 @@ export class AppComponent implements OnInit {
     }
   }
 
-  /*changeStatus() {
-    if (!this.isRegister) {
-     this.isRegister = true;
-    } else {
-      this.isRegister = false;
-    }*/
-  // <app-login [loginFormIsHidden]="loginFormIsHidden" (eventRegister)="changeStatus()"></app-login>
-  // *ngIf="!isloggedin" (click)="showLoginForm()"
+
+  changeColor() {
+    return
+  }
 }
 
 

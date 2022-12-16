@@ -38,6 +38,7 @@ import {error} from 'protractor';
   styleUrls: ['./add-book.component.scss']
 })
 export class AddBookComponent implements  OnInit {
+
   @Input()
   page: number;
   @Input()
@@ -88,7 +89,8 @@ export class AddBookComponent implements  OnInit {
       authors: this.fb.array([]),
       bookTags: this.fb.array([]),
       yearOfPublicationInput: '',
-      signatureInput: ''
+      signatureInput: '',
+      amountOfBookInput: ''
     });
 
     this.addNextAuthor();
@@ -157,7 +159,6 @@ export class AddBookComponent implements  OnInit {
     );
   }
 
-
   toggleTitlePlaceholder() {
      this.showTitlePlaceholder = (this.myFormModel.get('titleInput').value === '');
   }
@@ -184,7 +185,6 @@ export class AddBookComponent implements  OnInit {
     this.showYearOfPublicationPlaceholder = this.myFormModel.get('yearOfPublicationInput').value === '';
   }
 
-  // tslint:disable-next-line:typedef
   private filterAuthorForename(forename, index) {
     this.authorService.getAuthorsForenameWithSpecifiedCharacters(forename).subscribe(authorsIncoming => {
       this.filteredAuthorsForenameList[index] = authorsIncoming.map(authors => authors.forename);
@@ -245,8 +245,9 @@ export class AddBookComponent implements  OnInit {
         authors: [],
         bookTags: [],
         yearOfPublication: this.myFormModel.get('yearOfPublicationInput').value,
-        signature: this.myFormModel.get('signatureInput').value
-      };
+        signature: this.myFormModel.get('signatureInput').value,
+        amountOfBook: this.myFormModel.get('amountOfBookInput').value
+       };
     this.authors.controls.forEach(authorControl => {
       // @ts-ignore
       const author: Author = {
@@ -298,6 +299,7 @@ export class AddBookComponent implements  OnInit {
         this.myFormModel.get('titleInput').setValue(bookFromDb.title);
         this.myFormModel.get('yearOfPublicationInput').setValue(bookFromDb.yearOfPublication);
         this.myFormModel.get('signatureInput').setValue(bookFromDb.signature);
+        this.myFormModel.get('amountOfBookInput').setValue(bookFromDb.amountOfBook);
 
         while (this.authors.length > bookFromDb.authors.length) {
           this.authors.removeAt(0);
@@ -342,7 +344,8 @@ export class AddBookComponent implements  OnInit {
         authors: [],
         bookTags: [],
         yearOfPublication: this.myFormModel.get('yearOfPublicationInput').value,
-        signature: this.myFormModel.get('signatureInput').value
+        signature: this.myFormModel.get('signatureInput').value,
+        amountOfBook: this.myFormModel.get('amountOfBookInput').value
       };
       this.authors.controls.forEach(authorControl => {
         const author: Author = {
@@ -393,6 +396,7 @@ export class AddBookComponent implements  OnInit {
     this.myFormModel.get('titleInput').setValue('');
     this.myFormModel.get('yearOfPublicationInput').setValue('');
     this.myFormModel.get('signatureInput').setValue('');
+    this.myFormModel.get('amountOfBookInput').setValue('');
 
     this.authors.controls.forEach(authorControl => {
       authorControl.get('authorForenameInput').setValue('');

@@ -1,16 +1,23 @@
 
   <section id="booksList">
-    <div class="d-md-block d-lg-flex button-group">
-      <button type="button" class="c-btn c-btn--primary" data-bs-toggle="modal" data-bs-target="#exampleModal"
-              mat-raised-button (click)="openDialog('add')">Add a book</button>
 
-      <button type="button" class="c-btn c-btn--primary" data-bs-toggle="modal" data-bs-target="#exampleModal"
-              mat-raised-button (click)="openDialog('edit')" >Modify a book</button>
-
-    <button type="button" class="c-btn c-btn--primary" data-bs-toggle="modal" data-bs-target="#exampleModal"
-            mat-raised-button (click)="deleteBook()" >Delete a book</button>
+    <div class="t-side-header_divider">
     </div>
 
+    <div class="t-side-header_hero">
+
+      <button type="button" class="c-btn c-btn--orange" data-bs-toggle="modal" data-bs-target="#exampleModal"
+              mat-raised-button (click)="deleteBook()">Check out a book</button>
+
+      <button type="button" class="c-btn c-btn--accent" data-bs-toggle="modal" data-bs-target="#exampleModal"
+              mat-raised-button (click)="openDialog('add')">Add a book </button>
+
+      <button type="button" class="c-btn c-btn--accent" data-bs-toggle="modal" data-bs-target="#exampleModal"
+              mat-raised-button (click)="openDialog('edit')" >Modify a book </button>
+      <button type="button" class="c-btn c-btn--accent" data-bs-toggle="modal" data-bs-target="#exampleModal"
+              mat-raised-button (click)="deleteBook()" >Delete a book</button>
+
+    </div>
 
     <ng-container *ngIf="bookslist !== null; else noBooks">
       <p [ngStyle]="{color: getColor()}"></p>
@@ -60,7 +67,7 @@
           </td>
           <td>{{book.yearOfPublication}}</td>
           <td>{{book.signature}}</td>
-          <td>{{book.amountOfbook}}</td>
+          <td>{{book.amountOfBook}}</td>
         </tr>
         </tbody>
 

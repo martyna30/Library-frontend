@@ -8,4 +8,5 @@ export interface BookValidationError {
   signature?: string;
   bookTags?: Array<BookTag>;
   authors?: Array<AuthorValidationError>;
+  amountOfBook?: number;
 }

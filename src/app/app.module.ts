@@ -48,10 +48,11 @@ import {MatTableModule} from '@angular/material/table';
 import {Ng2SearchPipe, Ng2SearchPipeModule} from 'ng2-search-filter';
 
 
-export function jwtOptionsFactory(http: HttpService) {
+// tslint:disable-next-line:typedef
+export function jwtOptionsFactory(userAuthService: UserAuthService) {
   return {
     tokenGetter: () => {
-      return http.getTokenFromService();
+      return userAuthService.getTokenFromService();
     },
     allowedDomains: ['localhost:8080'],
     disallowedRoutes: ['http://localhost:8080/v1/library/login', 'http://localhost:8080/v1/library/token/refresh']
@@ -95,7 +96,7 @@ export function jwtOptionsFactory(http: HttpService) {
         jwtOptionsProvider: {
           provide: JWT_OPTIONS,
           useFactory: jwtOptionsFactory,
-          deps: [HttpService]
+          deps: [UserAuthService]
         }
       })
   ], // StoreModule.forRoot({ count: counterReducer })],

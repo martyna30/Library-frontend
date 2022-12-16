@@ -7,12 +7,13 @@ import {HttpService} from '../../services/http.service';
 import {Router} from '@angular/router';
 import {UserProfile} from '../models-interface/user-profile';
 import {JwtHelperService} from '@auth0/angular-jwt';
+import {UserAuthService} from '../../services/user-auth.service';
 
 
 @Injectable()
 export class AuthTokenInterceptor implements HttpInterceptor {
 
-  constructor(private injector: Injector, private http: HttpClient, private httpService: HttpService,
+  constructor(private injector: Injector, private http: HttpClient, private userAuthService: UserAuthService,
               private jwtHelper: JwtHelperService) {
   }
 
@@ -46,10 +47,10 @@ export class AuthTokenInterceptor implements HttpInterceptor {
               AuthTokenInterceptor.accessToken = newtoken.access_token;
               localStorage.clear();
               localStorage.setItem('new_token', newtoken.access_token);
-              this.httpService.token$.next(newtoken.access_token);
+              this.userAuthService.token$.next(newtoken.access_token);
               const userdata = this.jwtHelper.decodeToken(newtoken.access_token) as UserProfile;
               const userrole = userdata.role;
-              this.httpService.userProfile$.next(userrole);
+              this.userAuthService.userProfile$.next(userrole);
               return next.handle(request.clone({
                 setHeaders: {
                   Authorization: `Bearer ${AuthTokenInterceptor.accessToken}`
@@ -59,10 +60,10 @@ export class AuthTokenInterceptor implements HttpInterceptor {
           );
         }
         if (!this.islogout && (err.status === 403 || err.status === 401) && this.refresh === true) {
-          this.islogout = true;   //!this.islogout && AuthTokenInterceptor.accessToken !== null
+          this.islogout = true;   // !this.islogout && AuthTokenInterceptor.accessToken !== null
           AuthTokenInterceptor.accessToken = '';
-          const httpService = this.injector.get(HttpService);
-          return httpService.logout();
+          // const userAuthService = this.injector.get(UserAuthService);  //tu zminiam
+          return this.userAuthService.logout();
         }
         if (err.status === 422 && !this.islogout) {
           return next.handle(req);

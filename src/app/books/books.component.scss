@@ -19,12 +19,13 @@
 table {
   color: $dark-blue;
   max-height: 100%;
+  width: 1140px;
   border: 1px solid #3B99E1;
   text-align: center;
   background-color: mintcream;
   padding: 2em;
   flex-wrap: wrap;
-  margin-top: $grid-base*3;
+  margin-top: $grid-base*1.5;
 
 }
 
@@ -54,12 +55,12 @@ td {
   margin-left: auto;
   margin-right: auto;
 }
-#mat-input-12 {
-  width: 250px;
-}
+
 
 .mat-input-element {
   max-width: 150%;
+  width: 300px;
+  color: darkblue;
 }
 
 

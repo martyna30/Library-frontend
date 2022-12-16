@@ -13,12 +13,13 @@ import {UserAuthService} from '../services/user-auth.service';
 
 
 const routes: Routes = [
-  {path: '', redirectTo: '/', pathMatch: 'full' },
+  {path: '', redirectTo: '/', pathMatch: 'full',  },
   {path: 'books', component: BooksComponent, canActivate: [AuthGuard] },
   {path: 'authors', component: AuthorsComponent,  canActivate: [AuthGuard]  },
-  {path: 'users', component: UserComponent  },
-  {path: 'login', component: LoginComponent},
-  {path: '**', component: PageNotFoundComponent },
+  {path: 'tags', component: AuthorsComponent },
+  {path: 'users', component: UserComponent  , canActivate: [AuthGuard] },
+  {path: 'login', component: LoginComponent, canActivate: [AuthGuard] },
+  {path: '**', component: PageNotFoundComponent, canActivate: [AuthGuard] },
 ];
 @NgModule({
   imports: [RouterModule.forRoot(routes)

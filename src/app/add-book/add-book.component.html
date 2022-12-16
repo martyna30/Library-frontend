@@ -126,7 +126,7 @@
       <fieldset class="input-fieldset">
         <label class="input-label">Book signature</label>
         <mat-form-field appearance="fill">
-         <input matInput type="text" placeholder="Insert a Book signature" required formControlName="signatureInput"/>
+         <input matInput type="text" name="signature" placeholder="Insert a Book signature" required formControlName="signatureInput"/>
         </mat-form-field>
 
         <div id="validationServer04Feedback" class="invalid-feedback d-block"  *ngIf="validationErrors !== null && validationErrors?.signature">
@@ -135,6 +135,18 @@
 
 
       </fieldset>
+
+
+    <fieldset class="input-fieldset">
+      <label class="input-label">Amount of book</label>
+      <mat-form-field appearance="fill">
+        <input  matInput type="number" name="amountOfBook" placeholder="Amount of book" required formControlName="amountOfBookInput">
+      </mat-form-field>
+
+      <div class="col-10" *ngIf="validationErrors !== null && validationErrors?.amountOfBook">
+        <span class="text text-danger">{{validationErrors.amountOfBook[0]}}</span>
+      </div>
+    </fieldset>
 
   </mat-dialog-content>
 

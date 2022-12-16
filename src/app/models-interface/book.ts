@@ -8,5 +8,5 @@ export interface Book {
   signature: string;
   bookTags: Array<BookTag>;
   authors: Array<Author>;
-  amountOfbook?: number;
+  amountOfBook?: number;
 }

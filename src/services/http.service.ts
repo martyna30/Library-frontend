@@ -18,10 +18,6 @@ import {UserDto} from '../app/models-interface/userDto';
 import {NewUserDto} from '../app/models-interface/newUserDto';
 import {ObjectName} from '../app/models-interface/ObjectName';
 
-
-
-
-
 @Injectable({
   providedIn: 'root'
 })
@@ -30,17 +26,17 @@ export class HttpService {
   private httpHeader = {headers: new HttpHeaders({'Content-Type': 'application/json'})};
   private httpHeader2 = {headers2: new HttpHeaders({'Access-Control-Allow-Origin': '*'})};
 
-  token$ = new BehaviorSubject<string>(null);
+ /* token$ = new BehaviorSubject<string>(null);
   isloggedin$ = new BehaviorSubject<boolean>(false);
   userProfile$ = new BehaviorSubject<Array<string>>([]);
   jwtHelper = new JwtHelperService();
-
+*/
 
   constructor(private http: HttpClient) {
   }
 
 
-  getTokenFromService(): Observable<string> {
+  /*getTokenFromService(): Observable<string> {
     const accesstoken = localStorage.getItem('access_token');
     const newtoken = localStorage.getItem('new_token');
     if (accesstoken !== null && accesstoken !== undefined
@@ -55,7 +51,7 @@ export class HttpService {
     else {
       console.log('Access denied, you have to log in');
     }
-  }
+  }*/
 
   isTokenExpired(accesstoken?): boolean {
     //  const accesstoken = localStorage.getItem('access_token');
@@ -195,7 +191,7 @@ export class HttpService {
       .set('surname', surname + '');
     const header1 = this.httpHeader;
     return this.http.get<Array<Author>>(this.URL_DB + 'getAuthorsSurnameWithSpecifiedCharacters', {
-      headers: {'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json'}, //Authorization: `Bearer ${token}`
+      headers: {'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json'}, // Authorization: `Bearer ${token}`
       observe: 'body',
       params: param
     });
@@ -250,7 +246,7 @@ export class HttpService {
       responseType: 'json',
       observe: 'body',
       params: param
-    }).pipe(
+    }); /*.pipe(
       map((response) => {
         localStorage.clear();
         const tokens = response as Token;
@@ -265,7 +261,7 @@ export class HttpService {
         AuthTokenInterceptor.refreshToken = response.refresh_token;
         return true;
       }));
-      // tslint:disable-next-line:no-shadowed-variable
+  }// tslint:disable-next-line:no-shadowed-variable
      /*catchError((error) => {
         console.log(error);
         return of(false);
@@ -273,13 +269,13 @@ export class HttpService {
   }
   // tslint:disable-next-line:typedef
    logout() {
-     return this.http.post('http://localhost:8080/v1/library/logout', {}, {})
-       .subscribe(res => {
+     return this.http.post('http://localhost:8080/v1/library/logout', {}, {});
+       /*.subscribe(res => {
          this.token$.next(null);
          this.isloggedin$.next(false);
          this.userProfile$.next(null);
          localStorage.clear();
-       });
+       });*/
    }
 
    // tslint:disable-next-line:typedef

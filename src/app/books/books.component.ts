@@ -21,6 +21,7 @@ import {getToken} from 'codelyzer/angular/styles/cssLexer';
 import {ListBook} from '../models-interface/listBook';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {ObjectService} from '../../services/object.service';
+import {UserAuthService} from '../../services/user-auth.service';
 
 const FILTER_PAG_REGEX = /[^0-9]/g;
 
@@ -55,11 +56,11 @@ export class BooksComponent implements OnInit {
 
   constructor(private bookService: BookService, private checkboxService: CheckboxService,
               private dialog: MatDialog, private objectService: ObjectService,
-              private http: HttpService, private fb: FormBuilder) {
-    this.http.token$.subscribe((token) => {
+              private userAuthService: UserAuthService, private fb: FormBuilder) {
+    this.userAuthService.token$.subscribe((token) => {
       this.token = token;
     });
-    this.http.userProfile$.subscribe((userRole) => {
+    this.userAuthService.userProfile$.subscribe((userRole) => {
       this.user = userRole;
     });
   }
@@ -117,6 +118,9 @@ export class BooksComponent implements OnInit {
         } else {
           this.childComponent.showBookForm();
         }
+      }
+      else {
+        alert('Function available only for the administrator');
       }
     } else {
       alert('Function available only for the administrator');

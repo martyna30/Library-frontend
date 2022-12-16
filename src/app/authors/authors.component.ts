@@ -15,6 +15,7 @@ import {HttpService} from '../../services/http.service';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {Book} from '../models-interface/book';
 import {ObjectService} from '../../services/object.service';
+import {UserAuthService} from '../../services/user-auth.service';
 
 const FILTER_PAG_REGEX = /[^0-9]/g;
 
@@ -48,12 +49,12 @@ export class AuthorsComponent implements OnInit {
   private showNamePlaceholder: boolean;
 
   constructor(config: NgbPaginationConfig,  private objectService: ObjectService,
-              private authorService: AuthorService, private http: HttpService,
+              private authorService: AuthorService,  private userAuthService: UserAuthService,
               private checkboxService: CheckboxService, private dialog: MatDialog,
               private fb: FormBuilder) {
-      this.http.token$.subscribe((token) => {
+      this.userAuthService.token$.subscribe((token) => {
       this.token = token;
-      this.http.userProfile$.subscribe((userRole) => {
+      this.userAuthService.userProfile$.subscribe((userRole) => {
           this.user = userRole;
         });
     });
@@ -104,6 +105,9 @@ export class AuthorsComponent implements OnInit {
         } else {
           this.childComponent.showAddAuthorForm();
         }
+      }
+      else {
+        alert('Function available only for the administrator');
       }
     }else {
       alert('Function available only for the administrator');

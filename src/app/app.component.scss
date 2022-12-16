@@ -43,9 +43,32 @@
   width: 600px;
   display: flex;
   align-items: start;*/
+.username {
+  color: darkorange;
+}
+.witaj {
+  color: $dark-blue;
+}
+
+.c-nav-item {
+  margin: $grid-base;
+  font-size: $font-size-5;
+  padding-bottom: $grid-base * .75;
+  padding-top: $grid-base * .75;
+  text-align: center;
+  text-transform: uppercase;
+  width: 100%;
+}
+
+.c-nav-item.active {
+  font-weight: bold;
+  color: darkorange;
 
 
-
+}
+//.nav-link.active {
+ // font-weight: bold;
+//}
 
 
 .logoHeader {

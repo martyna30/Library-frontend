@@ -24,9 +24,11 @@ import {NewUserDto} from '../models-interface/newUserDto';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
+
+   login: string;
+   password: string;
    private isComming: boolean;
    private response: any;
-
 
    registerFormIsHidden = true;
 
@@ -45,6 +47,9 @@ export class LoginComponent implements OnInit {
      refresh_token: ''
    };
 
+  // @ts-ignore
+
+
    constructor(private fb: FormBuilder, private userAuthService: UserAuthService,
                private http: HttpService, private router: Router) {
    }
@@ -59,24 +64,21 @@ export class LoginComponent implements OnInit {
 
    }
    // tslint:disable-next-line:typedef
-
-
-   public signIn(){
+   public signIn(login: string){
+     this.login = login;
 
      const userDto: UserDto = {
        username : this.myFormModel.get('loginInput').value,
        password: this.myFormModel.get('passwordInput').value
      };
      // @ts-ignore
-     this.http.generateToken(userDto).subscribe(
+     this.userAuthService.login(userDto).subscribe(
        (tokenIsComming) => {
          this.isComming = tokenIsComming;
          if (this.isComming) {
            this.isloggedin = true;
-           // this.eventLogin.emit(this.isloggedin);
-           // if (this.isloggedin === true) {
            this.loginFormIsHidden = true;
-           // this.router.navigate(['/users']);
+           this.router.navigate(['/']);
          }
        }, (response: HttpErrorResponse) => {
          console.log(response.error);

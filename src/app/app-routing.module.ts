@@ -8,6 +8,7 @@ import {LoginComponent} from './login/login.component';
 import {UserComponent} from './add-user/user.component';
 import {AuthGuard} from './auth/auth.guard';
 import {UserAuthService} from '../services/user-auth.service';
+import {RentalComponent} from './rental/rental.component';
 
 
 
@@ -19,6 +20,7 @@ const routes: Routes = [
   {path: 'tags', component: AuthorsComponent },
   {path: 'users', component: UserComponent  , canActivate: [AuthGuard] },
   {path: 'login', component: LoginComponent, canActivate: [AuthGuard] },
+  {path: 'rental', component: RentalComponent, canActivate: [AuthGuard] },
   {path: '**', component: PageNotFoundComponent, canActivate: [AuthGuard] },
 ];
 @NgModule({

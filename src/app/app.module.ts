@@ -46,6 +46,8 @@ import {AuthTokenInterceptor} from './interceptors/auth-token-interceptor';
 import {JWT_OPTIONS, JwtModule} from '@auth0/angular-jwt';
 import {MatTableModule} from '@angular/material/table';
 import {Ng2SearchPipe, Ng2SearchPipeModule} from 'ng2-search-filter';
+import { CheckOutBookComponent } from './check-out-book/check-out-book.component';
+import { RentalComponent } from './rental/rental.component';
 
 
 // tslint:disable-next-line:typedef
@@ -80,8 +82,8 @@ export function jwtOptionsFactory(userAuthService: UserAuthService) {
     AddBookComponent,
     LoginComponent,
     UserComponent,
-
-
+    CheckOutBookComponent,
+    RentalComponent,
   ],
    entryComponents: [
     AddBookComponent

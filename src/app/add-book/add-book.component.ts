@@ -29,6 +29,7 @@ import {MAT_DIALOG_DATA, MatDialogConfig, MatDialogRef} from '@angular/material/
 import {MatDialog} from '@angular/material/dialog';
 import {HttpErrorResponse} from '@angular/common/http';
 import {error} from 'protractor';
+import {UserAuthService} from '../../services/user-auth.service';
 
 
 // @ts-ignore
@@ -49,6 +50,8 @@ export class AddBookComponent implements  OnInit {
 
   @Output()
   loadData: EventEmitter<any> = new EventEmitter();
+
+  private isLoggedin: boolean;
 
   isHidden = true;
   showTitlePlaceholder: boolean;
@@ -80,6 +83,7 @@ export class AddBookComponent implements  OnInit {
   constructor(private authorService: AuthorService,
               private bookService: BookService,
               private checkboxservice: CheckboxService,
+              private userAuthService: UserAuthService,
               private fb: FormBuilder) {}
 
 
@@ -96,6 +100,16 @@ export class AddBookComponent implements  OnInit {
     this.addNextAuthor();
     this.addNextBooksTag();
     this.checkTheChangeTitle();
+
+    this.userAuthService.isloggedin$.subscribe(isLoggedin => {
+      // @ts-ignore
+      if (isLoggedin === false) {
+        this.isLoggedin = false;
+      }
+      else {
+        this.isLoggedin = true;
+      }
+    });
   }
 
   closeDialog(): void {
@@ -275,12 +289,13 @@ export class AddBookComponent implements  OnInit {
       }
     }, (response: HttpErrorResponse) => {
       this.isCreated = false;
+
+      if (this.isLoggedin === false && response.status === 403 || response.status === 401) {
+        alert('Function available only for the administrator');
+      }
       this.validationErrors = response.error;
       if (this.validationErrors.signature !== undefined) {
         this.validationErrors.signature = undefined;
-      }
-      if (response.status === 403 || response.status === 401) {
-        alert('Function available only for the administrator');
       }
     });
   }
@@ -307,7 +322,6 @@ export class AddBookComponent implements  OnInit {
 
         bookFromDb.authors.forEach((author, index) => {
           if (index >= this.authors.length) {
-            console.log(index);
             this.addNextAuthor();
           }
 
@@ -315,7 +329,8 @@ export class AddBookComponent implements  OnInit {
           this.authors.at(index).get('authorSurnameInput').setValue(author.surname);
         });
         bookFromDb.bookTags.forEach((bookTag, index) => {
-          if (index) {
+          if (index >= this.bookTags.length ) {
+            console.log(index);
             this.addNextBooksTag();
           }
           this.bookTags.at(index).get('booksTagInput').setValue(bookTag.literaryGenre);
@@ -363,7 +378,8 @@ export class AddBookComponent implements  OnInit {
         book.bookTags.push(bookTag);
       });
       this.bookService.saveBookToDB(book).subscribe(saveBook => {
-        if (saveBook !== undefined) {
+        // @ts-ignore
+        if (saveBook !== undefined && saveBook !== null) {
           this.isCreated = true;
           this.bookExist = false;
         }

@@ -7,8 +7,18 @@ import {AddBookComponent} from './add-book/add-book.component';
 import {UserAuthService} from '../services/user-auth.service';
 import {Router} from '@angular/router';
 import {UserProfile} from './models-interface/user-profile';
-import {Observable} from 'rxjs';
+import {async, asyncScheduler, Observable} from 'rxjs';
 import {colors} from '@angular/cli/utilities/color';
+import {Rental} from './models-interface/rental';
+import {any} from 'codelyzer/util/function';
+import {DeleteComponent} from './delete/delete.component';
+import {CheckOutBookComponent} from './check-out-book/check-out-book.component';
+import {error} from 'protractor';
+import {resolve} from '@angular/compiler-cli/src/ngtsc/file_system';
+import {RentalComponent} from './rental/rental.component';
+import {UserDto} from './models-interface/userDto';
+import {Token} from './models-interface/token';
+
 
 @Component({
   selector: 'app-root',
@@ -18,71 +28,135 @@ import {colors} from '@angular/cli/utilities/color';
 export class AppComponent implements OnInit {
   private userdata: string;
   private tokenFromService: string;
+  private rentaltableIsHidden: boolean;
+  title: string;
 
-    constructor(private http: HttpService, private userAuthService: UserAuthService, private router: Router) {
-    }
+  constructor(private http: HttpService, private userAuthService: UserAuthService,
+              private bookService: BookService, private router: Router) {
+  }
 
-  title = 'library-frontend';
 
   loggedInUsername: string;
   isloggedin: boolean;
   loginFormIsHidden = true;
+  isBorrowedBook: boolean;
 
+  rentalList: () => Observable<Array<Rental>>;
 
-  ngOnInit(): void {
-    this.checkToken();
-    this.checkStatus();
-    // localStorage.clear();
+  @ViewChild('childCheckOutRef')
+  checkoutBookComponent: CheckOutBookComponent;
+
+  @ViewChild('rentalRef')
+  rentalComponent: RentalComponent;
+  userDto: UserDto;
+
+   ngOnInit() {
+     this.checkStatus();
+     // this.setUsername();
+     this.checkToken();
+    // await this.loadDataBook();
+
+    // localStorage.removeItem('refresh_token');
+    // localStorage.removeItem('password');
+    // localStorage.removeItem('username');
+
   }
+
   checkToken(): void {
-    this.userAuthService.token$.subscribe(data => {
-      this.userdata = data;
-    });
-    const accesstoken = localStorage.getItem('access_token');
-    const newtoken = localStorage.getItem('new_token');
-    if (this.userdata !== null && this.userdata !== undefined) {
-      console.log('zalog');
-    } else {
-      this.userAuthService.getTokenFromService().subscribe(token => {
+    this.userAuthService.getTokenFromService().subscribe(token => {
         this.tokenFromService = token;
       });
-      console.log('zalog');
-    }
+
+    if (this.tokenFromService !== null && this.tokenFromService !== undefined) {
+        this.isloggedin = true;
+      }
+    /*if (this.isloggedin) {
+        this.userAuthService.userName$.subscribe(username => {
+          this.loggedInUsername = username;
+        });
+      }*/
+    this.isloggedin = false;
+    console.log('Access denied, you have to log in');
   }
+
+
 
   getUrl(): string {
     return this.router.url;
   }
-
-  checkStatus(): void {
-    this.userAuthService.isloggedin$.subscribe(isLoggedin => {
-      this.isloggedin = isLoggedin;
+  // tslint:disable-next-line:typedef
+  checkStatus() {
+    this.userAuthService.isloggedin$.subscribe((isloggedin) => {
+      this.isloggedin = isloggedin;
+      if (this.isloggedin === true) {
+        this.userAuthService.userName$.subscribe((username) => {
+          this.loggedInUsername = username;
+          this.userDto.username = username;
+        });
+      }
     });
-
-    if (this.isloggedin) {
-      this.userAuthService.loggedInUsername$.subscribe(username => {
-       this.loggedInUsername = username;
-      });
+    this.bookService.getRentalListForUser(this.userDto);
+    this.rentalList = this.bookService.getRentalsFromBooksService;
+    if (this.rentalList.length > 0) {
+        this.showRentalTable();
     }
   }
 
-  logout() {
+
+    /*setUsername();: void {
+    this.userAuthService.userName$.subscribe((username) => {
+      this.loggedInUsername = username;
+      this.userDto.username = username;
+     });
+   };
+    }*/
+
+    logout() {
     this.userAuthService.logout();
     this.isloggedin = false;
-  }
+    this.userAuthService.isloggedin$.next(false);
+    }
 
 
-  showLoginForm() {
+
+    showLoginForm() {
     if (this.loginFormIsHidden === true) {
       this.loginFormIsHidden = false;
     }
   }
 
+  // tslint:disable-next-line:typedef
+  /*loadDataBook() {
+    /*this.bookService.isBorrowed$.subscribe( isBorrowed => {
+      this.isBorrowedBook = isBorrowed;
+    });*/
+    // this.bookService.borrowedBooks$.subscribe(borrowedBooks => {
+      // this.rentalList.push(borrowedBooks);*/
 
-  changeColor() {
-    return
+    showRentalTable() {
+    this.rentalComponent.showRentalTable();
+    this.rentaltableIsHidden = false;
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

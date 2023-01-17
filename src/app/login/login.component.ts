@@ -1,4 +1,4 @@
-import {Component, Injectable, OnInit, Output, EventEmitter, Input} from '@angular/core';
+import {Component, Injectable, OnInit, Output, EventEmitter, Input, ViewChild} from '@angular/core';
 import {UserAuthService} from '../../services/user-auth.service';
 
 import {FormBuilder, FormGroup} from '@angular/forms';
@@ -13,6 +13,7 @@ import {Token} from '../models-interface/token';
 import {AuthTokenInterceptor} from '../interceptors/auth-token-interceptor';
 import {UserDto} from '../models-interface/userDto';
 import {NewUserDto} from '../models-interface/newUserDto';
+import {CheckOutBookComponent} from '../check-out-book/check-out-book.component';
 
 @Injectable({
   providedIn: 'root'
@@ -30,6 +31,7 @@ export class LoginComponent implements OnInit {
    private isComming: boolean;
    private response: any;
 
+
    registerFormIsHidden = true;
 
    myFormModel: FormGroup;
@@ -38,6 +40,8 @@ export class LoginComponent implements OnInit {
 
    isloggedin: boolean;
    isRegister: boolean;
+
+   userDto: UserDto;
 
    @Input()
    loginFormIsHidden: boolean;
@@ -76,7 +80,6 @@ export class LoginComponent implements OnInit {
        (tokenIsComming) => {
          this.isComming = tokenIsComming;
          if (this.isComming) {
-           this.isloggedin = true;
            this.loginFormIsHidden = true;
            this.router.navigate(['/']);
          }

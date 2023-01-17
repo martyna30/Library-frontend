@@ -60,7 +60,7 @@ export class DeleteComponent implements OnInit {
             console.log(response.error);
             this.error = response.error;
             this.isDeleted = false;
-            if (response.status === 403) {
+            if (response.status === 403 || response.status === 401) {
               this.isDeleted = false;
               console.log(response);
               alert('Function available only for the administrator');

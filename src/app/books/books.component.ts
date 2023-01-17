@@ -22,6 +22,8 @@ import {ListBook} from '../models-interface/listBook';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {ObjectService} from '../../services/object.service';
 import {UserAuthService} from '../../services/user-auth.service';
+import {CheckOutBookComponent} from '../check-out-book/check-out-book.component';
+import {UserDto} from '../models-interface/userDto';
 
 const FILTER_PAG_REGEX = /[^0-9]/g;
 
@@ -37,7 +39,7 @@ export class BooksComponent implements OnInit {
   size = 10;
   total: Observable<number>;
   private token: string;
-  private user: Array<string>;
+  private userdata: string;
   checkboxOfBook: number;
   myFormModel: FormGroup;
 
@@ -52,6 +54,11 @@ export class BooksComponent implements OnInit {
 
   private searchedObjectsName: string[] = [];
   private showNamePlaceholder: boolean;
+  private userRole: Array<string>;
+  // @Output()
+  // isborrowedBook = new EventEmitter<boolean>();
+
+  private isBorrowed: boolean;
 
 
   constructor(private bookService: BookService, private checkboxService: CheckboxService,
@@ -61,15 +68,18 @@ export class BooksComponent implements OnInit {
       this.token = token;
     });
     this.userAuthService.userProfile$.subscribe((userRole) => {
-      this.user = userRole;
+      this.userRole = userRole;
     });
   }
 
   @ViewChild('childAddRef')
-  childComponent: AddBookComponent;
+  addBookComponent: AddBookComponent;
 
   @ViewChild('childDeleteRef')
-  child2Component: DeleteComponent;
+  deleteComponent: DeleteComponent;
+
+  @ViewChild('childCheckOutRef')
+  checkOutBookComponent: CheckOutBookComponent;
 
 
   // tslint:disable-next-line:typedef
@@ -109,14 +119,13 @@ export class BooksComponent implements OnInit {
     this.stan = mode;
     dialogConfig.panelClass = 'custom-modalbox';
     if (this.token !== null && this.token !== undefined) {
-      console.log(this.user.toString());
-      // tslint:disable-next-line:triple-equals
-      if (this.user.toString() === 'ROLE_ADMIN' || this.user.toString() === 'ROLE_LIBRARIAN') {
+      console.log(this.userRole.toString());
+      if (this.userRole.toString() === 'ROLE_ADMIN' || this.userRole.toString() === 'ROLE_LIBRARIAN') {
         this.dialog.open(AddBookComponent, dialogConfig);
         if (mode === 'edit') {
-          this.childComponent.showEditBookForm();
+          this.addBookComponent.showEditBookForm();
         } else {
-          this.childComponent.showBookForm();
+          this.addBookComponent.showBookForm();
         }
       }
       else {
@@ -165,10 +174,20 @@ export class BooksComponent implements OnInit {
     }
   }
 
+  // tslint:disable-next-line:typedef
+  checkoutBook() {
+    if (this.token !== null && this.token !== undefined) {
+      this.checkOutBookComponent.checkOutBook();
+    }
+    else {
+      alert('Function available only for the logged user');
+    }
+  }
+
   deleteBook() {
     if (this.token !== null && this.token !== undefined) {
-      if (this.user.toString() === 'ROLE_ADMIN') {
-        this.child2Component.deleteBook();
+      if (this.userRole.toString() === 'ROLE_ADMIN') {
+        this.deleteComponent.deleteBook();
       }
       else {
         alert('Function available only for the administrator');
@@ -201,6 +220,10 @@ export class BooksComponent implements OnInit {
   }
 
 
+  /*changeStatus(isBorrowed: boolean) {
+    this.isBorrowed = isBorrowed;
+    this.isborrowedBook.emit(this.isBorrowed);
+  }*/
 }
 
 

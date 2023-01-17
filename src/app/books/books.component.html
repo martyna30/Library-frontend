@@ -7,7 +7,7 @@
     <div class="t-side-header_hero">
 
       <button type="button" class="c-btn c-btn--orange" data-bs-toggle="modal" data-bs-target="#exampleModal"
-              mat-raised-button (click)="deleteBook()">Check out a book</button>
+              mat-raised-button (click)="checkoutBook()">Check out a book</button>
 
       <button type="button" class="c-btn c-btn--accent" data-bs-toggle="modal" data-bs-target="#exampleModal"
               mat-raised-button (click)="openDialog('add')">Add a book </button>
@@ -120,6 +120,7 @@
 </div>
   <app-add-book #childAddRef (loadData)="loadData()" [page]="page" [size]="size" [checkboxOfBook]="checkboxOfBook"></app-add-book>
     <app-delete #childDeleteRef  (loadBookData)="loadData()" [page]="page" [size]="size" ></app-delete>
+    <app-check-out-book #childCheckOutRef (loadBooks)="loadData()"  [page]="page" [size]="size" [checkboxOfBook]="checkboxOfBook" ></app-check-out-book>
   </section>
 
 

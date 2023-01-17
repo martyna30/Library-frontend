@@ -23,7 +23,7 @@
             <li class="nav-item">
               <a  routerLink="/login" routerLinkActive="active" class="cursor-pointer" class="nav-link text-white sk-header-item-link  text-uppercase" *ngIf="!isloggedin">Sign in</a>
               <a routerLinkActive="active" class="nav-link text-white sk-header-item-link  text-uppercase" *ngIf="isloggedin" (click)="logout()">Log out</a>
-              <a  routerLinkActive="active" class="witaj text-uppercase"  *ngIf="isloggedin">Witaj {{loggedInUsername}}</a>
+              <a  class="nav-link sk-header-item-link  text-uppercase font-weight-bold"  *ngIf="isloggedin"> {{loggedInUsername}}</a>
             </li>
             <li class="nav-item">
 
@@ -34,9 +34,8 @@
                     <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
                       <a routerLink="/login" routerLinkActive="active" ngbDropdownItem *ngIf="!isloggedin">Sign in</a>
                       <a ngbDropdownItem *ngIf="isloggedin" (click)="logout()">Log out </a>
-                      <a class="username" ngbDropdownItem *ngIf="isloggedin">{{loggedInUsername}}</a>
-                      <a ngbDropdownItem *ngIf="isloggedin">My borrowed books</a>
-                      <a ngbDropdownItem *ngIf="isloggedin">My ordered books</a>
+                      <a class="username"  ngbDropdownItem *ngIf="isloggedin" >{{loggedInUsername}}</a>
+                      <a routerLink="/rental" ngbDropdownItem (click)="showRentalTable()" >My borrowed books</a>
                     </div>
                   </div>
                 </div>
@@ -50,8 +49,8 @@
       </div>
 
       <app-login [loginFormIsHidden]="loginFormIsHidden" ></app-login>
-
-
+      <app-check-out-book #childCheckOutRef  ></app-check-out-book>
+      <app-rental #rentalRef ></app-rental>
     </div>
 
 

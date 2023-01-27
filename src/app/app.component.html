@@ -35,7 +35,7 @@
                       <a routerLink="/login" routerLinkActive="active" ngbDropdownItem *ngIf="!isloggedin">Sign in</a>
                       <a ngbDropdownItem *ngIf="isloggedin" (click)="logout()">Log out </a>
                       <a class="username"  ngbDropdownItem *ngIf="isloggedin" >{{loggedInUsername}}</a>
-                      <a routerLink="/rental" ngbDropdownItem (click)="showRentalTable()" >My borrowed books</a>
+                      <a routerLink="/checkout" routerLinkActive="active" ngbDropdownItem  (click)="getRentalListForUser()">My borrowed books</a>
                     </div>
                   </div>
                 </div>
@@ -49,8 +49,8 @@
       </div>
 
       <app-login [loginFormIsHidden]="loginFormIsHidden" ></app-login>
-      <app-check-out-book #childCheckOutRef  ></app-check-out-book>
-      <app-rental #rentalRef ></app-rental>
+      <app-check-out-book #childCheckOutRef ></app-check-out-book>
+
     </div>
 
 

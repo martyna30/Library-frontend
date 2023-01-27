@@ -1,1 +1,31 @@
 
+<section id="rentalList" [hidden]="isHidden">
+
+
+  <ng-container *ngIf="rentalList !== null ; else noBooks">
+    <table class="table table-striped" >
+
+      <tr  input class="form-check-input me-1" type="checkbox" value="" aria-label="..."  class="table-primary">
+        <th scope="row">Lp</th>
+        <th scope="row">Title</th>
+        <th scope="row">Amount of rental</th>
+        <th> <button type="button" class="close" aria-label="Close">
+            <span aria-hidden="true" (click)="close()">&times;</span>
+        </button>
+        </th>
+      </tr>
+
+      <tr *ngFor="let rental of rentallist | async; let i = index">
+
+        <th scope="row">{{i+1}}</th>
+        <td>{{rental.title}}</td>
+        <td>{{rental["amountOfBorrowedBooks"]}}</td>
+
+      </tr>
+    </table>
+  </ng-container>
+
+  <ng-template #noBooks>
+    <p>No books</p>
+  </ng-template>
+</section>

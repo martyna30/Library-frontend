@@ -33,9 +33,10 @@ export class AuthTokenInterceptor implements HttpInterceptor {
 
   // tslint:disable-next-line:typedef
   intercept(request, next) {
-    // if (request.url.indexOf('login') > -1 || request.url.indexOf('token/refresh') > -1) {
-    // return next.handle(request);
+    // if (request.url.indexOf('logout')) {// (request.url.indexOf('login') > -1 || request.url.indexOf('token/refresh') > -1) {
+     // return next.handle(request);
     // }
+
     // let atoken;
    // if (AuthTokenInterceptor.accessToken === null || AuthTokenInterceptor === undefined) {
      //  atoken = this.userAuthService.getTokenFromService();
@@ -49,17 +50,13 @@ export class AuthTokenInterceptor implements HttpInterceptor {
 
       return next.handle(req).pipe(catchError((err: HttpErrorResponse) => {
         if ((err.status === 403 || err.status === 401) && !AuthTokenInterceptor.refresh) {
-          // const refreshtoken = localStorage.getItem('tokens');
-          // this.userAuthService.token$.subscribe(token => {
-          // AuthTokenInterceptor.refreshToken = token;
-          // });
+
+          const userdata = this.jwtHelper.decodeToken(AuthTokenInterceptor.refreshToken) as UserProfile;
+          const exp = userdata.exp;
+          const expired = (Date.now() >= exp * 1000);
+          if (!expired) {
           AuthTokenInterceptor.accessToken = AuthTokenInterceptor.refreshToken;
-          this.userAuthService.token$.next(AuthTokenInterceptor.refreshToken);
-          // const userdata = this.jwtHelper.decodeToken(AuthTokenInterceptor.refreshToken) as UserProfile;
-         //  const userrole = userdata.role;
-          // this.userAuthService.userProfile$.next(userrole);
           localStorage.removeItem('access_token');
-          // const http = this.injector.get(HttpClient);
           return this.http.post('http://localhost:8080/v1/library/token/refresh', {}, {}).pipe(
             switchMap((res: any) => {
               const newtoken = res as Token;
@@ -76,9 +73,19 @@ export class AuthTokenInterceptor implements HttpInterceptor {
             })
           );
         }
+          if (expired && (err.status === 403 || err.status === 401) && !this.islogout) {
+            this.islogout = true;
+            AuthTokenInterceptor.accessToken = '';
+            localStorage.removeItem('access_token');
+            localStorage.removeItem('refresh_token');
+            return this.userAuthService.logout();
+          }
+          if (exp && (err.status === 403 || err.status === 401) && this.islogout === true) {
+            return next.handle(req);
+          }
+        }
         if (!this.islogout && (err.status === 403 || err.status === 401) && AuthTokenInterceptor.refresh === true) {
           this.islogout = true;
-          this.userAuthService.isloggedin$.next(false);
           AuthTokenInterceptor.accessToken = '';
           localStorage.removeItem('new_token');
           return this.userAuthService.logout();

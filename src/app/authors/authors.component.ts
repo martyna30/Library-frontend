@@ -34,11 +34,6 @@ export class AuthorsComponent implements OnInit {
   checkboxOfAuthor: number;
   myFormModel: FormGroup;
 
-
-  // authorId: string;
-  // authorList: Observable<Array<Book>>;
-  // bookslist: any[];
-
   objectToSearch: string;
 
   private stan;

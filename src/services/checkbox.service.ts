@@ -10,6 +10,8 @@ export class CheckboxService {
   private booksMap = new Map<number, number>();
   private authorsMap = new Map<number, number>();
 
+  private rentalsMap = new Map<number, number>();
+
   getBooksMap(): Map<number, number> {
     return this.booksMap;
   }
@@ -40,6 +42,23 @@ export class CheckboxService {
 
   lengthAuthorsMap(): number {
     return this.authorsMap.size;
+  }
+
+
+  getRentalsMap(): Map<number, number> {
+    return this.rentalsMap;
+  }
+
+  addToRentalsMap(id: number): void {
+    this.rentalsMap.set(id, 1);
+  }
+
+  removeFromRentalsMap(id: number): void {
+    this.rentalsMap.delete(id);
+  }
+
+  lengthRentalsMap(): number {
+    return this.rentalsMap.size;
   }
 
 

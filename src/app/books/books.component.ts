@@ -5,25 +5,13 @@ import {CheckboxService} from '../../services/checkbox.service';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {MatDialog, MatDialogConfig, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {AddBookComponent} from '../add-book/add-book.component';
-import {NgxPaginationModule} from 'ngx-pagination';
-import {applySourceSpanToExpressionIfNeeded} from '@angular/compiler/src/output/output_ast';
-import {MatTableDataSource} from '@angular/material/table';
-import {ActivatedRoute, ParamMap} from '@angular/router';
-import {switchMap} from 'rxjs/operators';
+
 import {DeleteComponent} from '../delete/delete.component';
-import {NgbPaginationConfig} from '@ng-bootstrap/ng-bootstrap';
-import {MAT_DIALOG_DATA} from '@angular/material/dialog';
-import { ChangeDetectorRef, AfterViewChecked} from '@angular/core';
-import {Token} from '../models-interface/token';
-import {UserProfile} from '../models-interface/user-profile';
-import {HttpService} from '../../services/http.service';
-import {getToken} from 'codelyzer/angular/styles/cssLexer';
-import {ListBook} from '../models-interface/listBook';
+
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {ObjectService} from '../../services/object.service';
 import {UserAuthService} from '../../services/user-auth.service';
 import {CheckOutBookComponent} from '../check-out-book/check-out-book.component';
-import {UserDto} from '../models-interface/userDto';
 
 const FILTER_PAG_REGEX = /[^0-9]/g;
 
@@ -34,6 +22,8 @@ const FILTER_PAG_REGEX = /[^0-9]/g;
   styleUrls: ['./books.component.scss']
 })
 export class BooksComponent implements OnInit {
+
+
   isDisabled: false;
   page = 1;
   size = 10;
@@ -55,8 +45,6 @@ export class BooksComponent implements OnInit {
   private searchedObjectsName: string[] = [];
   private showNamePlaceholder: boolean;
   private userRole: Array<string>;
-  // @Output()
-  // isborrowedBook = new EventEmitter<boolean>();
 
   private isBorrowed: boolean;
 
@@ -219,11 +207,6 @@ export class BooksComponent implements OnInit {
     }
   }
 
-
-  /*changeStatus(isBorrowed: boolean) {
-    this.isBorrowed = isBorrowed;
-    this.isborrowedBook.emit(this.isBorrowed);
-  }*/
 }
 
 

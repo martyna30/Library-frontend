@@ -67,7 +67,8 @@
           </td>
           <td>{{book.yearOfPublication}}</td>
           <td>{{book.signature}}</td>
-          <td>{{book.amountOfBook}}</td>
+          <td>
+            {{book.amountOfBook}}</td>
         </tr>
         </tbody>
 
@@ -120,7 +121,7 @@
 </div>
   <app-add-book #childAddRef (loadData)="loadData()" [page]="page" [size]="size" [checkboxOfBook]="checkboxOfBook"></app-add-book>
     <app-delete #childDeleteRef  (loadBookData)="loadData()" [page]="page" [size]="size" ></app-delete>
-    <app-check-out-book #childCheckOutRef (loadBooks)="loadData()"  [page]="page" [size]="size" [checkboxOfBook]="checkboxOfBook" ></app-check-out-book>
+    <app-check-out-book #childCheckOutRef   (loadBooks)="loadData()"  [page]="page" [size]="size" [checkboxOfBook]="checkboxOfBook" ></app-check-out-book>
   </section>
 
 

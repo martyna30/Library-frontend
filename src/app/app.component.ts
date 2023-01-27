@@ -15,7 +15,7 @@ import {DeleteComponent} from './delete/delete.component';
 import {CheckOutBookComponent} from './check-out-book/check-out-book.component';
 import {error} from 'protractor';
 import {resolve} from '@angular/compiler-cli/src/ngtsc/file_system';
-import {RentalComponent} from './rental/rental.component';
+
 import {UserDto} from './models-interface/userDto';
 import {Token} from './models-interface/token';
 
@@ -26,40 +26,39 @@ import {Token} from './models-interface/token';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-  private userdata: string;
+
   private tokenFromService: string;
-  private rentaltableIsHidden: boolean;
+
   title: string;
+
+  loggedInUsername: string;
+  isloggedin: boolean;
+  loginFormIsHidden = true;
+
+
+  @ViewChild('childCheckOutRef')
+  checkoutBookComponent: CheckOutBookComponent;
+
+
+  userDto: UserDto;
+
+
 
   constructor(private http: HttpService, private userAuthService: UserAuthService,
               private bookService: BookService, private router: Router) {
   }
 
 
-  loggedInUsername: string;
-  isloggedin: boolean;
-  loginFormIsHidden = true;
-  isBorrowedBook: boolean;
-
-  rentalList: () => Observable<Array<Rental>>;
-
-  @ViewChild('childCheckOutRef')
-  checkoutBookComponent: CheckOutBookComponent;
-
-  @ViewChild('rentalRef')
-  rentalComponent: RentalComponent;
-  userDto: UserDto;
-
    ngOnInit() {
+     //localStorage.removeItem('access_token');
+     //localStorage.removeItem('refresh_token');
+     //localStorage.removeItem('username');
+     //localStorage.removeItem('borrowedBooks');
+     this.userAuthService.userName$.subscribe((username) => {
+       this.loggedInUsername = username;
+     });
      this.checkStatus();
-     // this.setUsername();
      this.checkToken();
-    // await this.loadDataBook();
-
-    // localStorage.removeItem('refresh_token');
-    // localStorage.removeItem('password');
-    // localStorage.removeItem('username');
-
   }
 
   checkToken(): void {
@@ -70,11 +69,6 @@ export class AppComponent implements OnInit {
     if (this.tokenFromService !== null && this.tokenFromService !== undefined) {
         this.isloggedin = true;
       }
-    /*if (this.isloggedin) {
-        this.userAuthService.userName$.subscribe(username => {
-          this.loggedInUsername = username;
-        });
-      }*/
     this.isloggedin = false;
     console.log('Access denied, you have to log in');
   }
@@ -85,32 +79,17 @@ export class AppComponent implements OnInit {
     return this.router.url;
   }
   // tslint:disable-next-line:typedef
-  checkStatus() {
-    this.userAuthService.isloggedin$.subscribe((isloggedin) => {
-      this.isloggedin = isloggedin;
-      if (this.isloggedin === true) {
-        this.userAuthService.userName$.subscribe((username) => {
-          this.loggedInUsername = username;
-          this.userDto.username = username;
-        });
-      }
-    });
-    this.bookService.getRentalListForUser(this.userDto);
-    this.rentalList = this.bookService.getRentalsFromBooksService;
-    if (this.rentalList.length > 0) {
-        this.showRentalTable();
-    }
+
+ checkStatus() {
+   this.userAuthService.isloggedin$.subscribe((isloggedin) => {
+     this.isloggedin = isloggedin;
+   });
   }
 
 
-    /*setUsername();: void {
-    this.userAuthService.userName$.subscribe((username) => {
-      this.loggedInUsername = username;
-      this.userDto.username = username;
-     });
-   };
-    }*/
-
+  getRentalListForUser() {
+    this.checkoutBookComponent.getRentalListForUser();
+  }
     logout() {
     this.userAuthService.logout();
     this.isloggedin = false;
@@ -125,18 +104,6 @@ export class AppComponent implements OnInit {
     }
   }
 
-  // tslint:disable-next-line:typedef
-  /*loadDataBook() {
-    /*this.bookService.isBorrowed$.subscribe( isBorrowed => {
-      this.isBorrowedBook = isBorrowed;
-    });*/
-    // this.bookService.borrowedBooks$.subscribe(borrowedBooks => {
-      // this.rentalList.push(borrowedBooks);*/
-
-    showRentalTable() {
-    this.rentalComponent.showRentalTable();
-    this.rentaltableIsHidden = false;
-  }
 }
 
 

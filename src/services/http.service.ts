@@ -17,6 +17,9 @@ import {AuthTokenInterceptor} from '../app/interceptors/auth-token-interceptor';
 import {UserDto} from '../app/models-interface/userDto';
 import {NewUserDto} from '../app/models-interface/newUserDto';
 import {ObjectName} from '../app/models-interface/ObjectName';
+import {Rental} from '../app/models-interface/rental';
+import {RentalBookDto} from '../app/models-interface/rentalBookDto';
+import {BookDto} from '../app/models-interface/bookDto';
 
 @Injectable({
   providedIn: 'root'
@@ -26,11 +29,6 @@ export class HttpService {
   private httpHeader = {headers: new HttpHeaders({'Content-Type': 'application/json'})};
   private httpHeader2 = {headers2: new HttpHeaders({'Access-Control-Allow-Origin': '*'})};
 
- /* token$ = new BehaviorSubject<string>(null);
-  isloggedin$ = new BehaviorSubject<boolean>(false);
-  userProfile$ = new BehaviorSubject<Array<string>>([]);
-  jwtHelper = new JwtHelperService();
-*/
 
   constructor(private http: HttpClient) {
   }
@@ -53,9 +51,9 @@ export class HttpService {
     }
   }*/
 
-  isTokenExpired(accesstoken?): boolean {
-    //  const accesstoken = localStorage.getItem('access_token');
-    try {
+  isTokenExpired(accesstoke?): boolean {
+     const accesstoken = localStorage.getItem('access_token');
+     try {
       // tslint:disable-next-line:no-shadowed-variable
       const token = JSON.parse(atob(accesstoken.split('.')[1]));
       const exp = token.exp;
@@ -91,6 +89,8 @@ export class HttpService {
       params: param
     });
   }
+
+
 
   getBooksWithSpecifiedTitle(title: string): Observable<Array<Book>> {
     // @ts-ignore
@@ -246,39 +246,11 @@ export class HttpService {
       responseType: 'json',
       observe: 'body',
       params: param
-    }); /*.pipe(
-      map((response) => {
-        localStorage.clear();
-        const tokens = response as Token;
-        localStorage.setItem('access_token', tokens.access_token);
-        localStorage.setItem('refresh_token', tokens.refresh_token);
-        this.token$.next(tokens.access_token);
-        this.isloggedin$.next(true);
-        const userdata = this.jwtHelper.decodeToken(tokens.access_token) as UserProfile;
-        const userrole = userdata.role;
-        this.userProfile$.next(userrole);
-        AuthTokenInterceptor.accessToken = response.access_token;
-        AuthTokenInterceptor.refreshToken = response.refresh_token;
-        return true;
-      }));
-  }// tslint:disable-next-line:no-shadowed-variable
-     /*catchError((error) => {
-        console.log(error);
-        return of(false);
-        });*/
+    });
   }
-  // tslint:disable-next-line:typedef
    logout() {
      return this.http.post('http://localhost:8080/v1/library/logout', {}, {});
-       /*.subscribe(res => {
-         this.token$.next(null);
-         this.isloggedin$.next(false);
-         this.userProfile$.next(null);
-         localStorage.clear();
-       });*/
    }
-
-   // tslint:disable-next-line:typedef
   register(user: NewUserDto): Observable<string> {
     return this.http.post(this.URL_DB + 'register', user, {
       responseType: 'text',
@@ -286,9 +258,36 @@ export class HttpService {
     });
   }
 
+  getRentalListForUser(username: string): Observable<Array<Rental>> {
+    const param = new HttpParams()
+      .set('username',  username + '');
+    return this.http.get<Array<Rental>>(this.URL_DB + 'rental/getRentalsForUser',  {
+      headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
+      observe: 'body',
+      params: param
+    });
+  }
+
+  checkOutBook(bookDto: BookDto, username: string): Observable<boolean> {
+    const param = new HttpParams()
+      // .set('bookId', bookId + '')
+      .set('username', username + '');
+    // @ts-ignore
+    return this.http.put<boolean>(this.URL_DB + 'rental/checkoutBook', bookDto, {
+      observe: 'body',
+      header: HttpHeaders,
+      responseType: 'json',
+      params: param
+    });
+  }
+
+
+
 
 
 }
+
+
 
 
 

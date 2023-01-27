@@ -2,13 +2,15 @@ import { Injectable } from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {Book} from '../app/models-interface/book';
 import {HttpService} from './http.service';
-import {HttpErrorResponse, HttpParams} from '@angular/common/http';
-import {Author} from '../app/models-interface/author';
+
 import {BookTag} from '../app/models-interface/bookTag';
-import {any} from 'codelyzer/util/function';
+
 import {map, switchMap, tap} from 'rxjs/operators';
-import {ListBook} from '../app/models-interface/listBook';
+
 import {UserAuthService} from './user-auth.service';
+import {Rental} from '../app/models-interface/rental';
+
+import {BookDto} from '../app/models-interface/bookDto';
 
 @Injectable({
   providedIn: 'root'
@@ -18,19 +20,25 @@ export class BookService {
 
   private totalCountBooks$ = new BehaviorSubject<number>(0);
 
+  borrowedBooks$ = new BehaviorSubject<Array<Rental>>([]);
+
+
+  isBorrowed$ = new BehaviorSubject<boolean>(false);
+
   constructor(private httpService: HttpService, private userAuthService: UserAuthService) {
-  this.getBooksFromBooksService();
+    this.getBooksFromBooksService();
   }
 
 
   // @ts-ignore
   getBookListObservable(page: any, size: number): Observable<Array<Book>> {
     this.httpService.getBooks(page, size).subscribe((listBook) => {
-        this.bookListObs$.next(listBook.books);
-        this.totalCountBooks$.next(listBook.total);
-      });
+      this.bookListObs$.next(listBook.books);
+      this.totalCountBooks$.next(listBook.total);
+    });
   }
 
+  // tslint:disable-next-line:typedef
   getTotalCountBooks(): Observable<number> {
     return this.totalCountBooks$.asObservable();
   }
@@ -42,8 +50,9 @@ export class BookService {
   saveBookToDB(book: Book): Observable<Book> {
 
     return this.httpService.saveBook(book);
- }
-    // tslint:disable-next-line:typedef
+  }
+
+  // tslint:disable-next-line:typedef
 
   getBookById(id: number): Observable<Book> {
     return this.httpService.getBook(id);
@@ -52,19 +61,12 @@ export class BookService {
   // tslint:disable-next-line:typedef
   deleteBook(id: number): Observable<Book> {
     return this.httpService.deleteBook(id);
- }
+  }
 
- // @ts-ignore
+  // @ts-ignore
   updateBook(book: Book): Observable<Book> {
     return this.httpService.updateBook(book);
   }
-
-     // pipe(() => {
-      /*return this.httpService.getBooks(page, pageSize).pipe(
-        map((newList) => {
-          this.bookListObs$.next(newList);
-        }));
-    });*/
 
 
   getBooksWithSpecifiedTitle(title: string): Observable<Array<Book>> {
@@ -75,9 +77,43 @@ export class BookService {
     return this.httpService.getBooksTagsWithSpecifiedCharacters(bookTag);
   }
 
+  checkOutBook(bookDto: BookDto, username: string): Observable<boolean> {
+    return this.httpService.checkOutBook(bookDto, username)
+      .pipe(
+        map((response) => {
+          this.isBorrowed$.next(true);
+          return true;
+        }));
+  }
+
+  // tslint:disable-next-line:typedef
+  getRentalListForUser(username: string) {
+    this.httpService.getRentalListForUser(username).subscribe((response) => {
+          const rentals = response as Array<Rental>;
+          this.borrowedBooks$.next(response);
+          localStorage.setItem('borrowedBooks', rentals.toString());
+    });
+  }
+
+  getRentalListObservable(): Observable<any>  {
+    return this.borrowedBooks$.asObservable();
+  }
+
 
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

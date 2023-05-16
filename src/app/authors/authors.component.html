@@ -1,15 +1,19 @@
 <section id="authorsList">
-  <div class="d-md-block d-lg-flex button-group">
-    <button type="button" class="c-btn c-btn--primary" data-bs-toggle="modal" data-bs-target="#exampleModal"
-            mat-raised-button (click)="openDialog('add')">Add a Author</button>
-
-    <button type="button" class="c-btn c-btn--primary" data-bs-toggle="modal" data-bs-target="#exampleModal"
-            mat-raised-button (click)="openDialog('edit')" >Modify a Author</button>
-
-    <button type="button" class="c-btn c-btn--primary" data-bs-toggle="modal" data-bs-target="#exampleModal"
-            mat-raised-button (click)="deleteAuthor()">Delete a Author</button>
-
+  <div class="t-side-header_divider">
   </div>
+  <div class="t-side-header_hero2">
+
+
+    <button type="button" class="c-btn c-btn--primary" data-bs-toggle="modal" data-bs-target="#exampleModal"
+            mat-raised-button (click)="openDialog('add')">Add an Author</button>
+
+    <button type="button" class="c-btn c-btn--primary" data-bs-toggle="modal" data-bs-target="#exampleModal"
+            mat-raised-button (click)="openDialog('edit')" >Modify an Author</button>
+
+    <button type="button" class="c-btn c-btn--primary" data-bs-toggle="modal" data-bs-target="#exampleModal"
+            mat-raised-button (click)="deleteAuthor()">Delete an Author</button>
+  </div>
+
 
  <ng-container *ngIf="authorslist != null; else noAuthors">
    <p [ngStyle]="{color: getColor()}"></p>
@@ -23,8 +27,6 @@
        </mat-autocomplete>
      </mat-form-field>
    </fieldset>
-
-
 
 
    <table class="table table-striped">

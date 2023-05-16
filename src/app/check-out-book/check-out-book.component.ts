@@ -82,7 +82,7 @@ export class CheckOutBookComponent implements OnInit {
             this.bookService.checkOutBook(this.bookDto, this.username).subscribe((borrowedbook) => {
               if (borrowedbook === true) {
                 this.isborrowed = true;
-                this.getRentalListForUser();
+                // this.getRentalListForUser();
               }
               if (this.isborrowed) {
                 this.loadBooks.emit();
@@ -106,7 +106,9 @@ export class CheckOutBookComponent implements OnInit {
         }, (response: HttpErrorResponse) => {
           this.isborrowed = false;
           this.validationErrors = response.error;
-          alert('Amount of book must by at least 1');
+          if (this.isLoggedin === true && (response.status === 403 || response.status === 401)) {
+            alert('Amount of book must by at least 1');
+          }
         });
         if (this.checkboxservice.lengthBooksMap() > 1) {
           alert('jest zaznaczony więcj niż jeden, może byc jeden');
@@ -123,12 +125,13 @@ export class CheckOutBookComponent implements OnInit {
 
     this.bookService.getRentalListForUser(this.username);
     this.rentallist = this.bookService.getRentalListObservable();
-    this.rentallist.subscribe(rentals => {
+    this.showRentalTable();
+    /*this.rentallist.subscribe(rentals => {
       this.rentalList = rentals;
       if (this.rentalList.length > 0) {
         this.showRentalTable();
-      }
-    });
+      }*/
+   // });
   }
 
   showRentalTable(): void {

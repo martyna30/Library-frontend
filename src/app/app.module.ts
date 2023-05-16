@@ -27,7 +27,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {CheckboxService} from '../services/checkbox.service';
 import {MatTooltipModule} from '@angular/material/tooltip';
-import {MAT_DIALOG_DATA, MAT_DIALOG_DEFAULT_OPTIONS, MatDialog, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
+import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {MatButtonModule} from '@angular/material/button';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 // @ts-ignore
@@ -47,6 +47,8 @@ import {JWT_OPTIONS, JwtModule} from '@auth0/angular-jwt';
 import {MatTableModule} from '@angular/material/table';
 import {Ng2SearchPipe, Ng2SearchPipeModule} from 'ng2-search-filter';
 import { CheckOutBookComponent } from './check-out-book/check-out-book.component';
+import { BookTagsComponent } from './book-tags/book-tags.component';
+import {BookTagsService} from '../services/book-tags.service';
 
 
 
@@ -83,6 +85,7 @@ export function jwtOptionsFactory(userAuthService: UserAuthService) {
     LoginComponent,
     UserComponent,
     CheckOutBookComponent,
+    BookTagsComponent,
 
   ],
    entryComponents: [
@@ -107,9 +110,8 @@ export function jwtOptionsFactory(userAuthService: UserAuthService) {
     {provide: MAT_DIALOG_DATA, useValue: {} },
     {provide: HTTP_INTERCEPTORS,
     useClass: AuthTokenInterceptor,
-    multi: true
-    },
-   BookService, HttpService, AuthorService, CheckboxService, AuthGuard, UserAuthService], // jak jest injectable root to nie musi byc tu
+    multi: true},
+    BookService, HttpService, AuthorService, CheckboxService, AuthGuard, UserAuthService, BookTagsService], // jak jest injectable root to nie musi byc tu
   bootstrap: [AppComponent]
 })
 export class AppModule { }

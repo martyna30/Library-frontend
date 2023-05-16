@@ -1,3 +1,4 @@
+
 @import 'src/customize-bootstrap.scss';
 
 @import 'src/scss/01-settings/_settings.scss';
@@ -10,37 +11,28 @@
 @import 'src/scss/08-utilities/_utilities.scss';
 
 
-.username {
-  color: darkorange;
-}
-.usernames {
-  font-weight: bold;
-  color: darkorange;
-}
+.tag {
+  height: 50px;
+  width: 50px;
 
-.c-nav-item {
-  margin: $grid-base;
+  border: 2px solid $white;
+  border-radius: $border-radius;
+  display: inline-block;
   font-size: $font-size-5;
-  padding-bottom: $grid-base * .75;
-  padding-top: $grid-base * .75;
+  font-weight: 700;
+  line-height: $line-height-base;
+  padding: .75rem 0;
   text-align: center;
   text-transform: uppercase;
-  width: 100%;
+  transition: all .25s ease-in-out;
+  width: $grid-base *22;
+  background-color: $orange;
+  color: $white;
+  margin: 10px;
+
+  &:hover {
+    background-color: darken($orange, 15%);
+    color: $white;
+  }
 }
-
-.c-nav-item.active {
-  font-weight: bold;
-  color: darkorange;
-}
-
-.logoHeader {
-
-  width: $font-size-1;
-
-  @include large-up {
-    width: $font-size-1*1.5;
-}
-}
-
-
 

@@ -94,7 +94,7 @@
                   </mat-autocomplete>
                 </mat-form-field>
 
-                  <div class="invalid-feedback d-block" *ngIf="validationErrors?.bookTags && validationErrors['bookTags[' + i + '].literaryGenre'] !== undefined">
+                  <div class="invalid-feedback d-block" *ngIf="validationErrors !== undefined && validationErrors['bookTags[' + i + '].literaryGenre'] !== undefined">
                   {{validationErrors['bookTags[' + i + '].literaryGenre'][0]}}
                 </div>
               </td>
@@ -132,8 +132,6 @@
         <div id="validationServer04Feedback" class="invalid-feedback d-block"  *ngIf="validationErrors !== null && validationErrors?.signature">
        {{validationErrors.signature[0]}}
         </div>
-
-
       </fieldset>
 
 

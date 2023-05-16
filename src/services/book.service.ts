@@ -48,7 +48,6 @@ export class BookService {
   }
 
   saveBookToDB(book: Book): Observable<Book> {
-
     return this.httpService.saveBook(book);
   }
 

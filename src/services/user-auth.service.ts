@@ -54,7 +54,7 @@ export class UserAuthService {
       this.userName$.next(username);
       AuthTokenInterceptor.refresh = false;
       AuthTokenInterceptor.accessToken = accesstoken;
-      // AuthTokenInterceptor.refreshToken = refreshtoken;
+      AuthTokenInterceptor.refreshToken = refreshtoken;
       this.isloggedin$.next(true);
       return this.token$.asObservable();
     }
@@ -100,6 +100,7 @@ export class UserAuthService {
           localStorage.setItem('refresh_token', tokens.refresh_token);
           AuthTokenInterceptor.accessToken = response.access_token;
           AuthTokenInterceptor.refreshToken = response.refresh_token;
+          AuthTokenInterceptor.isLogout = false;
           const userdata = this.jwtHelper.decodeToken(tokens.access_token) as UserProfile;
           const userrole = userdata.role;
           this.token$.next(tokens.access_token);

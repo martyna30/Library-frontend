@@ -3,7 +3,7 @@ import {Book} from '../models-interface/book';
 import {BookService} from '../../services/book.service';
 import {CheckboxService} from '../../services/checkbox.service';
 import {BehaviorSubject, Observable} from 'rxjs';
-import {MatDialog, MatDialogConfig, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
+import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
 import {AddBookComponent} from '../add-book/add-book.component';
 
 import {DeleteComponent} from '../delete/delete.component';
@@ -15,15 +15,12 @@ import {CheckOutBookComponent} from '../check-out-book/check-out-book.component'
 
 const FILTER_PAG_REGEX = /[^0-9]/g;
 
-
 @Component({
   selector: 'app-books',
   templateUrl: './books.component.html',
   styleUrls: ['./books.component.scss']
 })
 export class BooksComponent implements OnInit {
-
-
   isDisabled: false;
   page = 1;
   size = 10;
@@ -35,12 +32,11 @@ export class BooksComponent implements OnInit {
 
   bookId: string;
   booksList: Observable<Array<Book>>;
-  bookslist: any[];
+  bookslist$: any[];
 
   objectToSearch: string;
 
   private stan;
-
 
   private searchedObjectsName: string[] = [];
   private showNamePlaceholder: boolean;
@@ -69,22 +65,17 @@ export class BooksComponent implements OnInit {
   @ViewChild('childCheckOutRef')
   checkOutBookComponent: CheckOutBookComponent;
 
-
   // tslint:disable-next-line:typedef
   ngOnInit() { // uruchamia sie jako 2 metoda tylko raz inicjalizuje dane w komponencie(lepiej ją uzywać niż konstruktor)
     this.myFormModel = this.fb.group({
       nameInput: '',
     });
-
     this.loadData();
     this.checkTheChangeName();
   }
-
-
   getColor(): string {
     return 'blue';
   }
-
   // tslint:disable-next-line:typedef
   changeCheckboxList(checkboxOfBook: HTMLInputElement) {    // checkboxOfBook: HTMLInputElement
     // tslint:disable-next-line:align
@@ -153,10 +144,10 @@ export class BooksComponent implements OnInit {
     this.bookService.getBookListObservable(page, this.size);
     this.booksList = this.bookService.getBooksFromBooksService();
     this.booksList.subscribe(books => {
-      this.bookslist = books;
+      this.bookslist$ = books;
     });
     this.total = this.bookService.getTotalCountBooks();
-    console.log(this.bookslist);
+    console.log(this.bookslist$);
     if (this.checkboxService.lengthBooksMap() > 0) {
       this.checkboxService.removeFromBooksMap(this.checkboxOfBook);
     }

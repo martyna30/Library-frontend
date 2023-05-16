@@ -38,10 +38,18 @@ export class AuthorsComponent implements OnInit {
 
   private stan;
 
-
-
   private searchedObjectsName: string[] = [];
   private showNamePlaceholder: boolean;
+
+  @ViewChild('childAddRef')
+  childComponent: AddAuthorComponent;
+
+  @ViewChild('childDeleteRef')
+  child2Component: DeleteComponent;
+
+  authorslist: Observable<Array<Author>>;
+
+ //allAuthors: Observable<Array<Author>>;
 
   constructor(config: NgbPaginationConfig,  private objectService: ObjectService,
               private authorService: AuthorService,  private userAuthService: UserAuthService,
@@ -55,13 +63,6 @@ export class AuthorsComponent implements OnInit {
     });
   }
 
-  @ViewChild('childAddRef')
-  childComponent: AddAuthorComponent;
-
-  @ViewChild('childDeleteRef')
-  child2Component: DeleteComponent;
-
-  authorslist: Observable<Array<Author>>;
   ngOnInit(): void {
     this.myFormModel = this.fb.group({
       nameInput: '',
@@ -136,6 +137,8 @@ export class AuthorsComponent implements OnInit {
     const page = this.page - 1;
     this.authorService.getAuthorsListObservable(page, this.size);
     this.authorslist = this.authorService.getAuthorsFromAuthorsService();
+    // this.authorService.getAllAuthorsListObservable();
+   // this.allAuthors = this.authorService.getAllAuthorsFromAuthorsService();
     this.total = this.authorService.getTotalCountOfAuthors();
     console.log(this.authorslist);
     if (this.checkboxService.lengthAuthorsMap() > 0) {

@@ -50,15 +50,11 @@ export class AppComponent implements OnInit {
 
 
    ngOnInit() {
-     //localStorage.removeItem('access_token');
-     //localStorage.removeItem('refresh_token');
-     //localStorage.removeItem('username');
-     //localStorage.removeItem('borrowedBooks');
-     this.userAuthService.userName$.subscribe((username) => {
+    this.userAuthService.userName$.subscribe((username) => {
        this.loggedInUsername = username;
      });
-     this.checkStatus();
-     this.checkToken();
+    this.checkStatus();
+    this.checkToken();
   }
 
   checkToken(): void {

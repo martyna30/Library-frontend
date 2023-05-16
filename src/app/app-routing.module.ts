@@ -9,6 +9,7 @@ import {UserComponent} from './add-user/user.component';
 import {AuthGuard} from './auth/auth.guard';
 import {UserAuthService} from '../services/user-auth.service';
 import {CheckOutBookComponent} from './check-out-book/check-out-book.component';
+import {BookTagsComponent} from './book-tags/book-tags.component';
 
 
 
@@ -17,7 +18,7 @@ const routes: Routes = [
   {path: '', redirectTo: '/', pathMatch: 'full',  },
   {path: 'books', component: BooksComponent, canActivate: [AuthGuard] },
   {path: 'authors', component: AuthorsComponent,  canActivate: [AuthGuard]  },
-  {path: 'tags', component: AuthorsComponent },
+  {path: 'tags', component: BookTagsComponent },
   {path: 'users', component: UserComponent  , canActivate: [AuthGuard] },
   {path: 'login', component: LoginComponent, canActivate: [AuthGuard] },
   {path: 'checkout', component: CheckOutBookComponent, canActivate: [AuthGuard] },

@@ -144,7 +144,7 @@ export class AddAuthorComponent implements OnInit {
             console.log(response.error);
             this.validationErrors = response.error;
             this.isCreated = false;
-          if (response.status === 403 || response.status === 401) {
+            if (response.status === 403 || response.status === 401) {
               alert('Function available only for the administrator');
             }
           });

@@ -24,8 +24,9 @@ table {
 .button-group {
   text-align: center;
   margin: 0 auto;
-  justify-content: space-around;
-
+  //justify-content: space-evenly;
+  display: flex;
+  justify-content: space-between;
   @include large-up {
     max-width: 800px;
   }

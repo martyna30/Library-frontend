@@ -30,7 +30,7 @@
   }
   &_divider {
     background-color: $white;
-    height: 1px;
+    height: 10px;
     opacity:  .75;
   }
 
@@ -55,6 +55,51 @@
       //padding-top: $grid-base*2;
       //max-width: 800px;
      // margin-bottom: $grid-base*2;
+    }
+  }
+
+  &_hero2 {
+    background-color: $blue;
+    padding-bottom: $grid-base*4;
+    padding-top: $grid-base*4;
+    padding-left: $grid-base*4;
+    padding-right: $grid-base*2.5;
+    display: flex;
+    text-align: center;
+    justify-content: space-evenly;
+    margin: 0 auto;
+    height: 125px;
+    width: 1140px;
+    //margin-bottom: $grid-base*2;
+    @include large-up {
+      //padding-bottom: $grid-base *2;
+      //text-align: center;
+      //padding-top: $grid-base*2;
+      //max-width: 800px;
+      // margin-bottom: $grid-base*2;
+    }
+  }
+    &_hero3 {
+      background-color: $blue;
+      padding-bottom: $grid-base*4;
+      padding-top: $grid-base*4;
+      padding-left: $grid-base*4;
+      padding-right: $grid-base*2.5;
+      display: flex;
+      text-align: center;
+      justify-content: space-evenly;
+      justify-items: end;
+      align-items: end;
+      margin: 0 auto;
+      height: 300px;
+      width: 1140px;
+
+    @include large-up {
+      //padding-bottom: $grid-base *2;
+      //text-align: center;
+      //padding-top: $grid-base*2;
+      //max-width: 800px;
+      // margin-bottom: $grid-base*2;
     }
   }
 

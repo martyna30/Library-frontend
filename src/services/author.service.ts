@@ -13,6 +13,8 @@ export class AuthorService {
 
   private authorsListObs$ = new BehaviorSubject<Array<Author>>([]);
 
+  // private allAuthorsListObs$ = new BehaviorSubject<Array<Author>>([]);
+
   private totalCountAuthors$ = new BehaviorSubject<number>(0);
 
   constructor(private httpService: HttpService) {
@@ -27,6 +29,13 @@ export class AuthorService {
     return;
   }
 
+  /*getAllAuthorsListObservable(): Observable<Array<Author>> {
+    this.httpService.getAllAuthors().subscribe((authors) => {
+     this.allAuthorsListObs$.next(authors);
+    });
+    return;
+  }*/
+
   getTotalCountOfAuthors(): Observable<number> {
     return this.totalCountAuthors$.asObservable();
   }
@@ -35,36 +44,15 @@ export class AuthorService {
     return this.httpService.getIdByName(forename, surname);
   }
 
-  /*
-    addAuthorToObservable(author: Author): void {
-    const authorToDB = this.authorToDB.getValue();
-    authorToDB.push(author);
-    this.authorToDB.next(authorToDB);
-    }
 
-    getAuthorWithName() {
-      // tslint:disable-next-line:no-shadowed-variable
-      const authorForename = this.authorToDB.getValue().map(author => author.forename);
-      // tslint:disable-next-line:no-shadowed-variable
-      const authorSurname = this.authorToDB.getValue().map(author => author.surname);
-
-      this.httpService.findAuthorsWithName(authorForename, authorSurname);
-    }*/
-
-  /*saveAuthorToDB() {
-    this.httpService.saveAuthor(this.authorListObs.getValue());
-  }*/
-
-  // @ts-ignore
   getAuthorsFromAuthorsService(): Observable<Array<Author>> {
     return this.authorsListObs$.asObservable();
   }
 
-  /*addAuthor(author: Author) {
-    const authorsList = this.authorsListObs.getValue();
-    authorsList.push(author);
-    this.authorsListObs.next(authorsList);
+  /*getAllAuthorsFromAuthorsService(): Observable<Array<Author>> {
+    return this.allAuthorsListObs$.asObservable();
   }*/
+
 
   saveAuthor(author: Author): Observable<Author> {
     return this.httpService.saveAuthor(author);

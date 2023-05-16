@@ -17,16 +17,7 @@ import {Author} from '../models-interface/author';
 import {AbstractControl, FormArray, FormBuilder, FormGroup} from '@angular/forms';
 import {BookTag} from '../models-interface/bookTag';
 import {BookValidationError} from '../models-interface/bookValidationError';
-import {AuthorValidationError} from '../models-interface/authorValidationError';
 import {CheckboxService} from '../../services/checkbox.service';
-import {FormControl} from '@angular/forms';
-import {debounceTime, map, startWith} from 'rxjs/operators';
-import {Observable, pipe} from 'rxjs';
-import {placeholdersToParams} from '@angular/compiler/src/render3/view/i18n/util';
-import {ifTrue} from 'codelyzer/util/function';
-import {yearsPerPage} from '@angular/material/datepicker';
-import {MAT_DIALOG_DATA, MatDialogConfig, MatDialogRef} from '@angular/material/dialog';
-import {MatDialog} from '@angular/material/dialog';
 import {HttpErrorResponse} from '@angular/common/http';
 import {error} from 'protractor';
 import {UserAuthService} from '../../services/user-auth.service';
@@ -72,7 +63,7 @@ export class AddBookComponent implements  OnInit {
   bookTags: FormArray;
 
   validationErrors: BookValidationError;
-  authorSurnameError = [];
+
   private isCreated = false;
   private bookExist = false;
   private mode;
@@ -308,7 +299,6 @@ export class AddBookComponent implements  OnInit {
     if (this.checkboxservice.lengthBooksMap() === 1) {
       this.idBook = Number(this.checkedList.keys().next().value);
 
-
       this.bookService.getBookById(this.idBook).subscribe((bookFromDb) => {
         this.bookToModified = bookFromDb;
         this.myFormModel.get('titleInput').setValue(bookFromDb.title);
@@ -379,7 +369,7 @@ export class AddBookComponent implements  OnInit {
       });
       this.bookService.saveBookToDB(book).subscribe(saveBook => {
         // @ts-ignore
-        if (saveBook !== undefined && saveBook !== null) {
+        if (saveBook !== undefined) {
           this.isCreated = true;
           this.bookExist = false;
         }

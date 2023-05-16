@@ -19,8 +19,6 @@ export class AuthTokenInterceptor implements HttpInterceptor {
   constructor(private injector: Injector, private http: HttpClient, private userAuthService: UserAuthService,
               private jwtHelper: JwtHelperService) {
   }
-
-
   static accessToken = '';
   static refreshToken = '';
 
@@ -28,7 +26,9 @@ export class AuthTokenInterceptor implements HttpInterceptor {
 
   static refresh = false;
 
-  private islogout = false;
+  static isLogout = false;
+
+
 
 
   // tslint:disable-next-line:typedef
@@ -51,54 +51,79 @@ export class AuthTokenInterceptor implements HttpInterceptor {
       return next.handle(req).pipe(catchError((err: HttpErrorResponse) => {
         if ((err.status === 403 || err.status === 401) && !AuthTokenInterceptor.refresh) {
 
-          const userdata = this.jwtHelper.decodeToken(AuthTokenInterceptor.refreshToken) as UserProfile;
-          const exp = userdata.exp;
-          const expired = (Date.now() >= exp * 1000);
-          if (!expired) {
-          AuthTokenInterceptor.accessToken = AuthTokenInterceptor.refreshToken;
-          localStorage.removeItem('access_token');
-          return this.http.post('http://localhost:8080/v1/library/token/refresh', {}, {}).pipe(
-            switchMap((res: any) => {
-              const newtoken = res as Token;
-              AuthTokenInterceptor.refresh = true;
-              AuthTokenInterceptor.accessToken = newtoken.access_token;
-              localStorage.setItem('new_token', newtoken.access_token);
-              this.userAuthService.token$.next(newtoken.access_token);
+
+          const refreshToken = localStorage.getItem('refresh_token');
+          if (refreshToken !== null && refreshToken !== undefined) {
+            const refresh = this.jwtHelper.decodeToken(refreshToken) as UserProfile;
+            const exp = refresh.exp;
+            const refreshExpired = (Date.now() >= exp * 1000);
+            if (!refreshExpired) {
+              AuthTokenInterceptor.accessToken = AuthTokenInterceptor.refreshToken;
+              localStorage.removeItem('access_token');
+              return this.http.post('http://localhost:8080/v1/library/token/refresh', {}, {}).pipe(
+                switchMap((res: any) => {
+                  const newtoken = res as Token;
+                  AuthTokenInterceptor.refresh = true;
+                  AuthTokenInterceptor.accessToken = newtoken.access_token;
+                  localStorage.setItem('new_token', newtoken.access_token);
+                  this.userAuthService.token$.next(newtoken.access_token);
+                  localStorage.removeItem('refresh_token');
+                  return next.handle(request.clone({
+                    setHeaders: {
+                      Authorization: `Bearer ${AuthTokenInterceptor.accessToken}`
+                    }
+                  }));
+                })
+              );
+            }
+            if (refreshExpired && (err.status === 403 || err.status === 401) && !AuthTokenInterceptor.isLogout) {
+              AuthTokenInterceptor.isLogout = true;
+              AuthTokenInterceptor.accessToken = '';
+              localStorage.removeItem('access_token');
               localStorage.removeItem('refresh_token');
-              return next.handle(request.clone({
-                setHeaders: {
-                  Authorization: `Bearer ${AuthTokenInterceptor.accessToken}`
-                }
-              }));
-            })
-          );
+              return this.userAuthService.logout();
+            }
+          }
         }
-          if (expired && (err.status === 403 || err.status === 401) && !this.islogout) {
+
+            /*if (refreshExpired && (err.status === 403 || err.status === 401) && this.islogout === true) {
+              return next.handle(req);
+            }*/
+        if ((err.status === 403 || err.status === 401) && AuthTokenInterceptor.refresh === true) {
+          const newToken = localStorage.getItem('new_token');
+          if (newToken !== null && newToken !== undefined) {
+            const newtoken = this.jwtHelper.decodeToken(AuthTokenInterceptor.accessToken) as UserProfile;
+            // tslint:disable-next-line:no-shadowed-variable
+            const newTokenExp = newtoken.exp;
+            const newTokenExpired = (Date.now() >= newTokenExp * 1000);
+            if (!newTokenExpired) {
+              return next.handle(req);
+            } else if (newTokenExpired && !AuthTokenInterceptor.isLogout) {
+              AuthTokenInterceptor.isLogout = true;
+              AuthTokenInterceptor.accessToken = '';
+              localStorage.removeItem('new_token');
+              return this.userAuthService.logout();
+            }
+          }
+        }/*else if (newToken === null && newToken === undefined && !AuthTokenInterceptor.isLogout) {
             this.islogout = true;
             AuthTokenInterceptor.accessToken = '';
-            localStorage.removeItem('access_token');
-            localStorage.removeItem('refresh_token');
+            localStorage.removeItem('new_token');
             return this.userAuthService.logout();
-          }
-          if (exp && (err.status === 403 || err.status === 401) && this.islogout === true) {
+          }*/
+          /*if (!this.islogout && (err.status === 403 || err.status === 401) && AuthTokenInterceptor.refresh === true) {
+            this.islogout = true;
+            AuthTokenInterceptor.accessToken = '';
+            localStorage.removeItem('new_token');
+            return this.userAuthService.logout();
+        }*/
+        if (err.status === 422 ) {
             return next.handle(req);
-          }
         }
-        if (!this.islogout && (err.status === 403 || err.status === 401) && AuthTokenInterceptor.refresh === true) {
-          this.islogout = true;
-          AuthTokenInterceptor.accessToken = '';
-          localStorage.removeItem('new_token');
-          return this.userAuthService.logout();
+        if ( (err.status === 403 || err.status === 401) && AuthTokenInterceptor.isLogout) {
+            return next.handle(req);
         }
-        if (err.status === 422 && !this.islogout) {
-          return next.handle(req);
-        }
-
-        if ( (err.status === 403 || err.status === 401) && this.islogout === true) {
-          return next.handle(req);
-        }
-
-        if (err.status === 201) {
+        if (err.status === 201 || err.status === 200) {
           return next.handle(req);
         }
         // this.refresh = false;
